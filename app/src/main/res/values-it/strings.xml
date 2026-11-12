@@ -495,4 +495,12 @@
     <string name="share_studies_note">Gli studi Lichess compaiono quando li hai iniziati.</string>
     <string name="share_failed">Impossibile caricare.</string>
     <string name="rating_chart_caption">Barre: tempo di studio di ogni settimana. Linea: il tuo punteggio alla fine di essa.</string>
+    <string name="review_preparing_tip">Sto preparando un consiglio per la prossima settimana…</string>
+    <string name="review_tip_title">Il consiglio del coach per la prossima settimana</string>
+    <string name="review_tip_focus">Focus per la prossima settimana</string>
+    <string name="review_tip_target">Obiettivo per la prossima settimana</string>
+    <string name="review_tip_use">Usalo la prossima settimana</string>
+    <string name="review_tip_make_focus">Fanne il mio focus</string>
+    <string name="review_tip_continue">Continua</string>
+    <string name="review_tip_not_now">Non ora</string>
 </resources>

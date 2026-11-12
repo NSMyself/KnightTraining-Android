@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.knightindustries.knighttraining.core.coach.WeakThemeStreak
 import com.knightindustries.knighttraining.core.model.ReminderSchedule
 import com.knightindustries.knighttraining.core.net.CatalogSync
 import java.time.DayOfWeek
@@ -13,6 +14,7 @@ import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 import java.time.Instant
 
 private val Context.dataStore by preferencesDataStore(name = "preferences")
@@ -37,6 +39,26 @@ class AppPreferences(private val context: Context) {
 
     suspend fun resetHomeLayout() {
         context.dataStore.edit { it.remove(homeLayoutKey) }
+    }
+
+    private val weakThemeStreakKey = stringPreferencesKey("weak_theme_streak")
+    private val lastCoachingSuggestionKey = longPreferencesKey("last_coaching_suggestion")
+
+    /** The weekly coach's weak-theme streak, carried from one review to the next (iOS `WeakThemeStreak`). */
+    suspend fun weakThemeStreak(): WeakThemeStreak? =
+        context.dataStore.data.first()[weakThemeStreakKey]?.let { runCatching { Json.decodeFromString(WeakThemeStreak.serializer(), it) }.getOrNull() }
+
+    suspend fun setWeakThemeStreak(streak: WeakThemeStreak?) {
+        context.dataStore.edit { prefs ->
+            if (streak == null) prefs.remove(weakThemeStreakKey) else prefs[weakThemeStreakKey] = Json.encodeToString(WeakThemeStreak.serializer(), streak)
+        }
+    }
+
+    /** When a "work with a coach" tip was last on screen: one every three months at most. */
+    suspend fun lastCoachingSuggestion(): Instant? = context.dataStore.data.first()[lastCoachingSuggestionKey]?.let(Instant::ofEpochMilli)
+
+    suspend fun setLastCoachingSuggestion(at: Instant) {
+        context.dataStore.edit { it[lastCoachingSuggestionKey] = at.toEpochMilli() }
     }
 
     /**

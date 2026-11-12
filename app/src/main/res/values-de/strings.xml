@@ -480,4 +480,12 @@
     <string name="share_studies_note">Lichess-Studien erscheinen, sobald du sie begonnen hast.</string>
     <string name="share_failed">Konnte nicht geladen werden.</string>
     <string name="rating_chart_caption">Balken: Lernzeit pro Woche. Linie: deine Wertungszahl am Ende der Woche.</string>
+    <string name="review_preparing_tip">Tipp für nächste Woche wird vorbereitet …</string>
+    <string name="review_tip_title">Trainertipp für nächste Woche</string>
+    <string name="review_tip_focus">Schwerpunkt für nächste Woche</string>
+    <string name="review_tip_target">Ziel für nächste Woche</string>
+    <string name="review_tip_use">Nächste Woche übernehmen</string>
+    <string name="review_tip_make_focus">Zu meinem Schwerpunkt machen</string>
+    <string name="review_tip_continue">Weiter</string>
+    <string name="review_tip_not_now">Jetzt nicht</string>
 </resources>

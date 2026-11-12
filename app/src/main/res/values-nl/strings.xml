@@ -480,4 +480,12 @@
     <string name="share_studies_note">Lichess-studies verschijnen zodra je eraan begonnen bent.</string>
     <string name="share_failed">Kon niet worden geladen.</string>
     <string name="rating_chart_caption">Balken: studietijd per week. Lijn: je rating aan het eind ervan.</string>
+    <string name="review_preparing_tip">Tip voor volgende week wordt voorbereid…</string>
+    <string name="review_tip_title">Tip van de trainer voor volgende week</string>
+    <string name="review_tip_focus">Focus voor volgende week</string>
+    <string name="review_tip_target">Doel voor volgende week</string>
+    <string name="review_tip_use">Volgende week gebruiken</string>
+    <string name="review_tip_make_focus">Maak er mijn focus van</string>
+    <string name="review_tip_continue">Doorgaan</string>
+    <string name="review_tip_not_now">Niet nu</string>
 </resources>

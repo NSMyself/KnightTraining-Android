@@ -1861,5 +1861,14 @@
   "it": "Barre: tempo di studio di ogni settimana. Linea: il tuo punteggio alla fine di essa.",
   "de": "Balken: Lernzeit pro Woche. Linie: deine Wertungszahl am Ende der Woche.",
   "fr": "Barres : temps d'étude de chaque semaine. Ligne : ton classement à la fin de celle-ci."
+ },
+ "review_tip_title": {
+  "pt-PT": "Dica do treinador para a próxima semana",
+  "es": "Consejo del entrenador para la próxima semana",
+  "pt-BR": "Dica do treinador para a próxima semana",
+  "nl": "Tip van de trainer voor volgende week",
+  "it": "Il consiglio del coach per la prossima settimana",
+  "de": "Trainertipp für nächste Woche",
+  "fr": "Le conseil du coach pour la semaine prochaine"
  }
 }

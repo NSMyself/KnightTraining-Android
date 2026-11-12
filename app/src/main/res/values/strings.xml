@@ -539,4 +539,14 @@
     <string name="share_studies_note">Lichess studies appear once you\'ve started them.</string>
     <string name="share_failed">Couldn\'t load this.</string>
     <string name="rating_chart_caption">Bars: time studied each week. Line: your rating at the end of it.</string>
+
+    <!-- Weekly coach -->
+    <string name="review_preparing_tip">Preparing a tip for next week…</string>
+    <string name="review_tip_title">Coach\'s tip for next week</string>
+    <string name="review_tip_focus">Focus for next week</string>
+    <string name="review_tip_target">Target for next week</string>
+    <string name="review_tip_use">Use it next week</string>
+    <string name="review_tip_make_focus">Make it my focus</string>
+    <string name="review_tip_continue">Continue</string>
+    <string name="review_tip_not_now">Not now</string>
 </resources>

@@ -198,4 +198,21 @@ maintainer confirms how interactions *feel* on a device themselves.
      the cards in `feature/share/`, rendered through a graphics layer to a PNG in
      `cache/shares/` and handed to the system share sheet via a `FileProvider`. Pinned by
      `ShareCardsTest`.
-   - Not yet: the weekly coach.
+   - **Weekly coach, built 2026-11-12, debug builds only.** Gemini Nano via ML Kit's Prompt API
+     (beta, `com.google.mlkit:genai-prompt`), only on Nano 3 or newer (`ModelGate`; the version
+     is read from `getBaseModelName()`, whose format Google doesn't document, so an unreadable
+     name keeps the coach off and is logged under `GeminiNano`).
+     - `core/coach/` ports iOS's pipeline with the prompts word for word: context builder,
+       deterministic backstops (blitz/bullet, coach mentions while the gate is closed, an echoed
+       wish, another goal's number), the verifier pass, the coaching gate, puzzle weakness and
+       target change.
+     - JSON in the prompt replaces Apple's guided generation; ML Kit's structured output is
+       still alpha.
+     - `app/coach/` holds the Nano adapter (a system prompt where supported, temperature 0.2)
+       and `WeeklyTipService` (30 s timeout, silent on any failure).
+     - The review screen shows the tip card; accepting saves the focus and applies the target
+       (`applyCoachTarget`).
+     - Pinned by `WeeklyTipCoachTest`, `CoachSignalsTest`, `CoachStoreTest`, `ModelGateTest`
+       and `WeeklyCoachTest`.
+     - Tip *quality* is unverified: no emulator runs Nano, so it needs a Pixel 9 or newer, in
+       English and each shipped language, before it leaves debug builds.

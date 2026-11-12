@@ -16,6 +16,7 @@ import com.knightindustries.knighttraining.widget.WeekWidget
 import android.util.Log
 import com.knightindustries.knighttraining.core.lichess.LichessClient
 import com.knightindustries.knighttraining.core.lichess.LichessSync
+import com.knightindustries.knighttraining.coach.WeeklyTipService
 import com.knightindustries.knighttraining.lichess.LichessAuth
 import com.knightindustries.knighttraining.lichess.LichessCredentials
 import kotlinx.coroutines.sync.Mutex
@@ -83,6 +84,9 @@ class AppContainer(application: Application) {
     val lichessSync = LichessSync(store, lichessClient, log = { message, failure -> Log.w("Lichess", message, failure) })
 
     val lichessAuth: LichessAuth by lazy { LichessAuth(application, lichessCredentials, lichessClient, lichessSync, store) }
+
+    /** The weekly coach on Gemini Nano (debug builds only for now). */
+    val weeklyTipService: WeeklyTipService by lazy { WeeklyTipService(this) }
 
     private val lichessSyncLock = Mutex()
     private var lastLichessSync: Instant? = null

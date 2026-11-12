@@ -495,4 +495,12 @@
     <string name="share_studies_note">Les études Lichess apparaissent dès que tu les as commencées.</string>
     <string name="share_failed">Impossible de charger ce contenu.</string>
     <string name="rating_chart_caption">Barres : temps d\'étude de chaque semaine. Ligne : ton classement à la fin de celle-ci.</string>
+    <string name="review_preparing_tip">Préparation d\'un conseil pour la semaine prochaine…</string>
+    <string name="review_tip_title">Le conseil du coach pour la semaine prochaine</string>
+    <string name="review_tip_focus">Axe de travail pour la semaine prochaine</string>
+    <string name="review_tip_target">Objectif pour la semaine prochaine</string>
+    <string name="review_tip_use">L\'appliquer la semaine prochaine</string>
+    <string name="review_tip_make_focus">En faire mon axe de travail</string>
+    <string name="review_tip_continue">Continuer</string>
+    <string name="review_tip_not_now">Pas maintenant</string>
 </resources>

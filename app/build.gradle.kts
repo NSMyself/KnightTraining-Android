@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.reorderable)
+    implementation(libs.mlkit.genai.prompt)
     implementation(libs.glance.appwidget)
     implementation(libs.glance.material3)
     implementation(platform(libs.compose.bom))
