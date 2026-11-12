@@ -141,7 +141,8 @@ class CoreLoopTest {
         // Correct the count down: the goal reopens.
         compose.onNode(hasText(text(R.string.activity_puzzles)) and hasClickAction()).performClick()
         compose.waitUntilAtLeastOneExists(hasText(text(R.string.edit_session)), 5_000)
-        compose.onNodeWithText("10").performScrollTo().performTextClearance()
+        // By its label, not "10": around 10 o'clock the start-time picker's hour field reads 10 too.
+        compose.onNode(hasText(text(R.string.how_many_completed)) and hasText("10")).performScrollTo().performTextClearance()
         compose.onNodeWithText(text(R.string.how_many_completed)).performTextInput("4")
         compose.onNodeWithText(text(R.string.save)).performScrollTo().performClick()
         compose.waitUntilAtLeastOneExists(hasText("4/10"), 5_000)
