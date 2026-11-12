@@ -103,7 +103,7 @@ fun TrainingScreen(
                         Text(weekRange(week.weekStart, week.effectiveNextWeekStart(current.firstLaunch, WeekCalendar.system())))
                     },
                     overlineContent = if (isCurrent) ({ Text(stringResource(R.string.current_plan)) }) else null,
-                    supportingContent = { Text(stringResource(R.string.goals_done, week.completedGoalCount, week.goalCount)) },
+                    supportingContent = { Text(pluralStringResource(R.plurals.goals_done, week.goalCount, week.completedGoalCount, week.goalCount)) },
                     leadingContent = {
                         if (week.isFullyCompleted) Icon(Icons.Rounded.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                         else CircularProgressIndicator(progress = { (week.completionPercentage / 100).toFloat() }, modifier = Modifier.padding(2.dp))

@@ -254,7 +254,7 @@ private fun PlanCard(
                         style = MaterialTheme.typography.titleLarge,
                     )
                     Text(
-                        stringResource(R.string.goals_done, plan.completedGoalCount, plan.goalCount) + " · " +
+                        pluralStringResource(R.plurals.goals_done, plan.goalCount, plan.completedGoalCount, plan.goalCount) + " · " +
                             weekRange(plan.weekStart, weekEnd ?: plan.nextWeekStart),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,

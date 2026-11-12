@@ -33,6 +33,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -86,7 +87,7 @@ fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit, onReflect: (U
                         }
                     }
                 }
-                item { SectionHeader(stringResource(R.string.goals_done, plan.completedGoalCount, plan.goalCount)) }
+                item { SectionHeader(pluralStringResource(R.plurals.goals_done, plan.goalCount, plan.completedGoalCount, plan.goalCount)) }
                 items(plan.weeklyGoals, key = { it.id }) { goal ->
                     ListItem(
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),

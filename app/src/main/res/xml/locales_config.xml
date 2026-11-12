@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lets Android 13+ offer a per-app language in system Settings. Keep in step with the values-* folders. -->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="en" />
+    <locale android:name="pt-PT" />
+    <locale android:name="pt-BR" />
+    <locale android:name="es" />
+    <locale android:name="nl" />
+    <locale android:name="it" />
+    <locale android:name="de" />
+    <locale android:name="fr" />
+</locale-config>

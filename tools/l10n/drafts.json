@@ -1,0 +1,1733 @@
+{
+ "target_puzzles": {
+  "pt-PT": {
+   "one": "%d tática",
+   "other": "%d táticas"
+  },
+  "es": {
+   "one": "%d problema",
+   "other": "%d problemas"
+  },
+  "pt-BR": {
+   "one": "%d tática",
+   "other": "%d táticas"
+  },
+  "nl": {
+   "one": "%d puzzel",
+   "other": "%d puzzels"
+  },
+  "it": {
+   "one": "%d problema",
+   "other": "%d problemi"
+  },
+  "de": {
+   "one": "%d Taktikaufgabe",
+   "other": "%d Taktikaufgaben"
+  },
+  "fr": {
+   "one": "%d problème",
+   "other": "%d problèmes"
+  }
+ },
+ "target_games": {
+  "pt-PT": {
+   "one": "%d partida",
+   "other": "%d partidas"
+  },
+  "es": {
+   "one": "%d partida",
+   "other": "%d partidas"
+  },
+  "pt-BR": {
+   "one": "%d partida",
+   "other": "%d partidas"
+  },
+  "nl": {
+   "one": "%d partij",
+   "other": "%d partijen"
+  },
+  "it": {
+   "one": "%d partita",
+   "other": "%d partite"
+  },
+  "de": {
+   "one": "%d Partie",
+   "other": "%d Partien"
+  },
+  "fr": {
+   "one": "%d partie",
+   "other": "%d parties"
+  }
+ },
+ "create_plan_title": {
+  "pt-PT": "Criar um plano de treino",
+  "es": "Crear un plan de entrenamiento",
+  "pt-BR": "Criar um plano de treino",
+  "nl": "Trainingsplan maken",
+  "it": "Crea un piano di allenamento",
+  "de": "Trainingsplan erstellen",
+  "fr": "Créer un plan d'entraînement"
+ },
+ "plan_name_label": {
+  "pt-PT": "Nome (opcional)",
+  "es": "Nombre (opcional)",
+  "pt-BR": "Nome (opcional)",
+  "nl": "Naam (optioneel)",
+  "it": "Nome (facoltativo)",
+  "de": "Name (optional)",
+  "fr": "Nom (facultatif)"
+ },
+ "plan_goals_header": {
+  "pt-PT": "Os teus objetivos semanais",
+  "es": "Tus objetivos semanales",
+  "pt-BR": "Seus objetivos semanais",
+  "nl": "Je weekdoelen",
+  "it": "I tuoi obiettivi settimanali",
+  "de": "Deine Wochenziele",
+  "fr": "Tes objectifs de la semaine"
+ },
+ "estimated_time_floor": {
+  "pt-PT": "Cerca de %s+ por semana",
+  "es": "Unas %s+ por semana",
+  "pt-BR": "Cerca de %s+ por semana",
+  "nl": "Ongeveer %s+ per week",
+  "it": "Circa %s+ a settimana",
+  "de": "Etwa %s+ pro Woche",
+  "fr": "Environ %s+ par semaine"
+ },
+ "keep_editing": {
+  "pt-PT": "Continuar a editar",
+  "es": "Seguir editando",
+  "pt-BR": "Continuar editando",
+  "nl": "Verder bewerken",
+  "it": "Continua a modificare",
+  "de": "Weiter bearbeiten",
+  "fr": "Continuer à modifier"
+ },
+ "discard_plan_body": {
+  "pt-PT": "Os objetivos que adicionaste vão perder-se.",
+  "es": "Se perderán los objetivos que agregaste.",
+  "pt-BR": "Os objetivos que você adicionou serão perdidos.",
+  "nl": "De doelen die je hebt toegevoegd gaan verloren.",
+  "it": "Gli obiettivi che hai aggiunto andranno persi.",
+  "de": "Die hinzugefügten Ziele gehen verloren.",
+  "fr": "Les objectifs ajoutés seront perdus."
+ },
+ "block_title_edit": {
+  "pt-PT": "Editar objetivo",
+  "es": "Editar objetivo",
+  "pt-BR": "Editar objetivo",
+  "nl": "Doel bewerken",
+  "it": "Modifica obiettivo",
+  "de": "Ziel bearbeiten",
+  "fr": "Modifier l'objectif"
+ },
+ "block_minutes": {
+  "pt-PT": "Minutos por semana",
+  "es": "Minutos por semana",
+  "pt-BR": "Minutos por semana",
+  "nl": "Minuten per week",
+  "it": "Minuti a settimana",
+  "de": "Minuten pro Woche",
+  "fr": "Minutes par semaine"
+ },
+ "block_time_control_none": {
+  "pt-PT": "Qualquer",
+  "es": "Cualquiera",
+  "pt-BR": "Qualquer",
+  "nl": "Elke",
+  "it": "Qualsiasi",
+  "de": "Beliebig",
+  "fr": "Toutes"
+ },
+ "block_name_label": {
+  "pt-PT": "Nome (opcional)",
+  "es": "Nombre (opcional)",
+  "pt-BR": "Nome (opcional)",
+  "nl": "Naam (optioneel)",
+  "it": "Nome (facoltativo)",
+  "de": "Name (optional)",
+  "fr": "Nom (facultatif)"
+ },
+ "add": {
+  "pt-PT": "Adicionar",
+  "es": "Agregar",
+  "pt-BR": "Adicionar",
+  "nl": "Toevoegen",
+  "it": "Aggiungi",
+  "de": "Hinzufügen",
+  "fr": "Ajouter"
+ },
+ "remove_goal": {
+  "pt-PT": "Remover objetivo",
+  "es": "Quitar objetivo",
+  "pt-BR": "Remover objetivo",
+  "nl": "Doel verwijderen",
+  "it": "Rimuovi obiettivo",
+  "de": "Ziel entfernen",
+  "fr": "Retirer l'objectif"
+ },
+ "time_control_daily": {
+  "pt-PT": "Por correspondência",
+  "es": "Por correspondencia",
+  "pt-BR": "Por correspondência",
+  "nl": "Correspondentie",
+  "it": "Per corrispondenza",
+  "de": "Fernschach",
+  "fr": "Par correspondance"
+ },
+ "plan_this_week": {
+  "pt-PT": "Planear esta semana",
+  "es": "Planear esta semana",
+  "pt-BR": "Planejar esta semana",
+  "nl": "Deze week plannen",
+  "it": "Pianifica questa settimana",
+  "de": "Diese Woche planen",
+  "fr": "Planifier cette semaine"
+ },
+ "plan_this_week_subtitle": {
+  "pt-PT": "Escolhe o plano com que te comprometes. Fica fixo para a semana assim que te comprometeres.",
+  "es": "Elige el plan con el que te comprometes. Queda fijo para la semana en cuanto te comprometas.",
+  "pt-BR": "Escolha o plano com que você se compromete. Ele fica fixo para a semana assim que você se comprometer.",
+  "nl": "Kies het plan waaraan je je verbindt. Zodra je dat doet, ligt het vast voor de week.",
+  "it": "Scegli il piano con cui ti impegni. Una volta confermato, resta fisso per la settimana.",
+  "de": "Wähle den Plan, auf den du dich festlegst. Sobald du ihn festlegst, gilt er für die ganze Woche.",
+  "fr": "Choisis le plan sur lequel tu t'engages. Une fois validé, il reste fixe pour la semaine."
+ },
+ "commit_plan": {
+  "pt-PT": "Comprometer-me com este plano",
+  "es": "Comprometerme con este plan",
+  "pt-BR": "Me comprometer com este plano",
+  "nl": "Dit plan vastleggen",
+  "it": "Impegnati con questo piano",
+  "de": "Auf diesen Plan festlegen",
+  "fr": "M'engager sur ce plan"
+ },
+ "goal_count": {
+  "pt-PT": {
+   "one": "%d objetivo",
+   "other": "%d objetivos"
+  },
+  "es": {
+   "one": "%d objetivo",
+   "other": "%d objetivos"
+  },
+  "pt-BR": {
+   "one": "%d objetivo",
+   "other": "%d objetivos"
+  },
+  "nl": {
+   "one": "%d doel",
+   "other": "%d doelen"
+  },
+  "it": {
+   "one": "%d obiettivo",
+   "other": "%d obiettivi"
+  },
+  "de": {
+   "one": "%d Ziel",
+   "other": "%d Ziele"
+  },
+  "fr": {
+   "one": "%d objectif",
+   "other": "%d objectifs"
+  }
+ },
+ "no_plan_body": {
+  "pt-PT": "Cria um plano semanal à volta do que estás a estudar. Demora um minuto.",
+  "es": "Arma un plan semanal en torno a lo que estás estudiando. Toma un minuto.",
+  "pt-BR": "Monte um plano semanal em torno do que você está estudando. Leva um minuto.",
+  "nl": "Maak een weekplan rond wat je aan het bestuderen bent. Het kost een minuut.",
+  "it": "Crea un piano settimanale intorno a quello che stai studiando. Ci vuole un minuto.",
+  "de": "Erstelle einen Wochenplan rund um das, was du gerade lernst. Das dauert eine Minute.",
+  "fr": "Construis un plan hebdomadaire autour de ce que tu étudies. Ça prend une minute."
+ },
+ "plan_week_title": {
+  "pt-PT": "Planear esta semana",
+  "es": "Planear esta semana",
+  "pt-BR": "Planejar esta semana",
+  "nl": "Deze week plannen",
+  "it": "Pianifica questa settimana",
+  "de": "Diese Woche planen",
+  "fr": "Planifier cette semaine"
+ },
+ "plan_week_body": {
+  "pt-PT": "Compromete-te com um plano para começares a registar esta semana.",
+  "es": "Comprométete con un plan para empezar a registrar esta semana.",
+  "pt-BR": "Comprometa-se com um plano para começar a registrar esta semana.",
+  "nl": "Leg een plan vast om deze week bij te houden.",
+  "it": "Impegnati con un piano per iniziare a registrare questa settimana.",
+  "de": "Leg dich auf einen Plan fest, um diese Woche zu erfassen.",
+  "fr": "Engage-toi sur un plan pour commencer à suivre cette semaine."
+ },
+ "widget_description": {
+  "pt-PT": "Os objetivos desta semana num relance.",
+  "es": "Los objetivos de esta semana de un vistazo.",
+  "pt-BR": "Os objetivos desta semana num relance.",
+  "nl": "De doelen van deze week in één oogopslag.",
+  "it": "Gli obiettivi di questa settimana a colpo d'occhio.",
+  "de": "Die Ziele dieser Woche auf einen Blick.",
+  "fr": "Les objectifs de la semaine en un coup d'œil."
+ },
+ "total_this_week": {
+  "pt-PT": "Total esta semana",
+  "es": "Total esta semana",
+  "pt-BR": "Total esta semana",
+  "nl": "Totaal deze week",
+  "it": "Totale questa settimana",
+  "de": "Gesamt diese Woche",
+  "fr": "Total cette semaine"
+ },
+ "games_played": {
+  "pt-PT": "Partidas jogadas",
+  "es": "Partidas jugadas",
+  "pt-BR": "Partidas jogadas",
+  "nl": "Gespeelde partijen",
+  "it": "Partite giocate",
+  "de": "Gespielte Partien",
+  "fr": "Parties jouées"
+ },
+ "week_streak": {
+  "pt-PT": "%d semanas seguidas",
+  "es": "%d semanas seguidas",
+  "pt-BR": "%d semanas seguidas",
+  "nl": "%d weken op rij",
+  "it": "%d settimane di fila",
+  "de": "%d Wochen in Folge",
+  "fr": "%d semaines d'affilée"
+ },
+ "start_session": {
+  "pt-PT": "Começar sessão",
+  "es": "Empezar sesión",
+  "pt-BR": "Começar sessão",
+  "nl": "Sessie starten",
+  "it": "Inizia sessione",
+  "de": "Einheit starten",
+  "fr": "Commencer une séance"
+ },
+ "start_goal": {
+  "pt-PT": "Começar %s",
+  "es": "Empezar %s",
+  "pt-BR": "Começar %s",
+  "nl": "%s starten",
+  "it": "Inizia %s",
+  "de": "%s starten",
+  "fr": "Commencer %s"
+ },
+ "session_in_progress": {
+  "pt-PT": "Sessão a decorrer",
+  "es": "Sesión en curso",
+  "pt-BR": "Sessão em andamento",
+  "nl": "Sessie bezig",
+  "it": "Sessione in corso",
+  "de": "Einheit läuft",
+  "fr": "Séance en cours"
+ },
+ "session_needs_saving": {
+  "pt-PT": "Sessão parada. Revê-a para a guardares.",
+  "es": "Sesión detenida. Revísala para guardarla.",
+  "pt-BR": "Sessão parada. Revise-a para salvá-la.",
+  "nl": "Sessie gestopt. Bekijk hem om op te slaan.",
+  "it": "Sessione fermata. Controllala per salvarla.",
+  "de": "Einheit gestoppt. Prüfe sie, um sie zu speichern.",
+  "fr": "Séance arrêtée. Vérifie-la pour l'enregistrer."
+ },
+ "open": {
+  "pt-PT": "Abrir",
+  "es": "Abrir",
+  "pt-BR": "Abrir",
+  "nl": "Openen",
+  "it": "Apri",
+  "de": "Öffnen",
+  "fr": "Ouvrir"
+ },
+ "notification_channel_session": {
+  "pt-PT": "Cronómetro de treino",
+  "es": "Cronómetro de entrenamiento",
+  "pt-BR": "Cronômetro de treino",
+  "nl": "Trainingstimer",
+  "it": "Timer di allenamento",
+  "de": "Trainingstimer",
+  "fr": "Chrono d'entraînement"
+ },
+ "notification_channel_session_description": {
+  "pt-PT": "Mostra a sessão que estás a cronometrar, com pausa e parar.",
+  "es": "Muestra la sesión que estás cronometrando, con pausa y detener.",
+  "pt-BR": "Mostra a sessão que você está cronometrando, com pausar e parar.",
+  "nl": "Toont de sessie die je timet, met pauzeren en stoppen.",
+  "it": "Mostra la sessione che stai cronometrando, con pausa e stop.",
+  "de": "Zeigt die Einheit, die du stoppst, mit Pause und Stopp.",
+  "fr": "Affiche la séance que tu chronomètres, avec pause et arrêt."
+ },
+ "notification_session_running": {
+  "pt-PT": "Sessão de treino",
+  "es": "Sesión de entrenamiento",
+  "pt-BR": "Sessão de treino",
+  "nl": "Trainingssessie",
+  "it": "Sessione di allenamento",
+  "de": "Trainingseinheit",
+  "fr": "Séance d'entraînement"
+ },
+ "notification_session_paused": {
+  "pt-PT": "Em pausa · %s",
+  "es": "En pausa · %s",
+  "pt-BR": "Pausada · %s",
+  "nl": "Gepauzeerd · %s",
+  "it": "In pausa · %s",
+  "de": "Pausiert · %s",
+  "fr": "En pause · %s"
+ },
+ "notification_session_stopped": {
+  "pt-PT": "Sessão parada. Toca para a guardares.",
+  "es": "Sesión detenida. Toca para guardarla.",
+  "pt-BR": "Sessão parada. Toque para salvá-la.",
+  "nl": "Sessie gestopt. Tik om op te slaan.",
+  "it": "Sessione fermata. Tocca per salvarla.",
+  "de": "Einheit gestoppt. Tippe, um sie zu speichern.",
+  "fr": "Séance arrêtée. Touche pour l'enregistrer."
+ },
+ "training_session": {
+  "pt-PT": "Sessão de treino",
+  "es": "Sesión de entrenamiento",
+  "pt-BR": "Sessão de treino",
+  "nl": "Trainingssessie",
+  "it": "Sessione di allenamento",
+  "de": "Trainingseinheit",
+  "fr": "Séance d'entraînement"
+ },
+ "target_reached": {
+  "pt-PT": "Meta atingida. Continua ou muda.",
+  "es": "Meta alcanzada. Sigue o cambia.",
+  "pt-BR": "Meta atingida. Continue ou troque.",
+  "nl": "Doel bereikt. Ga door of wissel.",
+  "it": "Obiettivo raggiunto. Continua o cambia.",
+  "de": "Ziel erreicht. Mach weiter oder wechsle.",
+  "fr": "Objectif atteint. Continue ou change."
+ },
+ "start_from_plan": {
+  "pt-PT": "Do plano desta semana",
+  "es": "Del plan de esta semana",
+  "pt-BR": "Do plano desta semana",
+  "nl": "Uit het plan van deze week",
+  "it": "Dal piano di questa settimana",
+  "de": "Aus dem Plan dieser Woche",
+  "fr": "Du plan de cette semaine"
+ },
+ "start_selected": {
+  "pt-PT": "Começar (%d)",
+  "es": "Empezar (%d)",
+  "pt-BR": "Começar (%d)",
+  "nl": "Starten (%d)",
+  "it": "Inizia (%d)",
+  "de": "Starten (%d)",
+  "fr": "Commencer (%d)"
+ },
+ "just_start": {
+  "pt-PT": "Só ligar o cronómetro",
+  "es": "Solo iniciar el cronómetro",
+  "pt-BR": "Só iniciar o cronômetro",
+  "nl": "Alleen de timer starten",
+  "it": "Avvia solo il timer",
+  "de": "Nur den Timer starten",
+  "fr": "Lancer juste le chrono"
+ },
+ "just_start_body": {
+  "pt-PT": "Escolhe o que foi quando parares.",
+  "es": "Elige qué fue cuando lo detengas.",
+  "pt-BR": "Escolha o que foi quando parar.",
+  "nl": "Kies wat het was als je stopt.",
+  "it": "Scegli cos'era quando ti fermi.",
+  "de": "Wähle beim Stoppen, was es war.",
+  "fr": "Choisis ce que c'était quand tu t'arrêtes."
+ },
+ "change_title": {
+  "pt-PT": "Mudar para",
+  "es": "Cambiar a",
+  "pt-BR": "Mudar para",
+  "nl": "Wisselen naar",
+  "it": "Passa a",
+  "de": "Wechseln zu",
+  "fr": "Passer à"
+ },
+ "session_discarded": {
+  "pt-PT": "Demasiado curta para guardar: sessão descartada.",
+  "es": "Demasiado corta para guardar: sesión descartada.",
+  "pt-BR": "Curta demais para salvar: sessão descartada.",
+  "nl": "Te kort om te bewaren: sessie verwijderd.",
+  "it": "Troppo breve da tenere: sessione scartata.",
+  "de": "Zu kurz zum Behalten: Einheit verworfen.",
+  "fr": "Trop courte pour être gardée : séance abandonnée."
+ },
+ "leave_session_hint": {
+  "pt-PT": "A sessão continua a decorrer. Encontra-a no Início ou na notificação.",
+  "es": "La sesión sigue en curso. La encuentras en Inicio o en la notificación.",
+  "pt-BR": "A sessão continua em andamento. Você a encontra no Início ou na notificação.",
+  "nl": "De sessie loopt door. Je vindt hem op Start of in de melding.",
+  "it": "La sessione continua. La trovi in Home o nella notifica.",
+  "de": "Die Einheit läuft weiter. Du findest sie unter Start oder in der Mitteilung.",
+  "fr": "La séance continue. Tu la retrouves dans Accueil ou dans la notification."
+ },
+ "skip_categorize": {
+  "pt-PT": "Saltar, registar como prática geral",
+  "es": "Omitir, registrar como práctica general",
+  "pt-BR": "Pular, registrar como prática geral",
+  "nl": "Overslaan, als algemene training vastleggen",
+  "it": "Salta, registra come pratica generale",
+  "de": "Überspringen, als allgemeines Training erfassen",
+  "fr": "Passer, enregistrer comme pratique générale"
+ },
+ "this_activity": {
+  "pt-PT": "Esta atividade",
+  "es": "Esta actividad",
+  "pt-BR": "Esta atividade",
+  "nl": "Deze activiteit",
+  "it": "Questa attività",
+  "de": "Diese Aktivität",
+  "fr": "Cette activité"
+ },
+ "coaching_topics": {
+  "pt-PT": "O que abordou a aula?",
+  "es": "¿Qué cubrió la clase?",
+  "pt-BR": "O que a aula abordou?",
+  "nl": "Waar ging de les over?",
+  "it": "Di cosa ha trattato la lezione?",
+  "de": "Worum ging es im Unterricht?",
+  "fr": "Sur quoi portait la leçon ?"
+ },
+ "save_failed": {
+  "pt-PT": "Não foi possível guardar a sessão. Tenta novamente.",
+  "es": "No se pudo guardar la sesión. Inténtalo de nuevo.",
+  "pt-BR": "Não foi possível salvar a sessão. Tente novamente.",
+  "nl": "De sessie kon niet worden opgeslagen. Probeer het opnieuw.",
+  "it": "Impossibile salvare la sessione. Riprova.",
+  "de": "Die Einheit konnte nicht gespeichert werden. Versuch es noch einmal.",
+  "fr": "Impossible d'enregistrer la séance. Réessaie."
+ },
+ "training_plans": {
+  "pt-PT": "Planos de treino",
+  "es": "Planes de entrenamiento",
+  "pt-BR": "Planos de treino",
+  "nl": "Trainingsplannen",
+  "it": "Piani di allenamento",
+  "de": "Trainingspläne",
+  "fr": "Plans d'entraînement"
+ },
+ "your_weeks": {
+  "pt-PT": "As tuas semanas",
+  "es": "Tus semanas",
+  "pt-BR": "Suas semanas",
+  "nl": "Je weken",
+  "it": "Le tue settimane",
+  "de": "Deine Wochen",
+  "fr": "Tes semaines"
+ },
+ "week_percent": {
+  "pt-PT": "%d%% concluída",
+  "es": "%d%% completada",
+  "pt-BR": "%d%% concluída",
+  "nl": "%d%% voltooid",
+  "it": "%d%% completata",
+  "de": "%d%% erledigt",
+  "fr": "Terminée à %d %%"
+ },
+ "training_log": {
+  "pt-PT": "Registo de treino",
+  "es": "Registro de entrenamiento",
+  "pt-BR": "Registro de treino",
+  "nl": "Trainingslogboek",
+  "it": "Diario di allenamento",
+  "de": "Trainingsprotokoll",
+  "fr": "Journal d'entraînement"
+ },
+ "session_details": {
+  "pt-PT": "Detalhes da sessão",
+  "es": "Detalles de la sesión",
+  "pt-BR": "Detalhes da sessão",
+  "nl": "Sessiedetails",
+  "it": "Dettagli della sessione",
+  "de": "Details der Einheit",
+  "fr": "Détails de la séance"
+ },
+ "session_date": {
+  "pt-PT": "Dia",
+  "es": "Día",
+  "pt-BR": "Dia",
+  "nl": "Dag",
+  "it": "Giorno",
+  "de": "Tag",
+  "fr": "Jour"
+ },
+ "session_time": {
+  "pt-PT": "Começou às",
+  "es": "Empezó a las",
+  "pt-BR": "Começou às",
+  "nl": "Begonnen om",
+  "it": "Iniziata alle",
+  "de": "Begonnen um",
+  "fr": "Commencée à"
+ },
+ "edit_session": {
+  "pt-PT": "Editar sessão",
+  "es": "Editar sesión",
+  "pt-BR": "Editar sessão",
+  "nl": "Sessie bewerken",
+  "it": "Modifica sessione",
+  "de": "Einheit bearbeiten",
+  "fr": "Modifier la séance"
+ },
+ "past_weeks_read_only": {
+  "pt-PT": "Só as sessões desta semana podem ser editadas.",
+  "es": "Solo se pueden editar las sesiones de esta semana.",
+  "pt-BR": "Só as sessões desta semana podem ser editadas.",
+  "nl": "Alleen sessies van deze week kun je bewerken.",
+  "it": "Si possono modificare solo le sessioni di questa settimana.",
+  "de": "Nur Einheiten dieser Woche lassen sich bearbeiten.",
+  "fr": "Seules les séances de cette semaine peuvent être modifiées."
+ },
+ "edit_plan": {
+  "pt-PT": "Editar plano",
+  "es": "Editar plan",
+  "pt-BR": "Editar plano",
+  "nl": "Plan bewerken",
+  "it": "Modifica piano",
+  "de": "Plan bearbeiten",
+  "fr": "Modifier le plan"
+ },
+ "edit_plan_locked": {
+  "pt-PT": "O plano desta semana está bloqueado porque já treinaste com ele. As alterações aplicam-se a partir da próxima semana a que te comprometeres.",
+  "es": "El plan de esta semana está bloqueado porque ya entrenaste con él. Los cambios se aplican desde la próxima semana con la que te comprometas.",
+  "pt-BR": "O plano desta semana está bloqueado porque você já treinou com ele. As alterações valem a partir da próxima semana com que você se comprometer.",
+  "nl": "Het plan van deze week staat vast omdat je er al mee hebt getraind. Wijzigingen gelden vanaf je volgende vastgelegde week.",
+  "it": "Il piano di questa settimana è bloccato perché ti sei già allenato con esso. Le modifiche valgono dalla prossima settimana confermata.",
+  "de": "Der Plan dieser Woche ist gesperrt, weil du schon damit trainiert hast. Änderungen gelten ab deiner nächsten festgelegten Woche.",
+  "fr": "Le plan de cette semaine est verrouillé car tu t'es déjà entraîné avec. Les modifications s'appliquent à partir de ta prochaine semaine validée."
+ },
+ "delete_plan": {
+  "pt-PT": "Apagar plano",
+  "es": "Eliminar plan",
+  "pt-BR": "Excluir plano",
+  "nl": "Plan verwijderen",
+  "it": "Elimina piano",
+  "de": "Plan löschen",
+  "fr": "Supprimer le plan"
+ },
+ "delete_plan_body": {
+  "pt-PT": "Deixas de o poder escolher nas próximas semanas. As semanas em que já treinaste com ele ficam no teu histórico.",
+  "es": "Ya no podrás elegirlo para las próximas semanas. Las semanas que ya entrenaste con él se quedan en tu historial.",
+  "pt-BR": "Você não poderá mais escolhê-lo nas próximas semanas. As semanas em que já treinou com ele ficam no seu histórico.",
+  "nl": "Je kunt het niet meer kiezen voor komende weken. Weken waarin je er al mee trainde blijven in je geschiedenis.",
+  "it": "Non potrai più sceglierlo per le prossime settimane. Le settimane in cui ti sei già allenato con esso restano nello storico.",
+  "de": "Du kannst ihn für kommende Wochen nicht mehr wählen. Wochen, in denen du schon damit trainiert hast, bleiben in deinem Verlauf.",
+  "fr": "Tu ne pourras plus le choisir pour les prochaines semaines. Les semaines où tu t'es déjà entraîné avec restent dans ton historique."
+ },
+ "next": {
+  "pt-PT": "Seguinte",
+  "es": "Siguiente",
+  "pt-BR": "Próximo",
+  "nl": "Volgende",
+  "it": "Avanti",
+  "de": "Weiter",
+  "fr": "Suivant"
+ },
+ "get_started": {
+  "pt-PT": "Começar",
+  "es": "Empezar",
+  "pt-BR": "Começar",
+  "nl": "Aan de slag",
+  "it": "Inizia",
+  "de": "Los geht's",
+  "fr": "C'est parti"
+ },
+ "raise_target": {
+  "pt-PT": "Aumentar a meta deste objetivo",
+  "es": "Subir la meta de este objetivo",
+  "pt-BR": "Aumentar a meta deste objetivo",
+  "nl": "Het doel van deze week verhogen",
+  "it": "Alza il traguardo di questo obiettivo",
+  "de": "Ziel dieser Woche erhöhen",
+  "fr": "Relever la cible de cet objectif"
+ },
+ "raise_target_body": {
+  "pt-PT": "Vai além do que te comprometeste",
+  "es": "Ve más allá de lo que te comprometiste",
+  "pt-BR": "Vá além do que você se comprometeu",
+  "nl": "Ga verder dan je had vastgelegd",
+  "it": "Vai oltre ciò che ti eri impegnato a fare",
+  "de": "Geh über das hinaus, was du dir vorgenommen hast",
+  "fr": "Va au-delà de ton engagement"
+ },
+ "new_target": {
+  "pt-PT": "Nova meta",
+  "es": "Nueva meta",
+  "pt-BR": "Nova meta",
+  "nl": "Nieuw doel",
+  "it": "Nuovo traguardo",
+  "de": "Neues Ziel",
+  "fr": "Nouvelle cible"
+ },
+ "review_title": {
+  "pt-PT": "Revisão da semana %d",
+  "es": "Repaso de la semana %d",
+  "pt-BR": "Revisão da semana %d",
+  "nl": "Terugblik op week %d",
+  "it": "Bilancio della settimana %d",
+  "de": "Rückblick auf Woche %d",
+  "fr": "Bilan de la semaine %d"
+ },
+ "review_time_invested": {
+  "pt-PT": "Tempo investido: %s",
+  "es": "Tiempo invertido: %s",
+  "pt-BR": "Tempo investido: %s",
+  "nl": "Geïnvesteerde tijd: %s",
+  "it": "Tempo investito: %s",
+  "de": "Investierte Zeit: %s",
+  "fr": "Temps investi : %s"
+ },
+ "review_last_week": {
+  "pt-PT": "Com os comentários da semana passada",
+  "es": "Con los comentarios de la semana pasada",
+  "pt-BR": "Com os comentários da semana passada",
+  "nl": "Met de opmerkingen van vorige week",
+  "it": "Con i commenti della settimana scorsa",
+  "de": "Mit den Notizen der letzten Woche",
+  "fr": "Avec les commentaires de la semaine dernière"
+ },
+ "reflect_on_week": {
+  "pt-PT": "Refletir sobre esta semana",
+  "es": "Reflexionar sobre esta semana",
+  "pt-BR": "Refletir sobre esta semana",
+  "nl": "Terugkijken op deze week",
+  "it": "Rifletti su questa settimana",
+  "de": "Auf diese Woche zurückblicken",
+  "fr": "Faire le bilan de la semaine"
+ },
+ "edit_reflection": {
+  "pt-PT": "Editar reflexão",
+  "es": "Editar reflexión",
+  "pt-BR": "Editar reflexão",
+  "nl": "Reflectie bewerken",
+  "it": "Modifica riflessioni",
+  "de": "Rückblick bearbeiten",
+  "fr": "Modifier le bilan"
+ },
+ "status_not_started": {
+  "pt-PT": "Por começar",
+  "es": "Sin empezar",
+  "pt-BR": "Não iniciado",
+  "nl": "Niet begonnen",
+  "it": "Da iniziare",
+  "de": "Nicht begonnen",
+  "fr": "Pas commencé"
+ },
+ "library_empty_title": {
+  "pt-PT": "A tua biblioteca está vazia",
+  "es": "Tu biblioteca está vacía",
+  "pt-BR": "Sua biblioteca está vazia",
+  "nl": "Je bibliotheek is leeg",
+  "it": "La tua libreria è vuota",
+  "de": "Deine Bibliothek ist leer",
+  "fr": "Ta bibliothèque est vide"
+ },
+ "library_empty_body": {
+  "pt-PT": "Adiciona os livros, cursos e vídeos que estás a estudar e cria o teu plano à volta deles.",
+  "es": "Agrega los libros, cursos y videos que estás estudiando y arma tu plan en torno a ellos.",
+  "pt-BR": "Adicione os livros, cursos e vídeos que você está estudando e monte seu plano em torno deles.",
+  "nl": "Voeg de boeken, cursussen en video's toe die je bestudeert en bouw je plan eromheen.",
+  "it": "Aggiungi i libri, i corsi e i video che stai studiando e costruisci il piano intorno a loro.",
+  "de": "Füge die Bücher, Kurse und Videos hinzu, mit denen du lernst, und baue deinen Plan darum herum.",
+  "fr": "Ajoute les livres, cours et vidéos que tu étudies, puis construis ton plan autour."
+ },
+ "no_matches": {
+  "pt-PT": "Nada corresponde",
+  "es": "Nada coincide",
+  "pt-BR": "Nada corresponde",
+  "nl": "Niets gevonden",
+  "it": "Nessun risultato",
+  "de": "Keine Treffer",
+  "fr": "Aucun résultat"
+ },
+ "add_resource": {
+  "pt-PT": "Adicionar recurso",
+  "es": "Agregar recurso",
+  "pt-BR": "Adicionar recurso",
+  "nl": "Bron toevoegen",
+  "it": "Aggiungi risorsa",
+  "de": "Ressource hinzufügen",
+  "fr": "Ajouter une ressource"
+ },
+ "add_manually": {
+  "pt-PT": "Adicionar manualmente",
+  "es": "Agregar manualmente",
+  "pt-BR": "Adicionar manualmente",
+  "nl": "Handmatig toevoegen",
+  "it": "Aggiungi manualmente",
+  "de": "Manuell hinzufügen",
+  "fr": "Ajouter manuellement"
+ },
+ "browse_catalog": {
+  "pt-PT": "Explorar catálogo",
+  "es": "Explorar catálogo",
+  "pt-BR": "Explorar catálogo",
+  "nl": "Catalogus bekijken",
+  "it": "Sfoglia il catalogo",
+  "de": "Katalog durchsuchen",
+  "fr": "Parcourir le catalogue"
+ },
+ "resource_link": {
+  "pt-PT": "Link (opcional)",
+  "es": "Enlace (opcional)",
+  "pt-BR": "Link (opcional)",
+  "nl": "Link (optioneel)",
+  "it": "Link (facoltativo)",
+  "de": "Link (optional)",
+  "fr": "Lien (facultatif)"
+ },
+ "resource_link_hint": {
+  "pt-PT": "Cola um link para preencher os detalhes",
+  "es": "Pega un enlace para completar los detalles",
+  "pt-BR": "Cole um link para preencher os detalhes",
+  "nl": "Plak een link om de details in te vullen",
+  "it": "Incolla un link per compilare i dettagli",
+  "de": "Füge einen Link ein, um die Details auszufüllen",
+  "fr": "Colle un lien pour remplir les détails"
+ },
+ "looking_up_link": {
+  "pt-PT": "A procurar o link…",
+  "es": "Buscando el enlace…",
+  "pt-BR": "Buscando o link…",
+  "nl": "Link opzoeken…",
+  "it": "Ricerca del link…",
+  "de": "Link wird gesucht…",
+  "fr": "Recherche du lien…"
+ },
+ "resource_title": {
+  "pt-PT": "Título",
+  "es": "Título",
+  "pt-BR": "Título",
+  "nl": "Titel",
+  "it": "Titolo",
+  "de": "Titel",
+  "fr": "Titre"
+ },
+ "resource_author": {
+  "pt-PT": "Autor (opcional)",
+  "es": "Autor (opcional)",
+  "pt-BR": "Autor (opcional)",
+  "nl": "Auteur (optioneel)",
+  "it": "Autore (facoltativo)",
+  "de": "Autor (optional)",
+  "fr": "Auteur (facultatif)"
+ },
+ "resource_kind": {
+  "pt-PT": "Tipo",
+  "es": "Tipo",
+  "pt-BR": "Tipo",
+  "nl": "Soort",
+  "it": "Tipo",
+  "de": "Art",
+  "fr": "Type"
+ },
+ "resource_description": {
+  "pt-PT": "Descrição",
+  "es": "Descripción",
+  "pt-BR": "Descrição",
+  "nl": "Beschrijving",
+  "it": "Descrizione",
+  "de": "Beschreibung",
+  "fr": "Description"
+ },
+ "resource_edition": {
+  "pt-PT": "Edição",
+  "es": "Edición",
+  "pt-BR": "Edição",
+  "nl": "Editie",
+  "it": "Edizione",
+  "de": "Auflage",
+  "fr": "Édition"
+ },
+ "resource_publisher": {
+  "pt-PT": "Editora",
+  "es": "Editorial",
+  "pt-BR": "Editora",
+  "nl": "Uitgever",
+  "it": "Editore",
+  "de": "Verlag",
+  "fr": "Éditeur"
+ },
+ "resource_owned": {
+  "pt-PT": "Tenho este",
+  "es": "Lo tengo",
+  "pt-BR": "Eu tenho",
+  "nl": "Ik heb dit",
+  "it": "Ce l'ho",
+  "de": "Besitze ich",
+  "fr": "Je le possède"
+ },
+ "resource_cover": {
+  "pt-PT": "Capa",
+  "es": "Portada",
+  "pt-BR": "Capa",
+  "nl": "Omslag",
+  "it": "Copertina",
+  "de": "Cover",
+  "fr": "Couverture"
+ },
+ "choose_photo": {
+  "pt-PT": "Escolher uma foto",
+  "es": "Elegir una foto",
+  "pt-BR": "Escolher uma foto",
+  "nl": "Foto kiezen",
+  "it": "Scegli una foto",
+  "de": "Foto auswählen",
+  "fr": "Choisir une photo"
+ },
+ "remove_cover": {
+  "pt-PT": "Remover capa",
+  "es": "Quitar portada",
+  "pt-BR": "Remover capa",
+  "nl": "Omslag verwijderen",
+  "it": "Rimuovi copertina",
+  "de": "Cover entfernen",
+  "fr": "Retirer la couverture"
+ },
+ "catalog_empty": {
+  "pt-PT": "Não foi possível carregar o catálogo. Podes adicionar um curso manualmente.",
+  "es": "No se pudo cargar el catálogo. Igual puedes agregar un curso a mano.",
+  "pt-BR": "Não foi possível carregar o catálogo. Você ainda pode adicionar um curso manualmente.",
+  "nl": "De catalogus kon niet worden geladen. Je kunt een cursus nog steeds handmatig toevoegen.",
+  "it": "Impossibile caricare il catalogo. Puoi comunque aggiungere un corso a mano.",
+  "de": "Der Katalog konnte nicht geladen werden. Du kannst einen Kurs trotzdem manuell hinzufügen.",
+  "fr": "Impossible de charger le catalogue. Tu peux quand même ajouter un cours à la main."
+ },
+ "chessmood_learn_more": {
+  "pt-PT": "Saber mais sobre a ChessMood",
+  "es": "Más información sobre ChessMood",
+  "pt-BR": "Saiba mais sobre a ChessMood",
+  "nl": "Meer over ChessMood",
+  "it": "Scopri di più su ChessMood",
+  "de": "Mehr über ChessMood",
+  "fr": "En savoir plus sur ChessMood"
+ },
+ "language_section_preferred": {
+  "pt-PT": "Na tua língua",
+  "es": "En tu idioma",
+  "pt-BR": "No seu idioma",
+  "nl": "In je eigen taal",
+  "it": "Nella tua lingua",
+  "de": "In deiner Sprache",
+  "fr": "Dans ta langue"
+ },
+ "language_section_english": {
+  "pt-PT": "Inglês",
+  "es": "Inglés",
+  "pt-BR": "Inglês",
+  "nl": "Engels",
+  "it": "Inglese",
+  "de": "Englisch",
+  "fr": "Anglais"
+ },
+ "time_invested": {
+  "pt-PT": "Tempo investido",
+  "es": "Tiempo invertido",
+  "pt-BR": "Tempo investido",
+  "nl": "Geïnvesteerde tijd",
+  "it": "Tempo investito",
+  "de": "Investierte Zeit",
+  "fr": "Temps investi"
+ },
+ "completions": {
+  "pt-PT": "Vezes concluído",
+  "es": "Veces terminado",
+  "pt-BR": "Vezes concluído",
+  "nl": "Keer afgerond",
+  "it": "Volte completato",
+  "de": "Mal abgeschlossen",
+  "fr": "Fois terminé"
+ },
+ "mark_finished": {
+  "pt-PT": "Marcar como concluído",
+  "es": "Marcar como terminado",
+  "pt-BR": "Marcar como concluído",
+  "nl": "Markeren als afgerond",
+  "it": "Segna come completato",
+  "de": "Als abgeschlossen markieren",
+  "fr": "Marquer comme terminé"
+ },
+ "mark_read": {
+  "pt-PT": "Marcar como lido",
+  "es": "Marcar como leído",
+  "pt-BR": "Marcar como lido",
+  "nl": "Markeren als gelezen",
+  "it": "Segna come letto",
+  "de": "Als gelesen markieren",
+  "fr": "Marquer comme lu"
+ },
+ "mark_unread": {
+  "pt-PT": "Marcar como não lido",
+  "es": "Marcar como no leído",
+  "pt-BR": "Marcar como não lido",
+  "nl": "Markeren als ongelezen",
+  "it": "Segna come non letto",
+  "de": "Als ungelesen markieren",
+  "fr": "Marquer comme non lu"
+ },
+ "start_again": {
+  "pt-PT": "Recomeçar",
+  "es": "Empezar de nuevo",
+  "pt-BR": "Recomeçar",
+  "nl": "Opnieuw beginnen",
+  "it": "Ricomincia",
+  "de": "Neu beginnen",
+  "fr": "Recommencer"
+ },
+ "read_article": {
+  "pt-PT": "Ler artigo",
+  "es": "Leer artículo",
+  "pt-BR": "Ler artigo",
+  "nl": "Artikel lezen",
+  "it": "Leggi l'articolo",
+  "de": "Artikel lesen",
+  "fr": "Lire l'article"
+ },
+ "open_link": {
+  "pt-PT": "Abrir link",
+  "es": "Abrir enlace",
+  "pt-BR": "Abrir link",
+  "nl": "Link openen",
+  "it": "Apri il link",
+  "de": "Link öffnen",
+  "fr": "Ouvrir le lien"
+ },
+ "completion_history": {
+  "pt-PT": "Histórico",
+  "es": "Historial",
+  "pt-BR": "Histórico",
+  "nl": "Geschiedenis",
+  "it": "Storico",
+  "de": "Verlauf",
+  "fr": "Historique"
+ },
+ "finished_on": {
+  "pt-PT": "Concluído a %s",
+  "es": "Terminado el %s",
+  "pt-BR": "Concluído em %s",
+  "nl": "Afgerond op %s",
+  "it": "Completato il %s",
+  "de": "Abgeschlossen am %s",
+  "fr": "Terminé le %s"
+ },
+ "finish_title": {
+  "pt-PT": "Concluído!",
+  "es": "¡Terminado!",
+  "pt-BR": "Concluído!",
+  "nl": "Afgerond!",
+  "it": "Completato!",
+  "de": "Geschafft!",
+  "fr": "Terminé !"
+ },
+ "finish_notes": {
+  "pt-PT": "Notas (opcional)",
+  "es": "Notas (opcional)",
+  "pt-BR": "Notas (opcional)",
+  "nl": "Notities (optioneel)",
+  "it": "Note (facoltative)",
+  "de": "Notizen (optional)",
+  "fr": "Notes (facultatif)"
+ },
+ "finish_rating": {
+  "pt-PT": "A tua avaliação",
+  "es": "Tu valoración",
+  "pt-BR": "Sua avaliação",
+  "nl": "Jouw beoordeling",
+  "it": "Il tuo voto",
+  "de": "Deine Bewertung",
+  "fr": "Ta note"
+ },
+ "more_options": {
+  "pt-PT": "Mais opções",
+  "es": "Más opciones",
+  "pt-BR": "Mais opções",
+  "nl": "Meer opties",
+  "it": "Altre opzioni",
+  "de": "Weitere Optionen",
+  "fr": "Plus d'options"
+ },
+ "delete_resource_body": {
+  "pt-PT": "O histórico de conclusões vai com ele. As sessões registadas ficam, sem a ligação ao recurso.",
+  "es": "Su historial de terminados se va con él. Las sesiones registradas se quedan, sin el vínculo.",
+  "pt-BR": "O histórico de conclusões vai junto. As sessões registradas ficam, sem o vínculo.",
+  "nl": "De afrondgeschiedenis verdwijnt mee. Vastgelegde sessies blijven, zonder de koppeling.",
+  "it": "Lo storico dei completamenti se ne va con essa. Le sessioni registrate restano, senza il collegamento.",
+  "de": "Der Abschlussverlauf wird mitgelöscht. Erfasste Einheiten bleiben, ohne die Verknüpfung.",
+  "fr": "Son historique part avec elle. Les séances enregistrées restent, sans le lien."
+ },
+ "share_target_label": {
+  "pt-PT": "Adicionar ao Knight Training",
+  "es": "Agregar a Knight Training",
+  "pt-BR": "Adicionar ao Knight Training",
+  "nl": "Toevoegen aan Knight Training",
+  "it": "Aggiungi a Knight Training",
+  "de": "Zu Knight Training hinzufügen",
+  "fr": "Ajouter à Knight Training"
+ },
+ "share_no_link": {
+  "pt-PT": "O que foi partilhado não tem nenhum link.",
+  "es": "Lo que se compartió no tiene ningún enlace.",
+  "pt-BR": "O que foi compartilhado não tem nenhum link.",
+  "nl": "Er zit geen link in wat er is gedeeld.",
+  "it": "Nel contenuto condiviso non c'è nessun link.",
+  "de": "Im Geteilten ist kein Link.",
+  "fr": "Il n'y a aucun lien dans ce qui a été partagé."
+ },
+ "resource_none": {
+  "pt-PT": "Nenhum",
+  "es": "Ninguno",
+  "pt-BR": "Nenhum",
+  "nl": "Geen",
+  "it": "Nessuna",
+  "de": "Keine",
+  "fr": "Aucune"
+ },
+ "link_resource": {
+  "pt-PT": "Recurso (opcional)",
+  "es": "Recurso (opcional)",
+  "pt-BR": "Recurso (opcional)",
+  "nl": "Bron (optioneel)",
+  "it": "Risorsa (facoltativa)",
+  "de": "Ressource (optional)",
+  "fr": "Ressource (facultatif)"
+ },
+ "link_resource_hint": {
+  "pt-PT": "Associa um recurso para acompanhar o tempo que lhe dedicas",
+  "es": "Vincula un recurso para seguir el tiempo que le dedicas",
+  "pt-BR": "Associe um recurso para acompanhar o tempo que você dedica a ele",
+  "nl": "Koppel een bron om je tijd eraan bij te houden",
+  "it": "Collega una risorsa per seguire il tempo che ci dedichi",
+  "de": "Verknüpfe eine Ressource, um deine Zeit damit zu erfassen",
+  "fr": "Lie une ressource pour suivre le temps que tu y passes"
+ },
+ "choose_resource": {
+  "pt-PT": "Escolher um recurso",
+  "es": "Elegir un recurso",
+  "pt-BR": "Escolher um recurso",
+  "nl": "Bron kiezen",
+  "it": "Scegli una risorsa",
+  "de": "Ressource auswählen",
+  "fr": "Choisir une ressource"
+ },
+ "reminder_days_left": {
+  "pt-PT": {
+   "one": "Falta %d dia esta semana",
+   "other": "Faltam %d dias esta semana"
+  },
+  "es": {
+   "one": "Queda %d día esta semana",
+   "other": "Quedan %d días esta semana"
+  },
+  "pt-BR": {
+   "one": "Falta %d dia esta semana",
+   "other": "Faltam %d dias esta semana"
+  },
+  "nl": {
+   "one": "Nog %d dag deze week",
+   "other": "Nog %d dagen deze week"
+  },
+  "it": {
+   "one": "Manca %d giorno questa settimana",
+   "other": "Mancano %d giorni questa settimana"
+  },
+  "de": {
+   "one": "Noch %d Tag diese Woche",
+   "other": "Noch %d Tage diese Woche"
+  },
+  "fr": {
+   "one": "Encore %d jour cette semaine",
+   "other": "Encore %d jours cette semaine"
+  }
+ },
+ "your_training": {
+  "pt-PT": "O teu treino",
+  "es": "Tu entrenamiento",
+  "pt-BR": "Seu treino",
+  "nl": "Je training",
+  "it": "Il tuo allenamento",
+  "de": "Dein Training",
+  "fr": "Ton entraînement"
+ },
+ "current_streak": {
+  "pt-PT": "Série atual",
+  "es": "Racha actual",
+  "pt-BR": "Sequência atual",
+  "nl": "Huidige reeks",
+  "it": "Serie attuale",
+  "de": "Aktuelle Serie",
+  "fr": "Série actuelle"
+ },
+ "longest_streak": {
+  "pt-PT": "Maior série",
+  "es": "Racha más larga",
+  "pt-BR": "Maior sequência",
+  "nl": "Langste reeks",
+  "it": "Serie più lunga",
+  "de": "Längste Serie",
+  "fr": "Plus longue série"
+ },
+ "weeks_count": {
+  "pt-PT": {
+   "one": "%d semana",
+   "other": "%d semanas"
+  },
+  "es": {
+   "one": "%d semana",
+   "other": "%d semanas"
+  },
+  "pt-BR": {
+   "one": "%d semana",
+   "other": "%d semanas"
+  },
+  "nl": {
+   "one": "%d week",
+   "other": "%d weken"
+  },
+  "it": {
+   "one": "%d settimana",
+   "other": "%d settimane"
+  },
+  "de": {
+   "one": "%d Woche",
+   "other": "%d Wochen"
+  },
+  "fr": {
+   "one": "%d semaine",
+   "other": "%d semaines"
+  }
+ },
+ "reminders_body": {
+  "pt-PT": "Só quando estiveres atrasado na semana, e nunca num dia em que já treinaste.",
+  "es": "Solo cuando vayas atrasado en la semana, y nunca un día en que ya entrenaste.",
+  "pt-BR": "Só quando você estiver atrasado na semana, e nunca num dia em que já treinou.",
+  "nl": "Alleen als je achterloopt op de week, en nooit op een dag dat je al hebt getraind.",
+  "it": "Solo quando sei indietro sulla settimana, e mai in un giorno in cui ti sei già allenato.",
+  "de": "Nur wenn du mit der Woche im Rückstand bist, und nie an einem Tag, an dem du schon trainiert hast.",
+  "fr": "Seulement quand tu es en retard sur la semaine, et jamais un jour où tu t'es déjà entraîné."
+ },
+ "reminder_days": {
+  "pt-PT": "Dias",
+  "es": "Días",
+  "pt-BR": "Dias",
+  "nl": "Dagen",
+  "it": "Giorni",
+  "de": "Tage",
+  "fr": "Jours"
+ },
+ "reminder_no_days": {
+  "pt-PT": "Nenhum dia escolhido: não vais receber lembretes.",
+  "es": "Ningún día elegido: no te llegarán recordatorios.",
+  "pt-BR": "Nenhum dia escolhido: você não vai receber lembretes.",
+  "nl": "Geen dagen gekozen: je krijgt geen herinneringen.",
+  "it": "Nessun giorno scelto: non riceverai promemoria.",
+  "de": "Keine Tage gewählt: Es kommen keine Erinnerungen.",
+  "fr": "Aucun jour choisi : tu ne recevras pas de rappels."
+ },
+ "replay_intro": {
+  "pt-PT": "Ver a introdução outra vez",
+  "es": "Ver la introducción otra vez",
+  "pt-BR": "Ver a introdução de novo",
+  "nl": "Intro opnieuw bekijken",
+  "it": "Rivedi l'introduzione",
+  "de": "Einführung noch einmal ansehen",
+  "fr": "Revoir l'introduction"
+ },
+ "delete_all_body": {
+  "pt-PT": "Todos os planos, sessões, recursos e reflexões são apagados deste dispositivo. Não é possível anular.",
+  "es": "Todos los planes, sesiones, recursos y reflexiones se borran de este dispositivo. No se puede deshacer.",
+  "pt-BR": "Todos os planos, sessões, recursos e reflexões são apagados deste dispositivo. Não é possível desfazer.",
+  "nl": "Alle plannen, sessies, bronnen en reflecties worden van dit apparaat gewist. Dit kan niet ongedaan worden gemaakt.",
+  "it": "Tutti i piani, le sessioni, le risorse e le riflessioni vengono cancellati da questo dispositivo. Non si può annullare.",
+  "de": "Alle Pläne, Einheiten, Ressourcen und Rückblicke werden von diesem Gerät gelöscht. Das lässt sich nicht rückgängig machen.",
+  "fr": "Tous les plans, séances, ressources et bilans sont effacés de cet appareil. C'est irréversible."
+ },
+ "about_version": {
+  "pt-PT": "Versão %s",
+  "es": "Versión %s",
+  "pt-BR": "Versão %s",
+  "nl": "Versie %s",
+  "it": "Versione %s",
+  "de": "Version %s",
+  "fr": "Version %s"
+ },
+ "week_complete_title": {
+  "pt-PT": "Semana concluída",
+  "es": "Semana completada",
+  "pt-BR": "Semana concluída",
+  "nl": "Week voltooid",
+  "it": "Settimana completata",
+  "de": "Woche geschafft",
+  "fr": "Semaine terminée"
+ },
+ "week_complete_body": {
+  "pt-PT": {
+   "one": "Cumpriste o objetivo a que te comprometeste.",
+   "other": "Cumpriste os %d objetivos a que te comprometeste."
+  },
+  "es": {
+   "one": "Cumpliste el objetivo con el que te comprometiste.",
+   "other": "Cumpliste los %d objetivos con los que te comprometiste."
+  },
+  "pt-BR": {
+   "one": "Você cumpriu o objetivo com que se comprometeu.",
+   "other": "Você cumpriu os %d objetivos com que se comprometeu."
+  },
+  "nl": {
+   "one": "Je hebt het doel gehaald dat je had vastgelegd.",
+   "other": "Je hebt alle %d doelen gehaald die je had vastgelegd."
+  },
+  "it": {
+   "one": "Hai raggiunto l'obiettivo con cui ti eri impegnato.",
+   "other": "Hai raggiunto tutti i %d obiettivi con cui ti eri impegnato."
+  },
+  "de": {
+   "one": "Du hast das Ziel erreicht, das du dir vorgenommen hattest.",
+   "other": "Du hast alle %d Ziele erreicht, die du dir vorgenommen hattest."
+  },
+  "fr": {
+   "one": "Tu as atteint l'objectif sur lequel tu t'étais engagé.",
+   "other": "Tu as atteint les %d objectifs sur lesquels tu t'étais engagé."
+  }
+ },
+ "lichess_connect_body": {
+  "pt-PT": "Regista as tuas partidas e táticas automaticamente e acompanha a tua classificação.",
+  "es": "Registra tus partidas y problemas automáticamente y sigue tu clasificación.",
+  "pt-BR": "Registre suas partidas e táticas automaticamente e acompanhe sua classificação.",
+  "nl": "Houd je partijen en puzzels automatisch bij en volg je rating.",
+  "it": "Registra partite e problemi in automatico e segui il tuo punteggio.",
+  "de": "Erfasse deine Partien und Taktikaufgaben automatisch und verfolge deine Wertungszahl.",
+  "fr": "Suis tes parties et tes problèmes automatiquement, ainsi que ton classement."
+ },
+ "lichess_reconnect_body": {
+  "pt-PT": "O Lichess terminou a tua sessão. Liga-te outra vez para continuar a sincronizar.",
+  "es": "Lichess cerró tu sesión. Conéctate de nuevo para seguir sincronizando.",
+  "pt-BR": "O Lichess encerrou sua sessão. Conecte-se de novo para continuar sincronizando.",
+  "nl": "Lichess heeft je uitgelogd. Koppel opnieuw om te blijven synchroniseren.",
+  "it": "Lichess ti ha disconnesso. Collegati di nuovo per continuare a sincronizzare.",
+  "de": "Lichess hat dich abgemeldet. Verbinde dich erneut, um weiter zu synchronisieren.",
+  "fr": "Lichess t'a déconnecté. Reconnecte-toi pour continuer la synchronisation."
+ },
+ "lichess_connect": {
+  "pt-PT": "Ligar",
+  "es": "Conectar",
+  "pt-BR": "Conectar",
+  "nl": "Koppelen",
+  "it": "Collega",
+  "de": "Verbinden",
+  "fr": "Connecter"
+ },
+ "lichess_connecting": {
+  "pt-PT": "A ligar…",
+  "es": "Conectando…",
+  "pt-BR": "Conectando…",
+  "nl": "Koppelen…",
+  "it": "Collegamento…",
+  "de": "Verbinden…",
+  "fr": "Connexion…"
+ },
+ "lichess_failed": {
+  "pt-PT": "Não foi possível ligar ao Lichess. Tenta novamente.",
+  "es": "No se pudo conectar con Lichess. Inténtalo de nuevo.",
+  "pt-BR": "Não foi possível conectar ao Lichess. Tente novamente.",
+  "nl": "Koppelen met Lichess mislukt. Probeer het opnieuw.",
+  "it": "Impossibile collegarsi a Lichess. Riprova.",
+  "de": "Keine Verbindung zu Lichess. Versuch es noch einmal.",
+  "fr": "Impossible de se connecter à Lichess. Réessaie."
+ },
+ "lichess_disconnect_title": {
+  "pt-PT": "Desligar o Lichess?",
+  "es": "¿Desconectar Lichess?",
+  "pt-BR": "Desconectar o Lichess?",
+  "nl": "Lichess loskoppelen?",
+  "it": "Scollegare Lichess?",
+  "de": "Lichess trennen?",
+  "fr": "Déconnecter Lichess ?"
+ },
+ "lichess_disconnect_body": {
+  "pt-PT": "O treino que registaste fica. O histórico de classificação e as sugestões do Lichess por confirmar são removidos deste dispositivo.",
+  "es": "El entrenamiento que registraste se queda. Tu historial de clasificación y las sugerencias de Lichess pendientes se quitan de este dispositivo.",
+  "pt-BR": "O treino que você registrou fica. Seu histórico de classificação e as sugestões pendentes do Lichess são removidos deste dispositivo.",
+  "nl": "Je vastgelegde training blijft. Je ratinggeschiedenis en openstaande Lichess-voorstellen worden van dit apparaat verwijderd.",
+  "it": "L'allenamento registrato resta. Lo storico del punteggio e le proposte di Lichess in sospeso vengono rimossi da questo dispositivo.",
+  "de": "Dein erfasstes Training bleibt. Dein Wertungsverlauf und offene Lichess-Vorschläge werden von diesem Gerät entfernt.",
+  "fr": "Ton entraînement enregistré reste. Ton historique de classement et les propositions Lichess en attente sont retirés de cet appareil."
+ },
+ "lichess_classical_detected": {
+  "pt-PT": {
+   "one": "Partida clássica detetada",
+   "other": "Partidas clássicas detetadas"
+  },
+  "es": {
+   "one": "Partida clásica detectada",
+   "other": "Partidas clásicas detectadas"
+  },
+  "pt-BR": {
+   "one": "Partida clássica detectada",
+   "other": "Partidas clássicas detectadas"
+  },
+  "nl": {
+   "one": "Klassieke partij gedetecteerd",
+   "other": "Klassieke partijen gedetecteerd"
+  },
+  "it": {
+   "one": "Partita classica rilevata",
+   "other": "Partite classiche rilevate"
+  },
+  "de": {
+   "one": "Klassische Partie erkannt",
+   "other": "Klassische Partien erkannt"
+  },
+  "fr": {
+   "one": "Partie classique détectée",
+   "other": "Parties classiques détectées"
+  }
+ },
+ "lichess_rapid_detected": {
+  "pt-PT": {
+   "one": "Partida rápida detetada",
+   "other": "Partidas rápidas detetadas"
+  },
+  "es": {
+   "one": "Partida rápida detectada",
+   "other": "Partidas rápidas detectadas"
+  },
+  "pt-BR": {
+   "one": "Partida rápida detectada",
+   "other": "Partidas rápidas detectadas"
+  },
+  "nl": {
+   "one": "Rapidpartij gedetecteerd",
+   "other": "Rapidpartijen gedetecteerd"
+  },
+  "it": {
+   "one": "Partita rapid rilevata",
+   "other": "Partite rapid rilevate"
+  },
+  "de": {
+   "one": "Schnellschachpartie erkannt",
+   "other": "Schnellschachpartien erkannt"
+  },
+  "fr": {
+   "one": "Partie rapide détectée",
+   "other": "Parties rapides détectées"
+  }
+ },
+ "lichess_blitz_detected": {
+  "pt-PT": {
+   "one": "Partida de blitz detetada",
+   "other": "Partidas de blitz detetadas"
+  },
+  "es": {
+   "one": "Partida blitz detectada",
+   "other": "Partidas blitz detectadas"
+  },
+  "pt-BR": {
+   "one": "Partida de blitz detectada",
+   "other": "Partidas de blitz detectadas"
+  },
+  "nl": {
+   "one": "Blitzpartij gedetecteerd",
+   "other": "Blitzpartijen gedetecteerd"
+  },
+  "it": {
+   "one": "Partita blitz rilevata",
+   "other": "Partite blitz rilevate"
+  },
+  "de": {
+   "one": "Blitzpartie erkannt",
+   "other": "Blitzpartien erkannt"
+  },
+  "fr": {
+   "one": "Partie de blitz détectée",
+   "other": "Parties de blitz détectées"
+  }
+ },
+ "storm_runs": {
+  "pt-PT": {
+   "one": "%d ronda",
+   "other": "%d rondas"
+  },
+  "es": {
+   "one": "%d ronda",
+   "other": "%d rondas"
+  },
+  "pt-BR": {
+   "one": "%d rodada",
+   "other": "%d rodadas"
+  },
+  "nl": {
+   "one": "%d run",
+   "other": "%d runs"
+  },
+  "it": {
+   "one": "%d partita",
+   "other": "%d partite"
+  },
+  "de": {
+   "one": "%d Durchlauf",
+   "other": "%d Durchläufe"
+  },
+  "fr": {
+   "one": "%d manche",
+   "other": "%d manches"
+  }
+ },
+ "track_title": {
+  "pt-PT": "Registar esta sessão",
+  "es": "Registrar esta sesión",
+  "pt-BR": "Registrar esta sessão",
+  "nl": "Deze sessie vastleggen",
+  "it": "Registra questa sessione",
+  "de": "Diese Einheit erfassen",
+  "fr": "Enregistrer cette séance"
+ },
+ "track_puzzles_solved": {
+  "pt-PT": "Táticas resolvidas (opcional)",
+  "es": "Problemas resueltos (opcional)",
+  "pt-BR": "Táticas resolvidas (opcional)",
+  "nl": "Opgeloste puzzels (optioneel)",
+  "it": "Problemi risolti (facoltativo)",
+  "de": "Gelöste Taktikaufgaben (optional)",
+  "fr": "Problèmes résolus (facultatif)"
+ },
+ "milestones_see_active": {
+  "pt-PT": "Ver ativos",
+  "es": "Ver activos",
+  "pt-BR": "Ver ativos",
+  "nl": "Actieve tonen",
+  "it": "Mostra attivi",
+  "de": "Aktive anzeigen",
+  "fr": "Voir les actifs"
+ },
+ "milestone_add": {
+  "pt-PT": "Adicionar um marco",
+  "es": "Agregar un hito",
+  "pt-BR": "Adicionar um marco",
+  "nl": "Mijlpaal toevoegen",
+  "it": "Aggiungi un traguardo",
+  "de": "Meilenstein hinzufügen",
+  "fr": "Ajouter un jalon"
+ },
+ "milestones_empty_body": {
+  "pt-PT": "Define um objetivo de longo prazo: uma classificação a atingir, um título do Lichess ou outra coisa em que estejas a trabalhar.",
+  "es": "Fija una meta a largo plazo: una clasificación a alcanzar, un título de Lichess o cualquier otra cosa en la que estés trabajando.",
+  "pt-BR": "Defina uma meta de longo prazo: uma classificação a atingir, um título do Lichess ou qualquer outra coisa em que esteja trabalhando.",
+  "nl": "Stel een doel voor de lange termijn: een rating om te halen, een Lichess-titel of iets anders waar je aan werkt.",
+  "it": "Fissa un obiettivo a lungo termine: un punteggio da raggiungere, un titolo Lichess o qualsiasi altra cosa su cui stai lavorando.",
+  "de": "Setze dir ein langfristiges Ziel: eine Wertungszahl, einen Lichess-Titel oder etwas anderes, woran du arbeitest.",
+  "fr": "Fixe-toi un objectif à long terme : un classement à atteindre, un titre Lichess ou tout ce sur quoi tu travailles."
+ },
+ "milestone_kind_elo": {
+  "pt-PT": "Atingir uma classificação",
+  "es": "Alcanzar una clasificación",
+  "pt-BR": "Atingir uma classificação",
+  "nl": "Een rating halen",
+  "it": "Raggiungere un punteggio",
+  "de": "Eine Wertungszahl erreichen",
+  "fr": "Atteindre un classement"
+ },
+ "milestone_kind_text_body": {
+  "pt-PT": "Concluído à mão",
+  "es": "Se completa a mano",
+  "pt-BR": "Concluído manualmente",
+  "nl": "Zelf afvinken",
+  "it": "Si completa a mano",
+  "de": "Wird von Hand abgehakt",
+  "fr": "Validé à la main"
+ },
+ "milestone_target_rating": {
+  "pt-PT": "Classificação a atingir",
+  "es": "Clasificación objetivo",
+  "pt-BR": "Classificação a atingir",
+  "nl": "Doelrating",
+  "it": "Punteggio obiettivo",
+  "de": "Ziel-Wertungszahl",
+  "fr": "Classement visé"
+ },
+ "milestone_target_title": {
+  "pt-PT": "Objetivo",
+  "es": "Objetivo",
+  "pt-BR": "Objetivo",
+  "nl": "Doel",
+  "it": "Obiettivo",
+  "de": "Ziel",
+  "fr": "Objectif"
+ },
+ "milestone_goal": {
+  "pt-PT": "O teu objetivo",
+  "es": "Tu meta",
+  "pt-BR": "Sua meta",
+  "nl": "Je doel",
+  "it": "Il tuo obiettivo",
+  "de": "Dein Ziel",
+  "fr": "Ton objectif"
+ },
+ "suggest_time_per_week": {
+  "pt-PT": "Tempo por semana",
+  "es": "Tiempo por semana",
+  "pt-BR": "Tempo por semana",
+  "nl": "Tijd per week",
+  "it": "Tempo a settimana",
+  "de": "Zeit pro Woche",
+  "fr": "Temps par semaine"
+ },
+ "suggest_less_time": {
+  "pt-PT": "Menos tempo",
+  "es": "Menos tiempo",
+  "pt-BR": "Menos tempo",
+  "nl": "Minder tijd",
+  "it": "Meno tempo",
+  "de": "Weniger Zeit",
+  "fr": "Moins de temps"
+ },
+ "suggest_more_time": {
+  "pt-PT": "Mais tempo",
+  "es": "Más tiempo",
+  "pt-BR": "Mais tempo",
+  "nl": "Meer tijd",
+  "it": "Più tempo",
+  "de": "Mehr Zeit",
+  "fr": "Plus de temps"
+ },
+ "suggest_focus": {
+  "pt-PT": "Em que queres trabalhar?",
+  "es": "¿En qué quieres trabajar?",
+  "pt-BR": "No que você quer trabalhar?",
+  "nl": "Waar wil je aan werken?",
+  "it": "Su cosa vuoi lavorare?",
+  "de": "Woran willst du arbeiten?",
+  "fr": "Sur quoi veux-tu travailler ?"
+ },
+ "suggest_rating": {
+  "pt-PT": "A tua classificação (opcional)",
+  "es": "Tu clasificación (opcional)",
+  "pt-BR": "Sua classificação (opcional)",
+  "nl": "Je rating (optioneel)",
+  "it": "Il tuo punteggio (facoltativo)",
+  "de": "Deine Wertungszahl (optional)",
+  "fr": "Ton classement (facultatif)"
+ },
+ "suggest_change": {
+  "pt-PT": "Mudar respostas",
+  "es": "Cambiar respuestas",
+  "pt-BR": "Mudar respostas",
+  "nl": "Antwoorden aanpassen",
+  "it": "Cambia risposte",
+  "de": "Antworten ändern",
+  "fr": "Modifier mes réponses"
+ },
+ "suggest_partner": {
+  "pt-PT": "Do nosso parceiro ChessMood",
+  "es": "De nuestro socio ChessMood",
+  "pt-BR": "Do nosso parceiro ChessMood",
+  "nl": "Van onze partner ChessMood",
+  "it": "Dal nostro partner ChessMood",
+  "de": "Von unserem Partner ChessMood",
+  "fr": "De notre partenaire ChessMood"
+ },
+ "suggest_view_course": {
+  "pt-PT": "Ver na ChessMood",
+  "es": "Ver en ChessMood",
+  "pt-BR": "Ver na ChessMood",
+  "nl": "Bekijken op ChessMood",
+  "it": "Vedi su ChessMood",
+  "de": "Auf ChessMood ansehen",
+  "fr": "Voir sur ChessMood"
+ },
+ "suggest_course_weeks": {
+  "pt-PT": {
+   "one": "Cerca de %d semana a este ritmo",
+   "other": "Cerca de %d semanas a este ritmo"
+  },
+  "es": {
+   "one": "Aproximadamente %d semana a este ritmo",
+   "other": "Unas %d semanas a este ritmo"
+  },
+  "pt-BR": {
+   "one": "Cerca de %d semana neste ritmo",
+   "other": "Cerca de %d semanas neste ritmo"
+  },
+  "nl": {
+   "one": "Ongeveer %d week in dit tempo",
+   "other": "Ongeveer %d weken in dit tempo"
+  },
+  "it": {
+   "one": "Circa %d settimana a questo ritmo",
+   "other": "Circa %d settimane a questo ritmo"
+  },
+  "de": {
+   "one": "Etwa %d Woche in diesem Tempo",
+   "other": "Etwa %d Wochen in diesem Tempo"
+  },
+  "fr": {
+   "one": "Environ %d semaine à ce rythme",
+   "other": "Environ %d semaines à ce rythme"
+  }
+ },
+ "goals_done": {
+  "pt-PT": {
+   "one": "%1$d/%2$d objetivo",
+   "other": "%1$d/%2$d objetivos"
+  },
+  "es": {
+   "one": "%1$d/%2$d objetivo",
+   "other": "%1$d/%2$d objetivos"
+  },
+  "pt-BR": {
+   "one": "%1$d/%2$d objetivo",
+   "other": "%1$d/%2$d objetivos"
+  },
+  "nl": {
+   "one": "%1$d/%2$d doel",
+   "other": "%1$d/%2$d doelen"
+  },
+  "it": {
+   "one": "%1$d/%2$d obiettivo",
+   "other": "%1$d/%2$d obiettivi"
+  },
+  "de": {
+   "one": "%1$d/%2$d Ziel",
+   "other": "%1$d/%2$d Ziele"
+  },
+  "fr": {
+   "one": "%1$d/%2$d objectif",
+   "other": "%1$d/%2$d objectifs"
+  }
+ },
+ "review_goals_completed": {
+  "pt-PT": {
+   "one": "Completaste %1$d de %2$d objetivo semanal",
+   "other": "Completaste %1$d de %2$d objetivos semanais"
+  },
+  "es": {
+   "one": "Completaste %1$d de %2$d objetivo semanal",
+   "other": "Completaste %1$d de %2$d objetivos semanales"
+  },
+  "pt-BR": {
+   "one": "Você completou %1$d de %2$d objetivo semanal",
+   "other": "Você completou %1$d de %2$d objetivos semanais"
+  },
+  "nl": {
+   "one": "Je hebt %1$d van %2$d weekdoel voltooid",
+   "other": "Je hebt %1$d van %2$d weekdoelen voltooid"
+  },
+  "it": {
+   "one": "Hai completato %1$d obiettivo settimanale su %2$d",
+   "other": "Hai completato %1$d obiettivi settimanali su %2$d"
+  },
+  "de": {
+   "one": "Du hast %1$d von %2$d Wochenziel erreicht",
+   "other": "Du hast %1$d von %2$d Wochenzielen erreicht"
+  },
+  "fr": {
+   "one": "Tu as atteint %1$d objectif de la semaine sur %2$d",
+   "other": "Tu as atteint %1$d objectifs de la semaine sur %2$d"
+  }
+ }
+}

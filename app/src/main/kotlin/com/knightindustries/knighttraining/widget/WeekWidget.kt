@@ -80,7 +80,7 @@ internal fun WeekWidgetContent(context: Context, surface: WeeklySurface) {
         }
         Text(title, style = TextStyle(color = GlanceTheme.colors.onBackground, fontWeight = FontWeight.Medium, fontSize = 15.sp), maxLines = 1)
         val summary = buildList {
-            plan?.let { add(context.getString(R.string.goals_done, it.completedGoalCount, it.goalCount)) }
+            plan?.let { add(context.resources.getQuantityString(R.plurals.goals_done, it.goalCount, it.completedGoalCount, it.goalCount)) }
             add(context.getString(R.string.duration_minutes, surface.weeklyTrackedMinutes))
         }.joinToString(" · ")
         Text(summary, style = TextStyle(color = GlanceTheme.colors.onSurfaceVariant, fontSize = 12.sp))

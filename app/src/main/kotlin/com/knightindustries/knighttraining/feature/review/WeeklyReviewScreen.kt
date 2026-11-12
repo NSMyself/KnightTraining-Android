@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -127,7 +128,7 @@ fun WeeklyReviewScreen(viewModel: WeeklyReviewViewModel, onDone: () -> Unit) {
             Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
                 Column(Modifier.padding(16.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(weekRange(plan.weekStart, context.weekEnd), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(stringResource(R.string.review_goals_completed, plan.completedGoalCount, plan.goalCount), style = MaterialTheme.typography.titleMedium)
+                    Text(pluralStringResource(R.plurals.review_goals_completed, plan.goalCount, plan.completedGoalCount, plan.goalCount), style = MaterialTheme.typography.titleMedium)
                     LinearProgressIndicator(progress = { (plan.completionPercentage / 100).toFloat() }, modifier = Modifier.fillMaxWidth())
                     Text(stringResource(R.string.review_time_invested, durationText(context.timeInvestedSeconds)), style = MaterialTheme.typography.bodyMedium)
                 }

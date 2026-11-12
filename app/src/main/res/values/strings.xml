@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Knight Training</string>
+    <string name="app_name" translatable="false">Knight Training</string>
 
     <!-- Tabs -->
     <string name="tab_home">Home</string>
     <string name="tab_training">Training</string>
     <string name="tab_resources">Resources</string>
     <string name="tab_profile">Profile</string>
-    <string name="coming_soon">Coming soon</string>
-    <string name="resources_coming_soon">Your library of books, courses and studies arrives in a later update.</string>
-    <string name="profile_coming_soon">Lichess sync and your rating history arrive in a later update.</string>
 
     <!-- Activity types (the chess vocabulary; keep in step with iOS) -->
     <string name="activity_puzzles">Puzzles</string>
@@ -30,12 +27,12 @@
         <item quantity="one">%d game</item>
         <item quantity="other">%d games</item>
     </plurals>
-    <string name="duration_hours_minutes">%1$d h %2$d min</string>
-    <string name="duration_hours">%d h</string>
-    <string name="duration_minutes">%d min</string>
-    <string name="progress_percent">%d%%</string>
-    <string name="progress_count">%1$d/%2$d</string>
-    <string name="progress_minutes">%1$d/%2$d min</string>
+    <string name="duration_hours_minutes" translatable="false">%1$d h %2$d min</string>
+    <string name="duration_hours" translatable="false">%d h</string>
+    <string name="duration_minutes" translatable="false">%d min</string>
+    <string name="progress_percent" translatable="false">%d%%</string>
+    <string name="progress_count" translatable="false">%1$d/%2$d</string>
+    <string name="progress_minutes" translatable="false">%1$d/%2$d min</string>
 
     <!-- Plans -->
     <string name="untitled_plan">Untitled training plan</string>
@@ -76,7 +73,6 @@
     <string name="time_control_blitz">Blitz</string>
     <string name="time_control_rapid">Rapid</string>
     <string name="time_control_classical">Classical</string>
-    <string name="time_control_daily">Daily</string>
     <string name="classical_tip">Slower time controls leave room to think things through. That\'s where you actually improve.</string>
 
     <!-- Presets (iOS PlanTemplatePreset.all, written 2026-11-03, awaiting a coach's review) -->
@@ -115,13 +111,16 @@
     <string name="greeting_morning">Good morning</string>
     <string name="greeting_afternoon">Good afternoon</string>
     <string name="greeting_evening">Good evening</string>
-    <string name="week_range">%1$s – %2$s</string>
+    <string name="week_range" translatable="false">%1$s – %2$s</string>
     <string name="no_plan_title">No training plan yet</string>
     <string name="no_plan_body">Build a weekly plan around what you\'re studying. It takes a minute.</string>
     <string name="plan_week_title">Plan this week</string>
     <string name="plan_week_body">Commit to a plan to start tracking this week.</string>
     <string name="widget_description">This week\'s goals at a glance.</string>
-    <string name="goals_done">%1$d/%2$d goals</string>
+    <plurals name="goals_done">
+        <item quantity="one">%1$d/%2$d goal</item>
+        <item quantity="other">%1$d/%2$d goals</item>
+    </plurals>
     <string name="goal_done">Done</string>
     <string name="this_week_activity">This week\'s activity</string>
     <string name="no_activity_this_week">No activities logged this week</string>
@@ -162,7 +161,6 @@
     <string name="skip">Skip</string>
     <string name="continue_action">Continue</string>
     <string name="session_discarded">Too short to keep: session discarded.</string>
-    <string name="leave_session_hint">The session keeps running. Find it on Home or in the notification.</string>
 
     <!-- Review -->
     <string name="session_complete">Session complete</string>
@@ -174,7 +172,6 @@
     <string name="how_many_completed">How many did you complete?</string>
     <string name="counts_toward">Counts toward</string>
     <string name="not_counted">Don\'t count toward a goal</string>
-    <string name="choose_goal">Choose a goal</string>
     <string name="fits_more_than_one">This session fits more than one goal.</string>
     <string name="coaching_topics">What did the lesson cover?</string>
     <string name="topic_openings">Openings</string>
@@ -193,14 +190,12 @@
     <string name="no_weeks_yet">No weeks logged yet</string>
     <string name="no_plans_yet">No training plans yet</string>
     <string name="current_plan">This week</string>
-    <string name="week_percent">%d%% complete</string>
 
     <!-- Week log -->
     <string name="training_log">Training log</string>
     <string name="add_session">Add session</string>
     <string name="log_past_session">Log a past session</string>
     <string name="log_past_session_body">Add training you forgot to record this week.</string>
-    <string name="session_details">Session details</string>
     <string name="session_date">Day</string>
     <string name="session_time">Started at</string>
     <string name="notes">Notes</string>
@@ -246,7 +241,10 @@
 
     <!-- Weekly review -->
     <string name="review_title">Week %d review</string>
-    <string name="review_goals_completed">You completed %1$d of %2$d weekly goals</string>
+    <plurals name="review_goals_completed">
+        <item quantity="one">You completed %1$d of %2$d weekly goal</item>
+        <item quantity="other">You completed %1$d of %2$d weekly goals</item>
+    </plurals>
     <string name="review_time_invested">Time invested: %s</string>
     <string name="review_last_week">With last week\'s comments</string>
     <string name="review_notes">This week\'s notes</string>
@@ -262,7 +260,6 @@
     <string name="intent_push_harder">Push harder</string>
     <string name="intent_change_focus">Change focus</string>
     <string name="reflect_on_week">Reflect on this week</string>
-    <string name="edit_reflection">Edit reflection</string>
 
     <!-- Resources -->
     <string name="kind_book">Book</string>
@@ -296,7 +293,6 @@
     <string name="resource_edition">Edition</string>
     <string name="resource_publisher">Publisher</string>
     <string name="resource_owned">I own this</string>
-    <string name="resource_cover">Cover</string>
     <string name="choose_photo">Choose a photo</string>
     <string name="remove_cover">Remove cover</string>
     <string name="search_catalog">Search courses</string>
@@ -313,7 +309,6 @@
     <string name="mark_unread">Mark as unread</string>
     <string name="start_again">Start again</string>
     <string name="read_article">Read article</string>
-    <string name="open_link">Open link</string>
     <string name="completion_history">History</string>
     <string name="finished_on">Finished %s</string>
     <string name="finish_title">Finished!</string>
@@ -382,7 +377,7 @@
     <string name="week_streak_label">%d-week streak</string>
 
     <!-- Lichess -->
-    <string name="lichess">Lichess</string>
+    <string name="lichess" translatable="false">Lichess</string>
     <string name="lichess_connect_body">Track your games and puzzles automatically and follow your ratings.</string>
     <string name="lichess_reconnect_body">Lichess signed you out. Connect again to keep syncing.</string>
     <string name="lichess_connect">Connect</string>
@@ -460,7 +455,7 @@
     <string name="suggest_focus">What do you want to work on?</string>
     <string name="suggest_rating">Your rating (optional)</string>
     <string name="suggest_rating_hint">e.g. 1450</string>
-    <string name="suggest_site_chesscom">Chess.com</string>
+    <string name="suggest_site_chesscom" translatable="false">Chess.com</string>
     <string name="suggest_go">Suggest my plan</string>
     <string name="suggest_result_title">Here\'s your plan</string>
     <string name="suggest_budget">About %s a week</string>
