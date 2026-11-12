@@ -460,4 +460,40 @@
     <string name="home_reorder_tile">Reordenar %s</string>
     <string name="last_week_none">Não planeaste a semana passada.</string>
     <string name="last_week_focus">Foco</string>
+    <string name="share_week_title">Partilhar a minha semana</string>
+    <string name="share_week_body">Envia ao teu treinador ou parceiro de treino um resumo da semana.</string>
+    <string name="share_week_label">A minha semana de treino</string>
+    <string name="share_include_notes">Incluir notas das sessões</string>
+    <string name="share_include_reflection">Incluir reflexão da semana</string>
+    <string name="share_goals">Objetivos</string>
+    <string name="share_resources_studied">Recursos estudados</string>
+    <string name="share_notes">Notas</string>
+    <string name="share_reflection">Reflexão</string>
+    <string name="share_went_well">O que correu bem</string>
+    <string name="share_held_back">O que te travou</string>
+    <string name="share_wish">O que gostarias de ter feito</string>
+    <string name="share_next_week">Próxima semana</string>
+    <string name="share_total_goals">objetivos</string>
+    <string name="share_total_trained">treinados</string>
+    <plurals name="share_sessions" tools:ignore="ImpliedQuantity">
+        <item quantity="one">sessão</item>
+        <item quantity="other">sessões</item>
+        <item quantity="many">sessões</item>
+    </plurals>
+    <string name="share_library_title">Partilhar a minha biblioteca</string>
+    <string name="share_library_body">Mostra ao teu treinador ou parceiro de treino o que estás a estudar.</string>
+    <string name="share_library_label">A minha biblioteca de xadrez</string>
+    <string name="share_library_heading">O que estou a estudar</string>
+    <string name="share_up_next">A seguir</string>
+    <string name="share_total_in_progress">em curso</string>
+    <string name="share_total_finished">concluídos</string>
+    <string name="share_total_invested">tempo investido</string>
+    <plurals name="share_and_more">
+        <item quantity="one">e mais %d</item>
+        <item quantity="other">e mais %d</item>
+        <item quantity="many">e mais %d</item>
+    </plurals>
+    <string name="share_include_up_next">Incluir recursos por começar</string>
+    <string name="share_studies_note">Os estudos do Lichess aparecem assim que os começares.</string>
+    <string name="share_failed">Não foi possível carregar.</string>
 </resources>

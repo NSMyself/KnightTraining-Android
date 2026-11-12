@@ -460,4 +460,40 @@
     <string name="home_reorder_tile">Riordina %s</string>
     <string name="last_week_none">La settimana scorsa non l\'hai pianificata.</string>
     <string name="last_week_focus">Focus</string>
+    <string name="share_week_title">Condividi la mia settimana</string>
+    <string name="share_week_body">Invia al tuo coach o compagno di allenamento un riepilogo della settimana.</string>
+    <string name="share_week_label">La mia settimana di allenamento</string>
+    <string name="share_include_notes">Includi le note delle sessioni</string>
+    <string name="share_include_reflection">Includi le riflessioni sulla settimana</string>
+    <string name="share_goals">Obiettivi</string>
+    <string name="share_resources_studied">Risorse studiate</string>
+    <string name="share_notes">Note</string>
+    <string name="share_reflection">Riflessioni</string>
+    <string name="share_went_well">Cosa è andato bene</string>
+    <string name="share_held_back">Cosa ti ha frenato</string>
+    <string name="share_wish">Cosa avresti voluto fare</string>
+    <string name="share_next_week">Prossima settimana</string>
+    <string name="share_total_goals">obiettivi</string>
+    <string name="share_total_trained">di allenamento</string>
+    <plurals name="share_sessions" tools:ignore="ImpliedQuantity">
+        <item quantity="one">sessione</item>
+        <item quantity="other">sessioni</item>
+        <item quantity="many">sessioni</item>
+    </plurals>
+    <string name="share_library_title">Condividi la mia libreria</string>
+    <string name="share_library_body">Mostra al tuo coach o compagno di allenamento cosa stai studiando.</string>
+    <string name="share_library_label">La mia libreria di scacchi</string>
+    <string name="share_library_heading">Cosa sto studiando</string>
+    <string name="share_up_next">Prossimi</string>
+    <string name="share_total_in_progress">in corso</string>
+    <string name="share_total_finished">finiti</string>
+    <string name="share_total_invested">tempo investito</string>
+    <plurals name="share_and_more">
+        <item quantity="one">e altri %d</item>
+        <item quantity="other">e altri %d</item>
+        <item quantity="many">e altri %d</item>
+    </plurals>
+    <string name="share_include_up_next">Includi le risorse da iniziare</string>
+    <string name="share_studies_note">Gli studi Lichess compaiono quando li hai iniziati.</string>
+    <string name="share_failed">Impossibile caricare.</string>
 </resources>

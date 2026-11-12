@@ -447,4 +447,38 @@
     <string name="home_reorder_tile">%s verschieben</string>
     <string name="last_week_none">Letzte Woche hast du nicht geplant.</string>
     <string name="last_week_focus">Schwerpunkt</string>
+    <string name="share_week_title">Meine Woche teilen</string>
+    <string name="share_week_body">Schick deinem Trainer oder Trainingspartner eine Zusammenfassung der Woche.</string>
+    <string name="share_week_label">Meine Trainingswoche</string>
+    <string name="share_include_notes">Notizen der Einheiten mitschicken</string>
+    <string name="share_include_reflection">Wochenrückblick mitschicken</string>
+    <string name="share_goals">Ziele</string>
+    <string name="share_resources_studied">Studierte Ressourcen</string>
+    <string name="share_notes">Notizen</string>
+    <string name="share_reflection">Rückblick</string>
+    <string name="share_went_well">Was gut lief</string>
+    <string name="share_held_back">Was dich gebremst hat</string>
+    <string name="share_wish">Was du gern getan hättest</string>
+    <string name="share_next_week">Nächste Woche</string>
+    <string name="share_total_goals">Ziele</string>
+    <string name="share_total_trained">trainiert</string>
+    <plurals name="share_sessions" tools:ignore="ImpliedQuantity">
+        <item quantity="one">Einheit</item>
+        <item quantity="other">Einheiten</item>
+    </plurals>
+    <string name="share_library_title">Meine Bibliothek teilen</string>
+    <string name="share_library_body">Zeig deinem Trainer oder Trainingspartner, woran du gerade arbeitest.</string>
+    <string name="share_library_label">Meine Schachbibliothek</string>
+    <string name="share_library_heading">Woran ich arbeite</string>
+    <string name="share_up_next">Als Nächstes</string>
+    <string name="share_total_in_progress">in Arbeit</string>
+    <string name="share_total_finished">beendet</string>
+    <string name="share_total_invested">investiert</string>
+    <plurals name="share_and_more">
+        <item quantity="one">und %d weitere</item>
+        <item quantity="other">und %d weitere</item>
+    </plurals>
+    <string name="share_include_up_next">Noch nicht begonnene Ressourcen mitschicken</string>
+    <string name="share_studies_note">Lichess-Studien erscheinen, sobald du sie begonnen hast.</string>
+    <string name="share_failed">Konnte nicht geladen werden.</string>
 </resources>

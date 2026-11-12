@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.knightindustries.knighttraining.R
+import com.knightindustries.knighttraining.feature.share.ShareWeekSheet
 import com.knightindustries.knighttraining.core.model.Activity
 import com.knightindustries.knighttraining.core.model.ActivityType
 import com.knightindustries.knighttraining.feature.home.weekRange
@@ -60,12 +62,19 @@ fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit, onReflect: (U
     val state by viewModel.state.collectAsStateWithLifecycle()
     var editing by remember { mutableStateOf<Activity?>(null) }
     var adding by rememberSaveable { mutableStateOf(false) }
+    var sharing by rememberSaveable { mutableStateOf(false) }
+    state?.plan?.takeIf { sharing }?.let { plan -> ShareWeekSheet(plan, onDismiss = { sharing = false }) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(state?.let { weekRange(it.weekStart, it.weekEnd) } ?: stringResource(R.string.training_log)) },
                 navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null) } },
+                actions = {
+                    if (state?.plan != null) {
+                        IconButton(onClick = { sharing = true }) { Icon(Icons.Rounded.Share, contentDescription = stringResource(R.string.share_week_title)) }
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )
         },

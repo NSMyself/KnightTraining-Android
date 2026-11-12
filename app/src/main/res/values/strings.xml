@@ -504,4 +504,40 @@
     <string name="home_reorder_tile">Reorder %s</string>
     <string name="last_week_none">You didn\'t plan last week.</string>
     <string name="last_week_focus">Focus</string>
+
+    <!-- Share cards -->
+    <string name="share_week_title">Share my week</string>
+    <string name="share_week_body">Send your coach or training partner a summary of the week.</string>
+    <string name="share_week_label">My training week</string>
+    <string name="share_include_notes">Include session notes</string>
+    <string name="share_include_reflection">Include weekly reflection</string>
+    <string name="share_goals">Goals</string>
+    <string name="share_resources_studied">Resources studied</string>
+    <string name="share_notes">Notes</string>
+    <string name="share_reflection">Reflection</string>
+    <string name="share_went_well">What went well</string>
+    <string name="share_held_back">What held them back</string>
+    <string name="share_wish">What they wish they\'d done</string>
+    <string name="share_next_week">Next week</string>
+    <string name="share_total_goals">goals</string>
+    <string name="share_total_trained">trained</string>
+    <plurals name="share_sessions">
+        <item quantity="one">session</item>
+        <item quantity="other">sessions</item>
+    </plurals>
+    <string name="share_library_title">Share my library</string>
+    <string name="share_library_body">Show your coach or training partner what you\'re studying.</string>
+    <string name="share_library_label">My chess library</string>
+    <string name="share_library_heading">What I\'m studying</string>
+    <string name="share_up_next">Up next</string>
+    <string name="share_total_in_progress">in progress</string>
+    <string name="share_total_finished">finished</string>
+    <string name="share_total_invested">invested</string>
+    <plurals name="share_and_more">
+        <item quantity="one">and %d more</item>
+        <item quantity="other">and %d more</item>
+    </plurals>
+    <string name="share_include_up_next">Include resources not started yet</string>
+    <string name="share_studies_note">Lichess studies appear once you\'ve started them.</string>
+    <string name="share_failed">Couldn\'t load this.</string>
 </resources>

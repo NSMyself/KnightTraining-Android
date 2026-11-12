@@ -88,4 +88,10 @@ interface LibraryDao {
 
     @Query("SELECT * FROM catalog_course WHERE platform = :platform AND externalId = :externalId")
     suspend fun course(platform: String, externalId: String): CatalogCourseEntity?
+
+    /** Completed time per resource, for the library share card. */
+    @Query("SELECT resourceId, SUM(duration) AS seconds FROM activity WHERE resourceId IS NOT NULL AND endedAt IS NOT NULL GROUP BY resourceId")
+    suspend fun secondsByResource(): List<ResourceSeconds>
 }
+
+data class ResourceSeconds(val resourceId: java.util.UUID, val seconds: Int)

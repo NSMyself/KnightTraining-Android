@@ -18,6 +18,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -50,6 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.R
+import com.knightindustries.knighttraining.feature.share.ShareLibrarySheet
 import com.knightindustries.knighttraining.core.model.Resource
 import com.knightindustries.knighttraining.core.model.ResourceKind
 import com.knightindustries.knighttraining.core.store.observeAllResources
@@ -90,6 +92,8 @@ fun ResourcesScreen(viewModel: ResourcesViewModel, onOpen: (UUID) -> Unit, onAdd
     var kindFilter by rememberSaveable { mutableStateOf<String?>(null) }
     var statusFilter by rememberSaveable { mutableStateOf<ResourceStatus?>(null) }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    var sharing by rememberSaveable { mutableStateOf(false) }
+    if (sharing) ShareLibrarySheet(onDismiss = { sharing = false })
 
     val all = resources.orEmpty()
     val visible = all.filter { resource ->
@@ -104,6 +108,9 @@ fun ResourcesScreen(viewModel: ResourcesViewModel, onOpen: (UUID) -> Unit, onAdd
             LargeTopAppBar(
                 title = { Text(stringResource(R.string.tab_resources)) },
                 actions = {
+                    if (!resources.isNullOrEmpty()) {
+                        IconButton(onClick = { sharing = true }) { Icon(Icons.Rounded.Share, contentDescription = stringResource(R.string.share_library_title)) }
+                    }
                     IconButton(onClick = { searching = !searching; if (!searching) query = "" }) {
                         Icon(if (searching) Icons.Rounded.Close else Icons.Rounded.Search, contentDescription = stringResource(R.string.search_resources))
                     }

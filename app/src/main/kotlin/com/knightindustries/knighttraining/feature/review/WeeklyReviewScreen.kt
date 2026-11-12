@@ -180,7 +180,7 @@ private fun ReflectionField(value: String, label: Int, hint: Int, onChange: (Str
     )
 }
 
-private fun intentName(code: String): Int = when (code) {
+internal fun intentName(code: String): Int = when (code) {
     WeeklyReview.NextWeekIntent.KEEP_SAME -> R.string.intent_keep_same
     WeeklyReview.NextWeekIntent.MAKE_EASIER -> R.string.intent_make_easier
     WeeklyReview.NextWeekIntent.PUSH_HARDER -> R.string.intent_push_harder

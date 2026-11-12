@@ -1774,5 +1774,83 @@
   "it": "Settimana scorsa",
   "de": "Letzte Woche",
   "fr": "Semaine dernière"
+ },
+ "share_total_goals": {
+  "pt-PT": "objetivos",
+  "es": "objetivos",
+  "pt-BR": "objetivos",
+  "nl": "doelen",
+  "it": "obiettivi",
+  "de": "Ziele",
+  "fr": "objectifs"
+ },
+ "share_total_trained": {
+  "pt-PT": "treinados",
+  "es": "entrenados",
+  "pt-BR": "treinados",
+  "nl": "getraind",
+  "it": "di allenamento",
+  "de": "trainiert",
+  "fr": "d'entraînement"
+ },
+ "share_sessions": {
+  "pt-PT": {
+   "one": "sessão",
+   "other": "sessões"
+  },
+  "es": {
+   "one": "sesión",
+   "other": "sesiones"
+  },
+  "pt-BR": {
+   "one": "sessão",
+   "other": "sessões"
+  },
+  "nl": {
+   "one": "sessie",
+   "other": "sessies"
+  },
+  "it": {
+   "one": "sessione",
+   "other": "sessioni"
+  },
+  "de": {
+   "one": "Einheit",
+   "other": "Einheiten"
+  },
+  "fr": {
+   "one": "séance",
+   "other": "séances"
+  }
+ },
+ "share_and_more": {
+  "pt-PT": {
+   "one": "e mais %d",
+   "other": "e mais %d"
+  },
+  "es": {
+   "one": "y %d más",
+   "other": "y %d más"
+  },
+  "pt-BR": {
+   "one": "e mais %d",
+   "other": "e mais %d"
+  },
+  "nl": {
+   "one": "en nog %d",
+   "other": "en nog %d"
+  },
+  "it": {
+   "one": "e altri %d",
+   "other": "e altri %d"
+  },
+  "de": {
+   "one": "und %d weitere",
+   "other": "und %d weitere"
+  },
+  "fr": {
+   "one": "et %d de plus",
+   "other": "et %d de plus"
+  }
  }
 }

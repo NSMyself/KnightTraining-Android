@@ -191,4 +191,9 @@ maintainer confirms how interactions *feel* on a device themselves.
      add/remove, reset), opened from Home's top bar and Profile. iOS's in-place jiggle mode isn't
      ported: Android has no such convention. Pinned by `HomeLayoutTest` and `EditHomeTest`;
      drag-reordering needs a device check.
-   - Not yet: the weekly coach, share cards.
+   - **Share cards, built 2026-11-12.** "Share my week" (week log's top bar) and "Share my library"
+     (Resources' top bar): `WeekShareSummary`/`LibraryShareSummary` in Core (`ShareSummaryTest`),
+     the cards in `feature/share/`, rendered through a graphics layer to a PNG in
+     `cache/shares/` and handed to the system share sheet via a `FileProvider`. Pinned by
+     `ShareCardsTest`.
+   - Not yet: the weekly coach.

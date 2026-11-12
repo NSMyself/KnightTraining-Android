@@ -447,4 +447,38 @@
     <string name="home_reorder_tile">%s verplaatsen</string>
     <string name="last_week_none">Je hebt vorige week niet gepland.</string>
     <string name="last_week_focus">Focus</string>
+    <string name="share_week_title">Deel mijn week</string>
+    <string name="share_week_body">Stuur je trainer of trainingsmaatje een overzicht van de week.</string>
+    <string name="share_week_label">Mijn trainingsweek</string>
+    <string name="share_include_notes">Sessienotities meesturen</string>
+    <string name="share_include_reflection">Weekreflectie meesturen</string>
+    <string name="share_goals">Doelen</string>
+    <string name="share_resources_studied">Bestudeerde bronnen</string>
+    <string name="share_notes">Notities</string>
+    <string name="share_reflection">Reflectie</string>
+    <string name="share_went_well">Wat ging goed</string>
+    <string name="share_held_back">Wat hield je tegen</string>
+    <string name="share_wish">Wat had je anders willen doen</string>
+    <string name="share_next_week">Volgende week</string>
+    <string name="share_total_goals">doelen</string>
+    <string name="share_total_trained">getraind</string>
+    <plurals name="share_sessions" tools:ignore="ImpliedQuantity">
+        <item quantity="one">sessie</item>
+        <item quantity="other">sessies</item>
+    </plurals>
+    <string name="share_library_title">Deel mijn bibliotheek</string>
+    <string name="share_library_body">Laat je trainer of trainingsmaatje zien wat je aan het bestuderen bent.</string>
+    <string name="share_library_label">Mijn schaakbibliotheek</string>
+    <string name="share_library_heading">Wat ik bestudeer</string>
+    <string name="share_up_next">Hierna</string>
+    <string name="share_total_in_progress">bezig</string>
+    <string name="share_total_finished">afgerond</string>
+    <string name="share_total_invested">geïnvesteerd</string>
+    <plurals name="share_and_more">
+        <item quantity="one">en nog %d</item>
+        <item quantity="other">en nog %d</item>
+    </plurals>
+    <string name="share_include_up_next">Nog niet begonnen bronnen meesturen</string>
+    <string name="share_studies_note">Lichess-studies verschijnen zodra je eraan begonnen bent.</string>
+    <string name="share_failed">Kon niet worden geladen.</string>
 </resources>
