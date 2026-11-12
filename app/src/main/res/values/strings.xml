@@ -380,4 +380,20 @@
         <item quantity="other">You hit all %d goals you committed to.</item>
     </plurals>
     <string name="week_streak_label">%d-week streak</string>
+
+    <!-- Lichess -->
+    <string name="lichess">Lichess</string>
+    <string name="lichess_connect_body">Track your games and puzzles automatically and follow your ratings.</string>
+    <string name="lichess_reconnect_body">Lichess signed you out. Connect again to keep syncing.</string>
+    <string name="lichess_connect">Connect</string>
+    <string name="lichess_connecting">Connecting…</string>
+    <string name="lichess_failed">Couldn\'t connect to Lichess. Try again.</string>
+    <string name="lichess_disconnect">Disconnect</string>
+    <string name="lichess_disconnect_title">Disconnect Lichess?</string>
+    <string name="lichess_disconnect_body">Your logged training stays. Your rating history and any pending Lichess offers are removed from this device.</string>
+    <string name="rating_bullet">Bullet</string>
+    <string name="rating_blitz">Blitz</string>
+    <string name="rating_rapid">Rapid</string>
+    <string name="rating_classical">Classical</string>
+    <string name="rating_puzzle">Puzzle</string>
 </resources>

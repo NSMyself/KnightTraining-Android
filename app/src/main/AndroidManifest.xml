@@ -38,6 +38,21 @@
             </intent-filter>
         </receiver>
 
+        <!-- Lichess sign-in's redirect (the same URI as iOS). -->
+        <activity
+            android:name=".lichess.LichessCallbackActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.knightindustries.knighttraining" android:host="callback" />
+            </intent-filter>
+        </activity>
+
         <!-- The Home Screen widget: this week at a glance. -->
         <receiver
             android:name=".widget.WeekWidgetReceiver"

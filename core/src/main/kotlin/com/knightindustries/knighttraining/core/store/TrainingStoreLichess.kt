@@ -172,3 +172,14 @@ suspend fun TrainingStore.acceptLichessActivityBatch(
     dao.setBatchStatus(batch.id, LichessActivityBatch.ACCEPTED, activityId)
     return true
 }
+
+// MARK: - Profile
+
+/** The connected account and its latest rating per type, for Profile. */
+data class LichessProfile(val account: Account, val ratings: Map<String, Int>)
+
+@OptIn(ExperimentalCoroutinesApi::class)
+fun TrainingStore.observeLichessProfile(): Flow<LichessProfile?> =
+    db.invalidationTracker.createFlow("account", "elo_snapshot")
+        .mapLatest { read { db.lichessDao().account(Account.LICHESS)?.toDomain()?.let { LichessProfile(it, latestRatingsInTransaction()) } } }
+        .distinctUntilChanged()

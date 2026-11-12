@@ -32,6 +32,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        AppContainer.from(application).syncLichessSoon()
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         pendingAction.value = intent.action

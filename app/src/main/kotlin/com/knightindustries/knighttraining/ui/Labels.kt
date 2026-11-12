@@ -13,13 +13,14 @@ import androidx.compose.material.icons.automirrored.rounded.Article
 import androidx.compose.material.icons.automirrored.rounded.MenuBook
 import androidx.compose.material.icons.rounded.GridOn
 import androidx.compose.material.icons.rounded.PlayCircle
-import com.knightindustries.knighttraining.core.model.ResourceKind
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.knightindustries.knighttraining.R
 import com.knightindustries.knighttraining.core.model.ActivityType
+import com.knightindustries.knighttraining.core.model.RatingType
+import com.knightindustries.knighttraining.core.model.ResourceKind
 import com.knightindustries.knighttraining.core.model.TargetType
 import com.knightindustries.knighttraining.core.model.WeeklyGoal
 
@@ -138,3 +139,15 @@ fun clockText(seconds: Int): String {
     val s = seconds % 60
     return if (h > 0) "%d:%02d:%02d".format(h, m, s) else "%02d:%02d".format(m, s)
 }
+
+/** Rating type names; [RatingType] codes never reach the screen. */
+fun ratingTypeNameRes(type: String): Int = when (type) {
+    RatingType.BULLET -> R.string.rating_bullet
+    RatingType.BLITZ -> R.string.rating_blitz
+    RatingType.RAPID -> R.string.rating_rapid
+    RatingType.CLASSICAL -> R.string.rating_classical
+    else -> R.string.rating_puzzle
+}
+
+/** Slowest first, the way a club player ranks them; puzzles last. */
+val ratingTypeOrder = listOf(RatingType.CLASSICAL, RatingType.RAPID, RatingType.BLITZ, RatingType.BULLET, RatingType.PUZZLE)

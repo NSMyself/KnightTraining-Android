@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +32,7 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -50,15 +54,20 @@ import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.BuildConfig
 import com.knightindustries.knighttraining.R
 import com.knightindustries.knighttraining.core.model.ReminderSchedule
+import com.knightindustries.knighttraining.core.store.LichessProfile
 import com.knightindustries.knighttraining.core.store.WeekCompletionTally
 import com.knightindustries.knighttraining.core.store.currentStreak
 import com.knightindustries.knighttraining.core.store.deleteAllUserData
 import com.knightindustries.knighttraining.core.store.finishedResourceCount
 import com.knightindustries.knighttraining.core.store.longestStreak
+import com.knightindustries.knighttraining.core.store.observeLichessProfile
 import com.knightindustries.knighttraining.core.store.totalDuration
 import com.knightindustries.knighttraining.core.store.weekCompletionTally
+import com.knightindustries.knighttraining.lichess.LichessAuth
 import com.knightindustries.knighttraining.reminders.ReminderScheduler
 import com.knightindustries.knighttraining.ui.durationText
+import com.knightindustries.knighttraining.ui.ratingTypeNameRes
+import com.knightindustries.knighttraining.ui.ratingTypeOrder
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -96,6 +105,27 @@ class ProfileViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
+    val lichess: StateFlow<LichessProfile?> = container.store.observeLichessProfile()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+    val lichessSignIn: StateFlow<LichessAuth.State> = container.lichessAuth.signInState
+
+    /** Whether a login is stored; a row without one means Lichess signed the user out. */
+    var lichessSignedIn by mutableStateOf(false)
+        private set
+
+    fun refreshLichess() {
+        viewModelScope.launch { lichessSignedIn = container.lichessCredentials.token() != null }
+    }
+
+    fun connectLichess(context: android.content.Context) = container.lichessAuth.beginSignIn(context)
+
+    fun disconnectLichess() {
+        viewModelScope.launch {
+            container.lichessAuth.signOut()
+            refreshLichess()
+        }
+    }
+
     fun replayIntro() {
         viewModelScope.launch { container.preferences.setOnboardingCompleted(false) }
     }
@@ -109,7 +139,7 @@ class ProfileViewModel(private val container: AppContainer) : ViewModel() {
     }
 }
 
-/** Profile & settings. Lichess and the rating history join this tab in Phase 4. */
+/** Profile & settings: training stats, the Lichess connection, reminders. */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Unit) -> Unit, contentPadding: PaddingValues) {
@@ -117,7 +147,15 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
     val reminders by viewModel.reminders.collectAsStateWithLifecycle()
     var pickingTime by rememberSaveable { mutableStateOf(false) }
     var confirmingDelete by rememberSaveable { mutableStateOf(false) }
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refresh() }
+    val lichess by viewModel.lichess.collectAsStateWithLifecycle()
+    val signIn by viewModel.lichessSignIn.collectAsStateWithLifecycle()
+    var confirmingDisconnect by rememberSaveable { mutableStateOf(false) }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        viewModel.refresh()
+        viewModel.refreshLichess()
+    }
+    // A finished sign-in changes the login without a resume of its own.
+    LaunchedEffect(signIn, lichess?.account?.id) { viewModel.refreshLichess() }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
@@ -144,6 +182,14 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
                     Stat(stringResource(R.string.resources_finished), stats.resourcesFinished.toString(), Modifier.weight(1f))
                 }
             }
+
+            LichessCard(
+                profile = lichess,
+                signedIn = viewModel.lichessSignedIn,
+                signIn = signIn,
+                onConnect = { viewModel.connectLichess(context) },
+                onDisconnect = { confirmingDisconnect = true },
+            )
 
             Text(stringResource(R.string.settings), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
             Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
@@ -226,6 +272,19 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
             dismissButton = { TextButton(onClick = { pickingTime = false }) { Text(stringResource(R.string.cancel)) } },
         )
     }
+    if (confirmingDisconnect) {
+        AlertDialog(
+            onDismissRequest = { confirmingDisconnect = false },
+            title = { Text(stringResource(R.string.lichess_disconnect_title)) },
+            text = { Text(stringResource(R.string.lichess_disconnect_body)) },
+            confirmButton = {
+                TextButton(onClick = { confirmingDisconnect = false; viewModel.disconnectLichess() }) {
+                    Text(stringResource(R.string.lichess_disconnect), color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = { TextButton(onClick = { confirmingDisconnect = false }) { Text(stringResource(R.string.cancel)) } },
+        )
+    }
     if (confirmingDelete) {
         AlertDialog(
             onDismissRequest = { confirmingDelete = false },
@@ -243,6 +302,64 @@ private fun Stat(label: String, value: String, modifier: Modifier = Modifier) {
         Column(Modifier.padding(12.dp).fillMaxWidth()) {
             Text(value, style = MaterialTheme.typography.titleMedium)
             Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun LichessCard(
+    profile: LichessProfile?,
+    signedIn: Boolean,
+    signIn: LichessAuth.State,
+    onConnect: () -> Unit,
+    onDisconnect: () -> Unit,
+) {
+    Text(stringResource(R.string.lichess), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+        when {
+            signIn == LichessAuth.State.Working || (signedIn && profile == null) -> ListItem(
+                colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                headlineContent = { Text(stringResource(R.string.lichess_connecting)) },
+                trailingContent = { CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp) },
+            )
+            signedIn && profile != null -> {
+                val account = profile.account
+                ListItem(
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                    headlineContent = { Text(listOfNotNull(account.title, account.username).joinToString(" ")) },
+                    supportingContent = { Text(stringResource(R.string.lichess)) },
+                    trailingContent = { TextButton(onClick = onDisconnect) { Text(stringResource(R.string.lichess_disconnect)) } },
+                )
+                val ratings = ratingTypeOrder.mapNotNull { type -> profile.ratings[type]?.let { type to it } }
+                if (ratings.isNotEmpty()) {
+                    FlowRow(
+                        Modifier.padding(horizontal = 16.dp).padding(bottom = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        ratings.forEach { (type, rating) ->
+                            Column {
+                                Text(rating.toString(), style = MaterialTheme.typography.titleMedium)
+                                Text(stringResource(ratingTypeNameRes(type)), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                    }
+                }
+            }
+            else -> ListItem(
+                colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                headlineContent = { Text(stringResource(R.string.lichess)) },
+                supportingContent = {
+                    val body = when {
+                        signIn == LichessAuth.State.Failed -> R.string.lichess_failed
+                        profile != null -> R.string.lichess_reconnect_body
+                        else -> R.string.lichess_connect_body
+                    }
+                    Text(stringResource(body))
+                },
+                trailingContent = { Button(onClick = onConnect) { Text(stringResource(R.string.lichess_connect)) } },
+            )
         }
     }
 }

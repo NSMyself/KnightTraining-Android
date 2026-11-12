@@ -13,6 +13,14 @@ import com.knightindustries.knighttraining.session.SessionRepository
 import androidx.glance.appwidget.updateAll
 import com.knightindustries.knighttraining.core.store.observeWeeklySurface
 import com.knightindustries.knighttraining.widget.WeekWidget
+import android.util.Log
+import com.knightindustries.knighttraining.core.lichess.LichessClient
+import com.knightindustries.knighttraining.core.lichess.LichessSync
+import com.knightindustries.knighttraining.lichess.LichessAuth
+import com.knightindustries.knighttraining.lichess.LichessCredentials
+import kotlinx.coroutines.sync.Mutex
+import java.time.Duration
+import java.time.Instant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
@@ -63,6 +71,42 @@ class AppContainer(application: Application) {
 
     /** The course catalog, re-fetched with its ETag (a cheap 304 when unchanged). */
     val catalogSync = CatalogSync(store, preferences.catalogEtags)
+
+    /** The Lichess login, kept out of the database (see `LichessCredentials`). */
+    val lichessCredentials = LichessCredentials(application)
+
+    val lichessClient = LichessClient(
+        token = { lichessCredentials.token() },
+        onUnauthorized = { lichessAuth.loginRejected() },
+    )
+
+    val lichessSync = LichessSync(store, lichessClient, log = { message, failure -> Log.w("Lichess", message, failure) })
+
+    val lichessAuth: LichessAuth by lazy { LichessAuth(application, lichessCredentials, lichessClient, lichessSync, store) }
+
+    private val lichessSyncLock = Mutex()
+    private var lastLichessSync: Instant? = null
+
+    /**
+     * Ratings, then every activity kind, one request at a time, whenever the app comes to the
+     * foreground (iOS's `scenePhase == .active` hook), so offers reach Home without opening Profile.
+     * At most every two minutes, and never two runs at once.
+     */
+    fun syncLichessSoon() {
+        appScope.launch {
+            if (!lichessSyncLock.tryLock()) return@launch
+            try {
+                if (lichessCredentials.token() == null) return@launch
+                val now = Instant.now()
+                if (lastLichessSync?.let { Duration.between(it, now) < Duration.ofMinutes(2) } == true) return@launch
+                lastLichessSync = now
+                lichessSync.syncRatings()
+                lichessSync.syncActivity()
+            } finally {
+                lichessSyncLock.unlock()
+            }
+        }
+    }
 
     companion object {
         fun from(application: Application): AppContainer = (application as KnightTrainingApplication).container
