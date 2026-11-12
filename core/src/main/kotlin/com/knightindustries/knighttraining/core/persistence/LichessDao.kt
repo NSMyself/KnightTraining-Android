@@ -74,6 +74,9 @@ interface LichessDao {
     )
     suspend fun latestRatingBefore(accountId: UUID, ratingType: String, before: Instant): Int?
 
+    @Query("SELECT * FROM elo_snapshot WHERE accountId = :accountId AND capturedAt >= :from AND capturedAt < :to ORDER BY capturedAt")
+    suspend fun snapshotsBetween(accountId: UUID, from: Instant, to: Instant): List<EloSnapshotEntity>
+
     /** The latest rating of each type, in one query. */
     @Query(
         """
