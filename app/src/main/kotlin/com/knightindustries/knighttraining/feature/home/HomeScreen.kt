@@ -55,6 +55,7 @@ import com.knightindustries.knighttraining.feature.session.SessionStart
 import com.knightindustries.knighttraining.feature.session.StartSessionSheet
 import com.knightindustries.knighttraining.feature.session.rememberStartWithNotifications
 import androidx.compose.material.icons.rounded.Timer
+import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -104,6 +105,15 @@ fun HomeScreen(
     if (choosingStart) {
         StartSessionSheet(openGoals, onDismiss = { choosingStart = false }, onStart = ::start)
     }
+    var addingMoreTo by remember { mutableStateOf<WeeklyGoal?>(null) }
+    addingMoreTo?.let { goal ->
+        AddMoreSheet(
+            goal,
+            onDismiss = { addingMoreTo = null },
+            onRaise = { viewModel.raiseTarget(goal, it); addingMoreTo = null },
+            onAddBonus = { viewModel.addBonus(goal.weeklyPlanId, it); addingMoreTo = null },
+        )
+    }
 
     Scaffold(
         modifier = Modifier.padding(contentPadding).nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -131,7 +141,7 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 session?.let { item { SessionBanner(it, onOpenSession) } }
-                item { PlanCard(current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal) }
+                item { PlanCard(current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal) { addingMoreTo = it } }
                 item { ActivityCard(current.surface, current.stats) }
             }
         }
@@ -184,6 +194,7 @@ private fun PlanCard(
     onCreatePlan: () -> Unit,
     onPlanThisWeek: () -> Unit,
     onStartGoal: (WeeklyGoal) -> Unit,
+    onAddMore: (WeeklyGoal) -> Unit,
 ) {
     val plan = surface.plan
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
@@ -209,7 +220,7 @@ private fun PlanCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                plan.weeklyGoals.forEach { GoalRow(it) { onStartGoal(it) } }
+                plan.weeklyGoals.forEach { goal -> GoalRow(goal, onStart = { onStartGoal(goal) }, onAddMore = { onAddMore(goal) }) }
             }
         }
     }
@@ -225,12 +236,20 @@ private fun CallToAction(title: String, body: String, action: String, onClick: (
     }
 }
 
+/**
+ * A goal and its progress. A completed one can still be trained (the target is a floor) and
+ * offers "Add more".
+ */
 @Composable
-private fun GoalRow(goal: WeeklyGoal, onStart: () -> Unit) {
+private fun GoalRow(goal: WeeklyGoal, onStart: () -> Unit, onAddMore: () -> Unit) {
     val title = goalTitle(goal)
     ListItem(
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-        leadingContent = { Icon(activityIcon(goal.activityType.code), contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+        leadingContent = {
+            if (goal.isCompleted) Icon(Icons.Rounded.CheckCircle, contentDescription = stringResource(R.string.goal_done), tint = MaterialTheme.colorScheme.primary)
+            else Icon(activityIcon(goal.activityType.code), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+        },
+        overlineContent = if (goal.isBonus) ({ Text(stringResource(R.string.bonus)) }) else null,
         headlineContent = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         supportingContent = {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -242,9 +261,10 @@ private fun GoalRow(goal: WeeklyGoal, onStart: () -> Unit) {
             }
         },
         trailingContent = {
-            if (goal.isCompleted) {
-                Icon(Icons.Rounded.CheckCircle, contentDescription = stringResource(R.string.goal_done), tint = MaterialTheme.colorScheme.primary)
-            } else {
+            Row {
+                if (goal.isCompleted) {
+                    IconButton(onClick = onAddMore) { Icon(Icons.Rounded.AddCircleOutline, contentDescription = stringResource(R.string.add_more)) }
+                }
                 IconButton(onClick = onStart) {
                     Icon(Icons.Rounded.PlayArrow, contentDescription = stringResource(R.string.start_goal, title))
                 }

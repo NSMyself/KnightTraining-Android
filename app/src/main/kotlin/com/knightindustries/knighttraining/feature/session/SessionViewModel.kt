@@ -77,14 +77,20 @@ class SessionViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
-    fun change(to: Attribution, outgoingCount: Int?) {
-        val current = session.value ?: return
-        // An ad-hoc segment never reaches the review, so it credits the only goal it fits, if one.
-        val outgoingCredit = (current.attribution as? Attribution.AdHoc)?.let { adHoc ->
-            goalCandidates(current, adHoc.activityTypeCode, adHoc.timeControlLabel, weekGoals).singleOrNull()?.id
-        }
+    /**
+     * The goals the running segment could count toward, asked when switching away from it since
+     * it never reaches the review. Only a "Something else" segment has any: a plan goal's segment
+     * already moves its goal, and general practice has no category to match.
+     */
+    fun outgoingCandidates(): List<WeeklyGoal> {
+        val current = session.value ?: return emptyList()
+        val adHoc = current.attribution as? Attribution.AdHoc ?: return emptyList()
+        return goalCandidates(current, adHoc.activityTypeCode, adHoc.timeControlLabel, weekGoals)
+    }
+
+    fun change(to: Attribution, outgoingCount: Int?, outgoingCreditedGoalId: UUID?) {
         val resourceId = (to as? Attribution.Goal)?.let { goals[it.goalId]?.resource?.id }
-        sessions.update { it.change(Instant.now(), to, resourceId, outgoingCount, outgoingCredit) }
+        sessions.update { it.change(Instant.now(), to, resourceId, outgoingCount, outgoingCreditedGoalId) }
     }
 
     fun categorize(code: String) = sessions.update { it.categorize(code) }

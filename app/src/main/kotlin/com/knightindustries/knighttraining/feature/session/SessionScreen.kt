@@ -206,15 +206,21 @@ private fun TimerContent(session: PracticeSession, viewModel: SessionViewModel) 
             onDismiss = { changing = false },
             onPick = { target ->
                 changing = false
-                // Leaving a countable activity asks how many first: that segment never reaches the review.
-                if (code != null && ActivityType.hasQuantityUnit(code)) pendingChange = target else viewModel.change(target, null)
+                // The segment being left never reaches the review, so anything it needs is asked
+                // now: how many, for a countable activity, and which goal, when several fit.
+                val needsCount = code != null && ActivityType.hasQuantityUnit(code)
+                val candidates = viewModel.outgoingCandidates()
+                if (needsCount || candidates.size > 1) pendingChange = target
+                else viewModel.change(target, null, candidates.singleOrNull()?.id)
             },
         )
     }
     pendingChange?.let { target ->
-        CountDialog(
+        LeaveSegmentDialog(
             activityName = activityName(code ?: ActivityType.GENERAL),
-            onDone = { count -> viewModel.change(target, count); pendingChange = null },
+            asksCount = code != null && ActivityType.hasQuantityUnit(code),
+            candidates = viewModel.outgoingCandidates(),
+            onDone = { count, goalId -> viewModel.change(target, count, goalId); pendingChange = null },
             onDismiss = { pendingChange = null },
         )
     }
@@ -243,7 +249,7 @@ private fun ChangeSheet(session: PracticeSession, goals: Map<java.util.UUID, Wee
         Column(Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).navigationBarsPadding(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(stringResource(R.string.change_title), style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(8.dp))
             if (choosingOther) {
-                ActivityGrid { code -> onPick(PracticeSession.adHoc(code, null)) }
+                AdHocPicker(onPick)
                 Spacer(Modifier.height(16.dp))
                 return@Column
             }
@@ -273,20 +279,42 @@ private fun ChangeSheet(session: PracticeSession, goals: Map<java.util.UUID, Wee
     }
 }
 
+/**
+ * Asked when switching away from a segment: how many (for a countable activity) and, for a
+ * "Something else" stretch that fits several goals, which one it counts toward, never a guess.
+ */
 @Composable
-private fun CountDialog(activityName: String, onDone: (Int?) -> Unit, onDismiss: () -> Unit) {
+private fun LeaveSegmentDialog(
+    activityName: String,
+    asksCount: Boolean,
+    candidates: List<WeeklyGoal>,
+    onDone: (Int?, java.util.UUID?) -> Unit,
+    onDismiss: () -> Unit,
+) {
     var count by rememberSaveable { mutableStateOf("") }
+    var goalId by rememberSaveable { mutableStateOf(candidates.singleOrNull()?.id?.toString()) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.change_count_title)) },
+        title = { Text(stringResource(if (asksCount) R.string.change_count_title else R.string.counts_toward)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(stringResource(R.string.change_count_body, activityName))
-                CountField(count) { count = it }
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (asksCount) {
+                    Text(stringResource(R.string.change_count_body, activityName))
+                    CountField(count) { count = it }
+                }
+                if (candidates.size > 1) {
+                    if (asksCount) Text(stringResource(R.string.counts_toward), style = MaterialTheme.typography.labelLarge)
+                    candidates.forEach { goal ->
+                        ChoiceRow(goalTitle(goal), progressText(goal), selected = goalId == goal.id.toString()) { goalId = goal.id.toString() }
+                    }
+                    ChoiceRow(stringResource(R.string.not_counted), null, selected = goalId == null) { goalId = null }
+                }
             }
         },
-        confirmButton = { TextButton(onClick = { onDone(count.toIntOrNull()) }) { Text(stringResource(R.string.continue_action)) } },
-        dismissButton = { TextButton(onClick = { onDone(null) }) { Text(stringResource(R.string.skip)) } },
+        confirmButton = {
+            TextButton(onClick = { onDone(count.toIntOrNull(), goalId?.let(java.util.UUID::fromString)) }) { Text(stringResource(R.string.continue_action)) }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
     )
 }
 

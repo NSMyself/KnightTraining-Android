@@ -230,6 +230,19 @@
     <string name="next">Next</string>
     <string name="get_started">Get started</string>
 
+    <!-- Add more (mid-week stretch) -->
+    <string name="add_more">Add more</string>
+    <string name="add_more_title">Add more?</string>
+    <string name="add_more_body">Anything you add here is a bonus. It won\'t count against you if you don\'t finish it, even after this week\'s plan is locked in.</string>
+    <string name="raise_target">Raise this goal\'s target</string>
+    <string name="raise_target_body">Keep going past what you committed to</string>
+    <string name="add_different_activity">Add a different activity</string>
+    <string name="add_different_activity_body">Pick a new activity for this week</string>
+    <string name="new_target">New target</string>
+    <string name="new_target_too_low">The new target has to be higher than what you already hit.</string>
+    <string name="save_new_target">Save new target</string>
+    <string name="bonus">Bonus</string>
+
     <!-- Weekly review -->
     <string name="review_title">Week %d review</string>
     <string name="review_goals_completed">You completed %1$d of %2$d weekly goals</string>

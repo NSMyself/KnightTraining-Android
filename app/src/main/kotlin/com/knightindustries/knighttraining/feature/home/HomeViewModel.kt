@@ -5,7 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.core.model.WeekCalendar
 import com.knightindustries.knighttraining.core.model.WeeklyTrainingStats
+import com.knightindustries.knighttraining.core.model.WeeklyGoal
 import com.knightindustries.knighttraining.core.session.PracticeSession
+import com.knightindustries.knighttraining.core.store.addBonusGoal
+import com.knightindustries.knighttraining.core.store.increaseGoalTarget
+import com.knightindustries.knighttraining.feature.plan.DraftBlock
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import com.knightindustries.knighttraining.feature.session.SessionStart
 import java.time.Instant
 import java.time.LocalDate
@@ -53,6 +59,20 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
 
     fun refresh() {
         refreshes.value++
+    }
+
+    fun raiseTarget(goal: WeeklyGoal, target: Int) {
+        viewModelScope.launch { container.store.increaseGoalTarget(goal.id, target) }
+    }
+
+    /** A one-week extra, never written back to the plan. */
+    fun addBonus(weeklyPlanId: java.util.UUID, block: DraftBlock) {
+        viewModelScope.launch {
+            container.store.addBonusGoal(
+                weeklyPlanId, container.store.activityType(block.activityTypeCode)!!, block.targetType, block.targetValue,
+                name = block.name, timeControlLabel = block.timeControlLabel,
+            )
+        }
     }
 
     /** One session at a time: if one is already running, this only reopens it. */

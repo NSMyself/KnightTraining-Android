@@ -44,7 +44,6 @@ import com.knightindustries.knighttraining.R
 import com.knightindustries.knighttraining.core.model.WeeklyGoal
 import com.knightindustries.knighttraining.core.session.PracticeSession
 import com.knightindustries.knighttraining.core.session.PracticeSession.Attribution
-import com.knightindustries.knighttraining.feature.plan.ActivityGrid
 import com.knightindustries.knighttraining.ui.activityIcon
 import com.knightindustries.knighttraining.ui.goalTitle
 import com.knightindustries.knighttraining.ui.progressText
@@ -73,7 +72,7 @@ fun StartSessionSheet(openGoals: List<WeeklyGoal>, onDismiss: () -> Unit, onStar
         Column(Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).navigationBarsPadding(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(stringResource(R.string.start_title), style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(8.dp))
             if (choosingOther) {
-                ActivityGrid { code -> onStart(SessionStart(PracticeSession.adHoc(code, null))) }
+                AdHocPicker { onStart(SessionStart(it)) }
                 Spacer(Modifier.height(16.dp))
                 return@Column
             }
