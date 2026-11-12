@@ -74,10 +74,15 @@ re-propose either without a concrete reason.
 
 ## Design
 
-Dark-only, accent `#8D59E9`. Tokens in `app/.../designsystem/Theme.kt` mirror iOS
-`DesignSystem/Theme.swift`. Material 3 is plumbing only; the scheme is filled from the tokens.
-Typography is still the system default: SF Rounded can't ship on Android, and the replacement
-font is undecided.
+**The closest native Android UX, not a copy of the iOS screens** (maintainer, 2026-11-12). The iOS
+app defines *what* each screen does and says; Android decides *how* it looks and behaves, the way
+a first-party Material 3 app would: system back and predictive back, edge-to-edge insets, bottom
+sheets and dialogs where iOS uses sheets, a navigation bar for tabs, the system font, Material
+motion. iOS's pixel-perfect-to-Figma rule doesn't apply here.
+
+Brand carries over through color only: dark-only, accent `#8D59E9`. Tokens in
+`app/.../designsystem/Theme.kt` mirror iOS `DesignSystem/Theme.swift` and fill the Material 3
+scheme.
 
 ## Build & test
 
