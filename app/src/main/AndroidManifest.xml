@@ -38,6 +38,18 @@
             </intent-filter>
         </receiver>
 
+        <!-- The Home Screen widget: this week at a glance. -->
+        <receiver
+            android:name=".widget.WeekWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/week_widget_info" />
+        </receiver>
+
         <!-- "Share → Knight Training": saves the shared link to the library, no screen of its own. -->
         <activity
             android:name=".share.ShareReceiverActivity"

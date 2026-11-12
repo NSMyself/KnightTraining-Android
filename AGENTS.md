@@ -138,8 +138,8 @@ maintainer confirms how interactions *feel* on a device themselves.
    with the review screen.
 2. Core loop UI: onboarding, plan creation + presets, weekly commit, Home (fixed layout),
    practice timer (ongoing notification), log/edit sessions, history. **Built 2026-11-12**, pending
-   the maintainer's device check. Not yet: picking a resource for a session or block (needs Phase
-   3's library), the weekly review screen, "add more" bonus goals from the plan editor, a time
+   the maintainer's device check. The weekly review screen and resource picking followed. Not yet:
+   "add more" bonus goals from the plan editor, a time
    control when switching to "Something else" mid-session, and crediting an ad-hoc segment when
    several goals fit (it credits only a single fit; iOS asks).
 3. Resources: library, detail screens, catalog sync, book lookup, link metadata. **Built
@@ -150,6 +150,11 @@ maintainer confirms how interactions *feel* on a device themselves.
    merge, a "see all" shelf per kind.
 4. Lichess: OAuth (AppAuth), Elo, activity sync (one request at a time, 60s after a 429),
    milestones.
-5. Reminders, Glance widget, share-to-app intent.
+5. Reminders, Glance widget, share-to-app intent. **Built 2026-11-12**: behind-only training
+   reminders on picked days (one inexact alarm, re-armed on boot/clock change), the share target
+   (Phase 3), and a Home Screen widget (`widget/WeekWidget.kt`): plan, goals, minutes and the
+   continue line, redrawn by the app on every weekly-surface change (it runs in-process, so it
+   reads the database directly, no App Group snapshot). Its layout is pinned by
+   `WeekWidgetTest`. Not yet: per-block activity reminders.
 6. Suggest a plan, weekly coach (Gemini Nano where available), customizable Home, share cards,
    translations converted from the iOS `.xcstrings`.

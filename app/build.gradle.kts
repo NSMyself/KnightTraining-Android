@@ -50,6 +50,8 @@ dependencies {
     implementation(libs.androidx.browser)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.glance.appwidget)
+    implementation(libs.glance.material3)
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
@@ -65,5 +67,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.glance.appwidget.testing)
     debugImplementation(libs.compose.ui.test.manifest)
 }

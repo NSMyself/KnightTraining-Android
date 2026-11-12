@@ -120,6 +120,7 @@
     <string name="no_plan_body">Build a weekly plan around what you\'re studying. It takes a minute.</string>
     <string name="plan_week_title">Plan this week</string>
     <string name="plan_week_body">Commit to a plan to start tracking this week.</string>
+    <string name="widget_description">This week\'s goals at a glance.</string>
     <string name="goals_done">%1$d/%2$d goals</string>
     <string name="goal_done">Done</string>
     <string name="this_week_activity">This week\'s activity</string>

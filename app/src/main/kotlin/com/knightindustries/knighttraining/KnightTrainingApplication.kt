@@ -10,6 +10,9 @@ import com.knightindustries.knighttraining.core.net.ResourceEnricher
 import com.knightindustries.knighttraining.data.AppPreferences
 import com.knightindustries.knighttraining.session.SessionNotifier
 import com.knightindustries.knighttraining.session.SessionRepository
+import androidx.glance.appwidget.updateAll
+import com.knightindustries.knighttraining.core.store.observeWeeklySurface
+import com.knightindustries.knighttraining.widget.WeekWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
@@ -29,6 +32,13 @@ class KnightTrainingApplication : Application() {
             container.store.seedPresetsIfNeeded()
             container.preferences.firstLaunch()
             container.catalogSync.syncIfNeeded()
+        }
+        // The widget redraws whenever the week changes, like iOS's widget writer off the same surface.
+        container.appScope.launch {
+            val firstLaunch = container.preferences.firstLaunch()
+            container.store.observeWeeklySurface(firstLaunch = firstLaunch).collect {
+                WeekWidget().updateAll(this@KnightTrainingApplication)
+            }
         }
     }
 }
