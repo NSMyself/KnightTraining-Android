@@ -34,7 +34,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        AppContainer.from(application).syncLichessSoon()
+        AppContainer.from(application).apply {
+            syncLichessSoon()
+            prefetchCoachModelOnce()
+        }
     }
 
     override fun onNewIntent(intent: Intent) {

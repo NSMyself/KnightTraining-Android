@@ -214,5 +214,10 @@ maintainer confirms how interactions *feel* on a device themselves.
        (`applyCoachTarget`).
      - Pinned by `WeeklyTipCoachTest`, `CoachSignalsTest`, `CoachStoreTest`, `ModelGateTest`
        and `WeeklyCoachTest`.
+     - When the coach stays silent in a debug build, a toast says why ("Coach skipped: …"), and
+       the reason is logged under `WeeklyCoach`.
+     - Each launch asks AICore for the model when it's downloadable, so the first review
+       normally has it (where the coach is on only, to spare everyone else a multi-gigabyte
+       download). The status is logged under `GeminiNano`.
      - Tip *quality* is unverified: no emulator runs Nano, so it needs a Pixel 9 or newer, in
        English and each shipped language, before it leaves debug builds.

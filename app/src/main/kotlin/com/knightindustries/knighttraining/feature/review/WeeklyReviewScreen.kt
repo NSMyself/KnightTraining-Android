@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.review
 
+import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -45,6 +47,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.R
+import com.knightindustries.knighttraining.coach.WeeklyTipService
 import com.knightindustries.knighttraining.core.coach.CoachTargetChange
 import com.knightindustries.knighttraining.core.coach.WeeklyTip
 import com.knightindustries.knighttraining.core.model.PlanSuggestionEngine
@@ -100,9 +103,10 @@ class WeeklyReviewViewModel(private val container: AppContainer, private val wee
 
     /**
      * Every field is optional: a mostly empty reflection still saves. Then the coach gets its turn,
-     * and [onSaved] runs straight away when it has nothing to say.
+     * and [onSaved] runs straight away when it has nothing to say, after [onCoachSilent] hears why
+     * (the coach only runs in debug builds, where the reason is worth showing).
      */
-    fun save(onSaved: () -> Unit) {
+    fun save(onSaved: () -> Unit, onCoachSilent: (String) -> Unit = {}) {
         val current = context ?: return
         isSaving = true
         viewModelScope.launch {
@@ -118,13 +122,17 @@ class WeeklyReviewViewModel(private val container: AppContainer, private val wee
             val service = container.weeklyTipService
             if (!service.isEnabledInThisBuild) return@launch onSaved()
             phase = Phase.PreparingTip
-            val tip = service.generateTip(current.plan, review, current.notedActivities, current.previous?.nextWeekFocus)
-            if (tip == null) {
-                phase = Phase.Form
-                return@launch onSaved()
+            when (val result = service.generateTip(current.plan, review, current.notedActivities, current.previous?.nextWeekFocus)) {
+                is WeeklyTipService.Result.Silent -> {
+                    phase = Phase.Form
+                    onCoachSilent(result.reason)
+                    onSaved()
+                }
+                is WeeklyTipService.Result.Tip -> {
+                    phase = Phase.Tip(result.tip)
+                    if (result.tip.suggestsCoach) service.recordCoachSuggestionShown()
+                }
             }
-            phase = Phase.Tip(tip)
-            if (tip.suggestsCoach) service.recordCoachSuggestionShown()
         }
     }
 
@@ -175,6 +183,8 @@ class WeeklyReviewViewModel(private val container: AppContainer, private val wee
 @Composable
 fun WeeklyReviewScreen(viewModel: WeeklyReviewViewModel, onDone: () -> Unit) {
     val context = viewModel.context
+    // The application context, so the debug toast outlives this screen closing.
+    val appContext = LocalContext.current.applicationContext
     Scaffold(
         topBar = {
             TopAppBar(
@@ -248,7 +258,7 @@ fun WeeklyReviewScreen(viewModel: WeeklyReviewViewModel, onDone: () -> Unit) {
                     )
                 }
             }
-            Button(onClick = { viewModel.save(onDone) }, enabled = !viewModel.isSaving, modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
+            Button(onClick = { viewModel.save(onDone, onCoachSilent = { Toast.makeText(appContext, "Coach skipped: $it", Toast.LENGTH_LONG).show() }) }, enabled = !viewModel.isSaving, modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
                 Text(stringResource(R.string.save))
             }
         }

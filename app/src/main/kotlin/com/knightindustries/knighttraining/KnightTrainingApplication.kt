@@ -21,6 +21,7 @@ import com.knightindustries.knighttraining.lichess.LichessAuth
 import com.knightindustries.knighttraining.lichess.LichessCredentials
 import kotlinx.coroutines.sync.Mutex
 import java.time.Duration
+import java.util.concurrent.atomic.AtomicBoolean
 import java.time.Instant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -87,6 +88,13 @@ class AppContainer(application: Application) {
 
     /** The weekly coach on Gemini Nano (debug builds only for now). */
     val weeklyTipService: WeeklyTipService by lazy { WeeklyTipService(this) }
+
+    private val coachModelPrefetched = AtomicBoolean(false)
+
+    /** Once per launch, in the foreground: lets AICore fetch Gemini Nano before the first review. */
+    fun prefetchCoachModelOnce() {
+        if (coachModelPrefetched.compareAndSet(false, true)) appScope.launch { weeklyTipService.prefetchModel() }
+    }
 
     private val lichessSyncLock = Mutex()
     private var lastLichessSync: Instant? = null

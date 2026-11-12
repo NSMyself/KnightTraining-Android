@@ -15,6 +15,7 @@ import com.knightindustries.knighttraining.core.coach.LanguageModel
 import com.knightindustries.knighttraining.core.coach.ModelGate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Gemini Nano through ML Kit's Prompt API (beta): the on-device model behind the weekly coach, as
@@ -47,18 +48,54 @@ class GeminiNano(
                 val name = runCatching { client.getBaseModelName() }.getOrNull()
                 // Logged so a tester can say which model their phone reports.
                 Log.i(TAG, "Gemini Nano base model: $name")
-                if (ModelGate.isSupported(name)) Availability.Ready(name!!) else Availability.Unavailable("model $name is older than Nano ${ModelGate.MINIMUM_NANO_VERSION} or unreadable")
+                if (ModelGate.isSupported(name)) {
+                    Availability.Ready(name!!)
+                } else {
+                    Availability.Unavailable("model \"$name\" isn't recognised as Nano ${ModelGate.MINIMUM_NANO_VERSION} or newer")
+                }
             }
             FeatureStatus.DOWNLOADABLE -> {
-                scope.launch {
-                    runCatching {
-                        client.download().collect { if (it is DownloadStatus.DownloadFailed) Log.w(TAG, "Gemini Nano download failed", it.e) }
-                    }
-                }
+                startDownload(scope)
                 Availability.Downloading
             }
             FeatureStatus.DOWNLOADING -> Availability.Downloading
             else -> Availability.Unavailable("Gemini Nano isn't available on this device")
+        }
+    }
+
+    /** Starts the download if the phone supports Nano but doesn't have it yet; does nothing otherwise. */
+    suspend fun prefetch(scope: CoroutineScope) {
+        val status = runCatching { client.checkStatus() }.getOrNull()
+        val name = when (status) {
+            FeatureStatus.AVAILABLE -> "available"
+            FeatureStatus.DOWNLOADABLE -> "downloadable, asking AICore for it"
+            FeatureStatus.DOWNLOADING -> "downloading"
+            FeatureStatus.UNAVAILABLE -> "unavailable on this device"
+            else -> "unknown ($status)"
+        }
+        Log.i(TAG, "Gemini Nano status at launch: $name")
+        if (status == FeatureStatus.DOWNLOADABLE) startDownload(scope)
+    }
+
+    private val downloading = AtomicBoolean(false)
+
+    /** One download at a time, however many callers ask. AICore owns the download itself. */
+    private fun startDownload(scope: CoroutineScope) {
+        if (!downloading.compareAndSet(false, true)) return
+        scope.launch {
+            try {
+                client.download().collect { status ->
+                    when (status) {
+                        is DownloadStatus.DownloadFailed -> Log.w(TAG, "Gemini Nano download failed", status.e)
+                        DownloadStatus.DownloadCompleted -> Log.i(TAG, "Gemini Nano download completed")
+                        else -> Unit
+                    }
+                }
+            } catch (failure: Exception) {
+                Log.w(TAG, "Gemini Nano download failed", failure)
+            } finally {
+                downloading.set(false)
+            }
         }
     }
 
