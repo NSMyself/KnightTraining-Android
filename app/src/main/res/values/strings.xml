@@ -326,6 +326,8 @@
     <string name="delete_resource_title">Delete this resource?</string>
     <string name="delete_resource_body">Its finished history goes with it. Sessions logged against it stay, without the link.</string>
     <string name="resource_added">Resource added</string>
+    <string name="share_target_label">Add to Knight Training</string>
+    <string name="share_no_link">There\'s no link in what was shared.</string>
     <string name="resource_none">None</string>
     <string name="link_resource">Resource (optional)</string>
     <string name="link_resource_hint">Link a resource to track your time on it</string>
