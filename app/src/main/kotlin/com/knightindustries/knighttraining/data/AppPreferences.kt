@@ -31,7 +31,10 @@ class AppPreferences(private val context: Context) {
     /** Set at the end of onboarding, not the start, so quitting halfway shows it again. */
     val hasCompletedOnboarding: Flow<Boolean> = context.dataStore.data.map { it[onboardingDoneKey] ?: false }
 
-    suspend fun completeOnboarding() {
-        context.dataStore.edit { it[onboardingDoneKey] = true }
+    suspend fun completeOnboarding() = setOnboardingCompleted(true)
+
+    /** `false` shows onboarding again: tests, and a future "replay intro" setting. */
+    suspend fun setOnboardingCompleted(done: Boolean) {
+        context.dataStore.edit { it[onboardingDoneKey] = done }
     }
 }

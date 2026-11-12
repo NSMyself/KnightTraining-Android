@@ -5,16 +5,24 @@ import android.graphics.Bitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import com.knightindustries.knighttraining.core.model.TargetType
+import com.knightindustries.knighttraining.core.store.NewBlock
+import com.knightindustries.knighttraining.core.store.createPlan
 import com.knightindustries.knighttraining.core.store.deleteAllUserData
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -25,10 +33,9 @@ import org.junit.runner.RunWith
 import java.io.File
 
 /**
- * The core loop end to end on a device: build a plan from a preset, commit it, time a session
- * against a goal, review and save it, and see Home's progress move. Acts through the semantics
- * tree (what TalkBack reads), never screen coordinates. Screenshots of each step land in the app's
- * external files dir under `screenshots/`.
+ * The core loop end to end on a device. Acts through the semantics tree (what TalkBack reads),
+ * never screen coordinates. Screenshots of each step land in the app's external files dir under
+ * `screenshots/`.
  */
 @OptIn(ExperimentalTestApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -40,11 +47,14 @@ class CoreLoopTest {
     val rules: RuleChain = RuleChain.outerRule(permissions).around(compose)
 
     private val context get() = InstrumentationRegistry.getInstrumentation().targetContext
+    private val container get() = AppContainer.from(context.applicationContext as KnightTrainingApplication)
 
     @Before
     fun startClean() {
-        val container = AppContainer.from(context.applicationContext as KnightTrainingApplication)
-        runBlocking { container.store.deleteAllUserData() }
+        runBlocking {
+            container.store.deleteAllUserData()
+            container.preferences.completeOnboarding()
+        }
         container.sessions.clear()
     }
 
@@ -57,6 +67,7 @@ class CoreLoopTest {
 
     private fun text(id: Int, vararg args: Any) = context.getString(id, *args)
 
+    /** Build a plan from a preset, commit it, time a session against a goal, save, see Home move. */
     @Test
     fun planCommitTimeAndSave() {
         compose.waitUntilAtLeastOneExists(hasText(text(R.string.no_plan_title)), 10_000)
@@ -72,7 +83,6 @@ class CoreLoopTest {
         screenshot("03_plan_builder")
         compose.onNodeWithText(text(R.string.save)).performClick()
 
-        // Saved and committed: Home shows the week's goals.
         compose.waitUntilAtLeastOneExists(hasText("0/60"), 10_000)
         screenshot("04_home_committed")
 
@@ -89,7 +99,69 @@ class CoreLoopTest {
         compose.onNodeWithText(text(R.string.save)).performClick()
 
         compose.waitUntilAtLeastOneExists(hasText("12/60"), 10_000)
-        compose.waitUntilAtLeastOneExists(hasText(text(R.string.this_week_activity)), 5_000)
         screenshot("07_home_after_session")
+    }
+
+    /**
+     * The week log: log a session that wasn't timed, see the week complete, then correct it and see
+     * the goal reopen (a correction below target un-completes, iOS 2026-10-16).
+     */
+    @Test
+    fun logCompleteAndCorrectAPastSession() {
+        runBlocking {
+            container.store.createPlan(
+                "Puzzle week", listOf(NewBlock(null, container.store.activityType("puzzles")!!, TargetType.COUNT, 10)),
+                "Untitled", { "Untitled ($it)" }, commit = true, firstLaunch = container.preferences.firstLaunch(),
+            )
+        }
+        compose.waitUntilAtLeastOneExists(hasText("0/10"), 10_000)
+
+        compose.onNodeWithText(text(R.string.tab_training)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.current_plan)), 5_000)
+        screenshot("10_training_tab")
+        compose.onNodeWithText(text(R.string.current_plan)).performClick()
+        // The FAB's label must be in the semantics tree: this is what caught it missing.
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.add_session)), 5_000)
+
+        compose.onNodeWithText(text(R.string.add_session)).performClick()
+        val puzzlesCard = hasText(text(R.string.activity_puzzles)) and hasClickAction()
+        compose.waitUntilAtLeastOneExists(puzzlesCard, 5_000)
+        compose.onNode(puzzlesCard).performClick()
+        compose.onNodeWithText(text(R.string.how_many_completed)).performScrollTo().performTextInput("10")
+        screenshot("11_log_past_session")
+        compose.onNodeWithText(text(R.string.save)).performScrollTo().performClick()
+
+        // The week's only goal is now met: the celebration fires.
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.week_complete_title)), 10_000)
+        screenshot("12_week_complete")
+        compose.onNodeWithText(text(R.string.done)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText("10/10"), 5_000)
+        screenshot("13_week_log")
+
+        // Correct the count down: the goal reopens.
+        compose.onNode(hasText(text(R.string.activity_puzzles)) and hasClickAction()).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.edit_session)), 5_000)
+        compose.onNodeWithText("10").performScrollTo().performTextClearance()
+        compose.onNodeWithText(text(R.string.how_many_completed)).performTextInput("4")
+        compose.onNodeWithText(text(R.string.save)).performScrollTo().performClick()
+        compose.waitUntilAtLeastOneExists(hasText("4/10"), 5_000)
+        screenshot("14_after_correction")
+    }
+
+    /** Onboarding shows until finished; Skip appears on the middle pages only. */
+    @Test
+    fun onboardingRunsOnceToTheEnd() {
+        runBlocking { container.preferences.setOnboardingCompleted(false) }
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.onboarding_brand_subtitle)), 10_000)
+        screenshot("20_onboarding_1")
+        compose.onNodeWithText(text(R.string.next)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.skip)), 5_000)
+        screenshot("21_onboarding_2")
+        compose.onNodeWithText(text(R.string.next)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.onboarding_commit_title)), 5_000)
+        compose.onNodeWithText(text(R.string.next)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.get_started)), 5_000)
+        compose.onNodeWithText(text(R.string.get_started)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.no_plan_title)), 10_000)
     }
 }

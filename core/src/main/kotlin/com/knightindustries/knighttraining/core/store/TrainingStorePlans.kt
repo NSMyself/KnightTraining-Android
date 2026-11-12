@@ -5,6 +5,8 @@ import com.knightindustries.knighttraining.core.model.PlanTemplate
 import com.knightindustries.knighttraining.core.persistence.entities.PlanTemplateEntity
 import com.knightindustries.knighttraining.core.persistence.toDomain
 import com.knightindustries.knighttraining.core.persistence.toEntity
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import java.util.UUID
 
 private suspend fun TrainingStore.withGoalTemplates(templates: List<PlanTemplateEntity>): List<PlanTemplate> {
@@ -72,3 +74,9 @@ suspend fun TrainingStore.nextUntitledPlanTemplateName(
     numbered: (Int) -> String,
     excludingId: UUID? = null,
 ): String = PlanTemplate.untitledName(planDao.visibleTemplateNames(excludingId), base, numbered)
+
+/** Live list of the plans the user can see, for the Training tab, which stays mounted. */
+fun TrainingStore.observePlanTemplates(): kotlinx.coroutines.flow.Flow<List<PlanTemplate>> =
+    db.invalidationTracker.createFlow("plan_template", "goal_template", "resource")
+        .map { allPlanTemplates() }
+        .distinctUntilChanged()

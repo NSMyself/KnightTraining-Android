@@ -59,6 +59,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import com.knightindustries.knighttraining.ui.LabeledFab
 import com.knightindustries.knighttraining.ui.activityIcon
 import com.knightindustries.knighttraining.ui.activityName
 import com.knightindustries.knighttraining.ui.durationText
@@ -115,11 +116,7 @@ fun HomeScreen(
         },
         floatingActionButton = {
             if (state is HomeState.Loaded) {
-                ExtendedFloatingActionButton(
-                    onClick = onStartSession,
-                    icon = { Icon(Icons.Rounded.PlayArrow, contentDescription = null) },
-                    text = { Text(stringResource(if (session != null) R.string.session_in_progress else R.string.start_session)) },
-                )
+                LabeledFab(Icons.Rounded.PlayArrow, stringResource(if (session != null) R.string.session_in_progress else R.string.start_session), onStartSession)
             }
         },
         containerColor = MaterialTheme.colorScheme.background,

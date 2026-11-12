@@ -190,7 +190,7 @@ fun ActivityGrid(codes: List<String> = ActivityType.pickableCodes, onPick: (Stri
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun MinutesField(minutes: String, onChange: (String) -> Unit) {
+fun MinutesField(minutes: String, label: String = stringResource(R.string.block_minutes), onChange: (String) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf(15, 30, 45, 60, 90, 120).forEach { preset ->
@@ -204,7 +204,7 @@ fun MinutesField(minutes: String, onChange: (String) -> Unit) {
         OutlinedTextField(
             value = minutes,
             onValueChange = { onChange(it.filter(Char::isDigit).take(4)) },
-            label = { Text(stringResource(R.string.block_minutes)) },
+            label = { Text(label) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),

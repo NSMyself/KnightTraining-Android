@@ -33,3 +33,11 @@ data object PlanThisWeekRoute : Route
 /** The practice timer and its review: the session in `SessionRepository`. */
 @Serializable
 data object SessionRoute : Route
+
+/** One committed week's log. [weekStart] is ISO (`2026-11-08`). */
+@Serializable
+data class WeekLogRoute(val weekStart: String) : Route
+
+/** Edit a saved plan. [templateId] is a UUID string. */
+@Serializable
+data class EditPlanRoute(val templateId: String) : Route

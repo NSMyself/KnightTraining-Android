@@ -21,6 +21,24 @@ import androidx.compose.material3.Text
 import android.app.Application
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.knightindustries.knighttraining.core.store.WeeklyPlanCompleted
+import com.knightindustries.knighttraining.feature.celebration.WeekCompleteDialog
+import com.knightindustries.knighttraining.feature.onboarding.OnboardingScreen
+import com.knightindustries.knighttraining.feature.plan.EditPlanScreen
+import com.knightindustries.knighttraining.feature.plan.EditPlanViewModel
+import com.knightindustries.knighttraining.feature.training.TrainingScreen
+import com.knightindustries.knighttraining.feature.training.TrainingViewModel
+import com.knightindustries.knighttraining.feature.training.WeekLogScreen
+import com.knightindustries.knighttraining.feature.training.WeekLogViewModel
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.util.UUID
 import androidx.compose.ui.platform.LocalContext
 import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.session.SessionNotifier
@@ -63,9 +81,30 @@ private val tabs = listOf(
  */
 @Composable
 fun KnightTrainingApp(pendingAction: String? = null, onActionHandled: () -> Unit = {}) {
+    val application = LocalContext.current.applicationContext as Application
+    val container = remember { AppContainer.from(application) }
+    val onboarded by container.preferences.hasCompletedOnboarding.collectAsStateWithLifecycle(initialValue = null)
+    val scope = rememberCoroutineScope()
+
+    when (onboarded) {
+        null -> Unit // Not read yet: draw nothing rather than flash the wrong screen.
+        false -> OnboardingScreen(onFinished = { scope.launch { container.preferences.completeOnboarding() } })
+        true -> MainContent(pendingAction, onActionHandled)
+    }
+}
+
+@Composable
+private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
     val backStack = rememberNavBackStack(HomeRoute)
     val top = backStack.lastOrNull()
     val application = LocalContext.current.applicationContext as Application
+
+    // The week's last goal just completed, from wherever it was logged.
+    var celebration by remember { mutableStateOf<WeeklyPlanCompleted?>(null) }
+    LaunchedEffect(Unit) {
+        AppContainer.from(application).store.weeklyPlanCompletedEvents.collect { celebration = it }
+    }
+    celebration?.let { WeekCompleteDialog(it) { celebration = null } }
 
     // The timer notification: tapping it opens the session; its Stop opens straight on the review.
     LaunchedEffect(pendingAction) {
@@ -118,15 +157,36 @@ fun KnightTrainingApp(pendingAction: String? = null, onActionHandled: () -> Unit
                         onFinished = { backStack.remove(SessionRoute) },
                     )
                 }
-                entry<TrainingRoute> { Placeholder(R.string.tab_training, R.string.coming_soon, padding) }
+                entry<TrainingRoute> {
+                    TrainingScreen(
+                        viewModel = appViewModel { TrainingViewModel(it) },
+                        onOpenWeek = { backStack.add(WeekLogRoute(it.toString())) },
+                        onEditPlan = { backStack.add(EditPlanRoute(it.id.toString())) },
+                        // An extra plan from here doesn't reassign the week: that's Plan this week's job.
+                        onCreatePlan = { backStack.add(CreatePlanRoute(commit = false)) },
+                        contentPadding = padding,
+                    )
+                }
+                entry<WeekLogRoute> { route ->
+                    WeekLogScreen(
+                        viewModel = appViewModel(key = route.weekStart) { WeekLogViewModel(it, LocalDate.parse(route.weekStart)) },
+                        onBack = { backStack.removeLastOrNull() },
+                    )
+                }
+                entry<EditPlanRoute> { route ->
+                    EditPlanScreen(
+                        viewModel = appViewModel(key = route.templateId) { EditPlanViewModel(it, UUID.fromString(route.templateId)) },
+                        onClose = { backStack.removeLastOrNull() },
+                    )
+                }
                 entry<ResourcesRoute> { Placeholder(R.string.tab_resources, R.string.resources_coming_soon, padding) }
                 entry<ProfileRoute> { Placeholder(R.string.tab_profile, R.string.profile_coming_soon, padding) }
                 entry<CreatePlanRoute> { route ->
                     CreatePlanScreen(
                         viewModel = appViewModel { CreatePlanViewModel(it, route.commit) },
                         onClose = { backStack.removeLastOrNull() },
-                        // A plan created from "Plan this week" commits, so both screens are done.
-                        onSaved = { backStack.popTo(HomeRoute) },
+                        // A committing plan (from Home or "Plan this week") finishes both screens.
+                        onSaved = { if (route.commit) backStack.popTo(HomeRoute) else backStack.removeLastOrNull() },
                     )
                 }
                 entry<PlanThisWeekRoute> {

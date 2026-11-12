@@ -185,4 +185,56 @@
     <string name="discard_session_title">Discard this session?</string>
     <string name="discard_session_body">This can\'t be undone. You\'ll lose everything tracked in this session.</string>
     <string name="save_failed">Couldn\'t save the session. Try again.</string>
+
+    <!-- Training tab -->
+    <string name="training_plans">Training plans</string>
+    <string name="your_weeks">Your weeks</string>
+    <string name="no_weeks_yet">No weeks logged yet</string>
+    <string name="no_plans_yet">No training plans yet</string>
+    <string name="current_plan">This week</string>
+    <string name="week_percent">%d%% complete</string>
+
+    <!-- Week log -->
+    <string name="training_log">Training log</string>
+    <string name="add_session">Add session</string>
+    <string name="log_past_session">Log a past session</string>
+    <string name="log_past_session_body">Add training you forgot to record this week.</string>
+    <string name="session_details">Session details</string>
+    <string name="session_date">Day</string>
+    <string name="session_time">Started at</string>
+    <string name="notes">Notes</string>
+    <string name="delete_session">Delete session</string>
+    <string name="delete_session_title">Delete this session?</string>
+    <string name="delete_session_body">Its time and count are removed from this week\'s totals and goals.</string>
+    <string name="edit_session">Edit session</string>
+    <string name="past_weeks_read_only">Only this week\'s sessions can be edited.</string>
+
+    <!-- Edit plan -->
+    <string name="edit_plan">Edit plan</string>
+    <string name="edit_plan_unlocked">You can freely adjust this week\'s plan until your 2nd session.</string>
+    <string name="edit_plan_last_chance">One more session and this week\'s plan locks in. You can still adjust it now.</string>
+    <string name="edit_plan_locked">This week\'s plan is locked because it\'s already been trained against. Changes here apply from your next committed week.</string>
+    <string name="edit_plan_future">Changes here apply from your next committed week.</string>
+    <string name="delete_plan">Delete plan</string>
+    <string name="delete_plan_title">Delete this plan?</string>
+    <string name="delete_plan_body">You won\'t be able to pick it for future weeks. Weeks you already trained with it stay in your history.</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_brand_subtitle">Chess training that fits your week</string>
+    <string name="onboarding_plan_title">Build your weekly plan</string>
+    <string name="onboarding_plan_body">Puzzles, games, or the book you\'re working through</string>
+    <string name="onboarding_commit_title">Decide once, not every day</string>
+    <string name="onboarding_commit_body">Your week\'s plan is set the moment you commit to it</string>
+    <string name="onboarding_floor_title">Hit your target, then keep going</string>
+    <string name="onboarding_floor_body">A weekly target, not a daily grind</string>
+    <string name="next">Next</string>
+    <string name="get_started">Get started</string>
+
+    <!-- Celebration -->
+    <string name="week_complete_title">Week complete</string>
+    <plurals name="week_complete_body">
+        <item quantity="one">You hit the goal you committed to.</item>
+        <item quantity="other">You hit all %d goals you committed to.</item>
+    </plurals>
+    <string name="week_streak_label">%d-week streak</string>
 </resources>

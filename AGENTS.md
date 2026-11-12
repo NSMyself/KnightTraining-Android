@@ -82,7 +82,28 @@ motion. iOS's pixel-perfect-to-Figma rule doesn't apply here.
 
 Brand carries over through color only: dark-only, accent `#8D59E9`. Tokens in
 `app/.../designsystem/Theme.kt` mirror iOS `DesignSystem/Theme.swift` and fill the Material 3
-scheme.
+scheme, surface-container ladder included.
+
+## App structure
+
+- `navigation/`: one Navigation 3 back stack (`KnightTrainingApp`). The bottom bar shows on tab
+  roots only; non-Home tabs sit on top of Home, so back returns Home first. Onboarding gates the
+  whole app until finished, and the week-complete dialog listens app-wide.
+- `feature/<area>/`: a screen and its ViewModel per area (`home`, `plan`, `session`, `training`,
+  `onboarding`, `celebration`). ViewModels come from `appViewModel { … }`, built from
+  `AppContainer` by hand.
+- `ui/Labels.kt`: every code → display text/icon mapping. Strings live in `strings.xml`.
+- **No foreground service for the timer.** `PracticeSession` (core) derives elapsed time from
+  timestamps and `SessionRepository` writes it to a file on every change, so the process can die
+  mid-session and resume intact. The ongoing notification's clock is a system chronometer; Pause
+  and Resume go through `SessionActionReceiver`, Stop opens the app on the review. Play also
+  restricts foreground-service types, and a study timer fits none of them.
+- **Default block names aren't stored.** A block without a typed or preset name is saved with
+  `name = null` and titled from its activity at display time (`blockTitle`), where iOS stores the
+  composed English text. Preset titles are stored, like a typed name.
+- Build extended FABs with `LabeledFab`: the `icon`/`text` overload left the label out of the
+  semantics tree, so TalkBack read an unlabelled button.
+- Text outside a `Scaffold`/`Surface` defaults to black: wrap full-screen content in a `Surface`.
 
 ## Build & test
 
@@ -92,10 +113,18 @@ JDK: Android Studio's bundled JBR. SDK: `~/Library/Android/sdk` (`local.properti
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 ./gradlew :core:test           # JVM unit tests, fast
 ./gradlew :app:assembleDebug   # debug APK
+# Device tests (CoreLoopTest); needs a running emulator. Keeping the app installed keeps the
+# screenshots each step writes to /sdcard/Android/data/<package>/files/screenshots.
+./gradlew :app:connectedDebugAndroidTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true
 ```
 
 `compileSdk` is 37 (current AndroidX requires it); `targetSdk` 36, `minSdk` 28. Emulator AVD:
-`KT_Pixel_API36`.
+`KT_Pixel_API36`. Headless, start it with `-gpu swiftshader_indirect`, or screenshots come back
+black. Its System UI is slow under software rendering and throws "isn't responding" dialogs;
+they're the emulator's, not the app's.
+
+UI tests act through the semantics tree (what TalkBack reads), never screen coordinates. The
+maintainer confirms how interactions *feel* on a device themselves.
 
 ## Phases
 
@@ -108,8 +137,11 @@ export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
    phases. The weekly review's queries (and `applyCoachTarget`) aren't ported yet; port them
    with the review screen.
 2. Core loop UI: onboarding, plan creation + presets, weekly commit, Home (fixed layout),
-   practice timer (foreground service + ongoing notification), log/edit sessions, history. First
-   tester build.
+   practice timer (ongoing notification), log/edit sessions, history. **Built 2026-11-12**, pending
+   the maintainer's device check. Not yet: picking a resource for a session or block (needs Phase
+   3's library), the weekly review screen, "add more" bonus goals from the plan editor, a time
+   control when switching to "Something else" mid-session, and crediting an ad-hoc segment when
+   several goals fit (it credits only a single fit; iOS asks).
 3. Resources: library, detail screens, catalog sync, book lookup, link metadata.
 4. Lichess: OAuth (AppAuth), Elo, activity sync (one request at a time, 60s after a 429),
    milestones.
