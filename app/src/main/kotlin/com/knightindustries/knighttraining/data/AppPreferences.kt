@@ -6,7 +6,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.knightindustries.knighttraining.core.model.ReminderSchedule
 import com.knightindustries.knighttraining.core.net.CatalogSync
+import java.time.DayOfWeek
 import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -51,6 +53,30 @@ class AppPreferences(private val context: Context) {
 
         override suspend fun set(etag: String) {
             context.dataStore.edit { it[key] = etag }
+        }
+    }
+
+    private val reminderEnabledKey = booleanPreferencesKey("reminder_enabled")
+    private val reminderDaysKey = stringPreferencesKey("reminder_days")
+    private val reminderTimeKey = stringPreferencesKey("reminder_time")
+
+    /** When the user is willing to be nudged. Off until they opt in. */
+    val reminderSchedule: Flow<ReminderSchedule> = context.dataStore.data.map { prefs ->
+        val time = prefs[reminderTimeKey]?.split(":")?.mapNotNull(String::toIntOrNull)
+        ReminderSchedule(
+            isEnabled = prefs[reminderEnabledKey] ?: false,
+            weekdays = prefs[reminderDaysKey]?.split(",")?.mapNotNull { runCatching { DayOfWeek.valueOf(it) }.getOrNull() }?.toSet()
+                ?: ReminderSchedule.EVERY_DAY,
+            hour = time?.getOrNull(0) ?: ReminderSchedule.DEFAULT.hour,
+            minute = time?.getOrNull(1) ?: ReminderSchedule.DEFAULT.minute,
+        )
+    }
+
+    suspend fun setReminderSchedule(schedule: ReminderSchedule) {
+        context.dataStore.edit {
+            it[reminderEnabledKey] = schedule.isEnabled
+            it[reminderDaysKey] = schedule.weekdays.joinToString(",") { day -> day.name }
+            it[reminderTimeKey] = "${schedule.hour}:${schedule.minute}"
         }
     }
 

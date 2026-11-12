@@ -40,6 +40,9 @@ import com.knightindustries.knighttraining.feature.resources.ResourceDetailScree
 import com.knightindustries.knighttraining.feature.resources.ResourceDetailViewModel
 import com.knightindustries.knighttraining.feature.resources.ResourcesScreen
 import com.knightindustries.knighttraining.feature.resources.ResourcesViewModel
+import com.knightindustries.knighttraining.feature.profile.ProfileScreen
+import com.knightindustries.knighttraining.feature.profile.ProfileViewModel
+import com.knightindustries.knighttraining.ui.rememberWithNotificationPermission
 import com.knightindustries.knighttraining.feature.plan.EditPlanScreen
 import com.knightindustries.knighttraining.feature.plan.EditPlanViewModel
 import com.knightindustries.knighttraining.feature.training.TrainingScreen
@@ -225,7 +228,13 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                         onBack = { backStack.remove(route) },
                     )
                 }
-                entry<ProfileRoute> { Placeholder(R.string.tab_profile, R.string.profile_coming_soon, padding) }
+                entry<ProfileRoute> {
+                    ProfileScreen(
+                        viewModel = appViewModel { ProfileViewModel(it) },
+                        onRequestNotifications = rememberWithNotificationPermission(),
+                        contentPadding = padding,
+                    )
+                }
                 entry<CreatePlanRoute> { route ->
                     CreatePlanScreen(
                         viewModel = appViewModel { CreatePlanViewModel(it, route.commit) },

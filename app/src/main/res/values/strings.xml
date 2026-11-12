@@ -333,6 +333,45 @@
     <string name="link_resource_hint">Link a resource to track your time on it</string>
     <string name="choose_resource">Choose a resource</string>
 
+    <!-- Reminders -->
+    <string name="reminder_channel">Training reminders</string>
+    <string name="reminder_new_week_title">New week</string>
+    <string name="reminder_new_week_body">Pick this week\'s training plan.</string>
+    <string name="reminder_last_day">Last day of the week</string>
+    <plurals name="reminder_days_left">
+        <item quantity="one">%d day left this week</item>
+        <item quantity="other">%d days left this week</item>
+    </plurals>
+    <string name="reminder_nothing_logged_title">Nothing logged this week yet</string>
+    <string name="reminder_nothing_logged_body">%s. Even a short session counts.</string>
+    <string name="reminder_progress_title">%1$d of %2$d done this week</string>
+    <string name="reminder_progress_body">%s. Got time for one more?</string>
+
+    <!-- Profile & settings -->
+    <string name="profile_title">Profile</string>
+    <string name="your_training">Your training</string>
+    <string name="weeks_completed">Weeks completed</string>
+    <string name="weeks_completed_value">%1$d of %2$d</string>
+    <string name="current_streak">Current streak</string>
+    <string name="longest_streak">Longest streak</string>
+    <plurals name="weeks_count">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <string name="total_study_time">Total study time</string>
+    <string name="resources_finished">Resources finished</string>
+    <string name="settings">Settings</string>
+    <string name="reminders">Reminders</string>
+    <string name="reminders_body">Only when you\'re behind on the week, and never on a day you\'ve already trained.</string>
+    <string name="reminder_days">Days</string>
+    <string name="reminder_time">Time</string>
+    <string name="reminder_no_days">No days selected: no reminders will arrive.</string>
+    <string name="replay_intro">Replay the intro</string>
+    <string name="delete_all_data">Delete all data</string>
+    <string name="delete_all_title">Delete all your data?</string>
+    <string name="delete_all_body">Every plan, session, resource and reflection is erased from this device. This can\'t be undone.</string>
+    <string name="about_version">Version %s</string>
+
     <!-- Celebration -->
     <string name="week_complete_title">Week complete</string>
     <plurals name="week_complete_body">
