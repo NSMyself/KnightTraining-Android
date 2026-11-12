@@ -148,8 +148,25 @@ maintainer confirms how interactions *feel* on a device themselves.
    blocks, bonus goals and the session review. Not yet: YouTube playlist import (needs an
    Android-restricted API key from the maintainer), the `shared_course` table and its catalog
    merge, a "see all" shelf per kind.
-4. Lichess: OAuth (AppAuth), Elo, activity sync (one request at a time, 60s after a 429),
-   milestones.
+4. Lichess: OAuth, Elo, activity sync (one request at a time, 60s after a 429), milestones.
+   **Built 2026-11-12**:
+   - Core: `core/lichess/` (payload models, `LichessClient` + `LichessRequestGate`, `LichessSync`).
+   - Store: `TrainingStoreLichess.kt` and `TrainingStoreMilestones.kt`.
+   - Sign-in: PKCE in a Custom Tab with no AppAuth dependency (`app/.../lichess/`). The token is
+     encrypted with a Keystore key in `noBackupFilesDir` and never written to the database (the
+     `account` token columns stay `NULL`).
+   - Syncs run on every `MainActivity.onStart`, at most every two minutes.
+   - Home has the offer banner and confirm sheet and the milestones card; Profile has the
+     connect, ratings and disconnect card.
+   - Pinned by `LichessSyncTest`, `LichessBatchTest`, `MilestoneTest` and
+     `LichessStreakDetectionTest` (core), plus `LichessProfileTest` and `LichessHomeTest`
+     (instrumented).
+
+   Not yet:
+   - A real lichess.org sign-in, which needs the maintainer's account on a device.
+   - Lichess studies sync.
+   - The weekly rating chart (`weeklyEloHistory` exists, no UI).
+   - The puzzle dashboard for the weekly coach (Phase 6).
 5. Reminders, Glance widget, share-to-app intent. **Built 2026-11-12**: behind-only training
    reminders on picked days (one inexact alarm, re-armed on boot/clock change), the share target
    (Phase 3), and a Home Screen widget (`widget/WeekWidget.kt`): plan, goals, minutes and the

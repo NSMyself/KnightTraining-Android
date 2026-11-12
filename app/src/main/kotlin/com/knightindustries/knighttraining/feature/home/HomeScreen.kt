@@ -45,6 +45,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.knightindustries.knighttraining.R
+import com.knightindustries.knighttraining.core.model.LichessActivityBatch
+import com.knightindustries.knighttraining.core.model.Milestone
 import com.knightindustries.knighttraining.core.model.PlanTemplate
 import com.knightindustries.knighttraining.core.model.WeeklyGoal
 import com.knightindustries.knighttraining.core.model.WeeklyTrainingStats
@@ -82,6 +84,12 @@ fun HomeScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val session by viewModel.session.collectAsStateWithLifecycle()
+    val offers by viewModel.lichessOffers.collectAsStateWithLifecycle()
+    val milestones by viewModel.milestones.collectAsStateWithLifecycle()
+    var tracking by remember { mutableStateOf<LichessActivityBatch?>(null) }
+    var editingMilestone by remember { mutableStateOf<Milestone?>(null) }
+    var addingMilestone by rememberSaveable { mutableStateOf(false) }
+    var deletingMilestone by remember { mutableStateOf<Milestone?>(null) }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refresh() }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var choosingStart by rememberSaveable { mutableStateOf(false) }
@@ -115,6 +123,24 @@ fun HomeScreen(
         )
     }
 
+    tracking?.let { batch ->
+        TrackLichessSheet(
+            batch,
+            onDismiss = { tracking = null },
+            onAdd = { duration, puzzles -> viewModel.acceptOffer(batch, duration, puzzles); tracking = null },
+        )
+    }
+    if (addingMilestone || editingMilestone != null) {
+        MilestoneSheet(
+            editing = editingMilestone,
+            onDismiss = { addingMilestone = false; editingMilestone = null },
+            onSave = { viewModel.saveMilestone(it); addingMilestone = false; editingMilestone = null },
+        )
+    }
+    deletingMilestone?.let { milestone ->
+        DeleteMilestoneDialog(onConfirm = { viewModel.deleteMilestone(milestone); deletingMilestone = null }, onDismiss = { deletingMilestone = null })
+    }
+
     Scaffold(
         modifier = Modifier.padding(contentPadding).nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -141,8 +167,22 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 session?.let { item { SessionBanner(it, onOpenSession) } }
+                offers.firstOrNull()?.let { offer ->
+                    item(key = offer.id) { LichessOfferBanner(offer, onTrack = { tracking = offer }, onDismiss = { viewModel.declineOffer(offer) }) }
+                }
                 item { PlanCard(current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal) { addingMoreTo = it } }
                 item { ActivityCard(current.surface, current.stats) }
+                milestones?.let { snapshot ->
+                    item {
+                        MilestonesCard(
+                            snapshot,
+                            onToggle = viewModel::toggleMilestone,
+                            onAdd = { addingMilestone = true },
+                            onEdit = { editingMilestone = it },
+                            onDelete = { deletingMilestone = it },
+                        )
+                    }
+                }
             }
         }
     }

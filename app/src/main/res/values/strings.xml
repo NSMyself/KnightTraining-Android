@@ -396,4 +396,59 @@
     <string name="rating_rapid">Rapid</string>
     <string name="rating_classical">Classical</string>
     <string name="rating_puzzle">Puzzle</string>
+
+    <!-- Lichess offers -->
+    <string name="lichess_streak_detected">Puzzle Streak detected</string>
+    <string name="lichess_storm_detected">Puzzle Storm detected</string>
+    <string name="lichess_puzzles_detected">Puzzle session detected</string>
+    <plurals name="lichess_classical_detected">
+        <item quantity="one">Classical game detected</item>
+        <item quantity="other">Classical games detected</item>
+    </plurals>
+    <plurals name="lichess_rapid_detected">
+        <item quantity="one">Rapid game detected</item>
+        <item quantity="other">Rapid games detected</item>
+    </plurals>
+    <plurals name="lichess_blitz_detected">
+        <item quantity="one">Blitz game detected</item>
+        <item quantity="other">Blitz games detected</item>
+    </plurals>
+    <plurals name="storm_runs">
+        <item quantity="one">%d run</item>
+        <item quantity="other">%d runs</item>
+    </plurals>
+    <string name="add_to_history">Add to training history</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="track_title">Track this session</string>
+    <string name="track_activity">Activity</string>
+    <string name="track_time_control">Time control</string>
+    <string name="track_quantity">Quantity</string>
+    <string name="track_duration">Duration</string>
+    <string name="track_puzzles_solved">Puzzles solved (optional)</string>
+
+    <!-- Milestones -->
+    <string name="milestones">Milestones</string>
+    <string name="milestones_see_all">See all</string>
+    <string name="milestones_see_active">See active</string>
+    <string name="milestone_add">Add a milestone</string>
+    <string name="milestones_empty_title">No milestones yet</string>
+    <string name="milestones_empty_body">Set a long-term goal: a rating target, a Lichess title, or anything else you\'re working toward.</string>
+    <string name="milestones_all_done">No active milestones. Nice work.</string>
+    <string name="milestone_add_body">A goal you\'re working toward over months, like a rating target or a title. It doesn\'t reset each week.</string>
+    <string name="milestone_kind_elo">Reach a rating target</string>
+    <string name="milestone_kind_title">Earn a Lichess title</string>
+    <string name="milestone_kind_text">Something else</string>
+    <string name="milestone_kind_text_body">Completed by hand</string>
+    <string name="milestone_rating_type">Rating type</string>
+    <string name="milestone_target_rating">Target rating</string>
+    <string name="milestone_target_title">Target</string>
+    <string name="milestone_any_title">Any title</string>
+    <string name="milestone_goal">Your goal</string>
+    <string name="milestone_goal_hint">e.g. Play a tournament abroad</string>
+    <string name="milestone_connect_lichess">Connect Lichess to track progress</string>
+    <string name="milestone_current_title">Current: %s</string>
+    <string name="milestone_target_elo">Reach %1$d %2$s</string>
+    <string name="milestone_target_title_specific">Earn the %s title</string>
+    <string name="milestone_target_title_any">Earn any Lichess title</string>
+    <string name="milestone_delete_title">Delete this milestone?</string>
 </resources>

@@ -12,6 +12,17 @@ import com.knightindustries.knighttraining.core.store.increaseGoalTarget
 import com.knightindustries.knighttraining.core.store.resource
 import com.knightindustries.knighttraining.feature.plan.DraftBlock
 import kotlinx.coroutines.launch
+import com.knightindustries.knighttraining.core.model.LichessActivityBatch
+import com.knightindustries.knighttraining.core.model.Milestone
+import com.knightindustries.knighttraining.core.model.MilestonesSnapshot
+import com.knightindustries.knighttraining.core.store.acceptLichessActivityBatch
+import com.knightindustries.knighttraining.core.store.completeMilestone
+import com.knightindustries.knighttraining.core.store.declineLichessActivityBatch
+import com.knightindustries.knighttraining.core.store.deleteMilestone
+import com.knightindustries.knighttraining.core.store.observeMilestonesSnapshot
+import com.knightindustries.knighttraining.core.store.observePendingLichessActivityBatches
+import com.knightindustries.knighttraining.core.store.reopenMilestone
+import com.knightindustries.knighttraining.core.store.saveMilestone
 import com.knightindustries.knighttraining.feature.session.SessionStart
 import java.time.Instant
 import java.time.LocalDate
@@ -56,6 +67,38 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
 
     /** The session in progress, if any: Home shows a way back to it. */
     val session: StateFlow<PracticeSession?> = container.sessions.session
+
+    /** Pending Lichess offers, oldest first; Home shows the first. */
+    val lichessOffers: StateFlow<List<LichessActivityBatch>> = container.store.observePendingLichessActivityBatches()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val milestones: StateFlow<MilestonesSnapshot?> = container.store.observeMilestonesSnapshot()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    fun acceptOffer(batch: LichessActivityBatch, durationSeconds: Int, puzzleCount: Int?) {
+        viewModelScope.launch {
+            container.store.acceptLichessActivityBatch(batch, durationSeconds, puzzleCount, container.preferences.firstLaunch())
+        }
+    }
+
+    /** Remembered: the same items are never offered again. */
+    fun declineOffer(batch: LichessActivityBatch) {
+        viewModelScope.launch { container.store.declineLichessActivityBatch(batch.id) }
+    }
+
+    fun toggleMilestone(milestone: Milestone) {
+        viewModelScope.launch {
+            if (milestone.isCompleted) container.store.reopenMilestone(milestone.id) else container.store.completeMilestone(milestone.id)
+        }
+    }
+
+    fun saveMilestone(milestone: Milestone) {
+        viewModelScope.launch { container.store.saveMilestone(milestone) }
+    }
+
+    fun deleteMilestone(milestone: Milestone) {
+        viewModelScope.launch { container.store.deleteMilestone(milestone.id) }
+    }
 
     fun refresh() {
         refreshes.value++
