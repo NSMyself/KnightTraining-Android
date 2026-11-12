@@ -5,6 +5,8 @@ import androidx.room.Room
 import com.knightindustries.knighttraining.core.persistence.AppDatabase
 import com.knightindustries.knighttraining.core.persistence.AppDatabase.Companion.configure
 import com.knightindustries.knighttraining.core.store.TrainingStore
+import com.knightindustries.knighttraining.core.net.CatalogSync
+import com.knightindustries.knighttraining.core.net.ResourceEnricher
 import com.knightindustries.knighttraining.data.AppPreferences
 import com.knightindustries.knighttraining.session.SessionNotifier
 import com.knightindustries.knighttraining.session.SessionRepository
@@ -26,6 +28,7 @@ class KnightTrainingApplication : Application() {
         container.appScope.launch {
             container.store.seedPresetsIfNeeded()
             container.preferences.firstLaunch()
+            container.catalogSync.syncIfNeeded()
         }
     }
 }
@@ -44,6 +47,12 @@ class AppContainer(application: Application) {
 
     /** The practice session in progress, if any, and its notification. */
     val sessions = SessionRepository(application, SessionNotifier(application))
+
+    /** What a pasted or shared link can tell the add-resource form. */
+    val enricher = ResourceEnricher()
+
+    /** The course catalog, re-fetched with its ETag (a cheap 304 when unchanged). */
+    val catalogSync = CatalogSync(store, preferences.catalogEtags)
 
     companion object {
         fun from(application: Application): AppContainer = (application as KnightTrainingApplication).container

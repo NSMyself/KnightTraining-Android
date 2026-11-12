@@ -33,6 +33,13 @@ import com.knightindustries.knighttraining.feature.onboarding.OnboardingScreen
 import com.knightindustries.knighttraining.core.store.previousWeeklyPlan
 import com.knightindustries.knighttraining.feature.review.WeeklyReviewScreen
 import com.knightindustries.knighttraining.feature.review.WeeklyReviewViewModel
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.knightindustries.knighttraining.feature.resources.AddResourceSheet
+import com.knightindustries.knighttraining.feature.resources.AddResourceViewModel
+import com.knightindustries.knighttraining.feature.resources.ResourceDetailScreen
+import com.knightindustries.knighttraining.feature.resources.ResourceDetailViewModel
+import com.knightindustries.knighttraining.feature.resources.ResourcesScreen
+import com.knightindustries.knighttraining.feature.resources.ResourcesViewModel
 import com.knightindustries.knighttraining.feature.plan.EditPlanScreen
 import com.knightindustries.knighttraining.feature.plan.EditPlanViewModel
 import com.knightindustries.knighttraining.feature.training.TrainingScreen
@@ -200,7 +207,24 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                         onClose = { backStack.removeLastOrNull() },
                     )
                 }
-                entry<ResourcesRoute> { Placeholder(R.string.tab_resources, R.string.resources_coming_soon, padding) }
+                entry<ResourcesRoute> {
+                    var adding by rememberSaveable { mutableStateOf(false) }
+                    // Each opening of the sheet starts blank: a fresh ViewModel per opening.
+                    var addCount by rememberSaveable { mutableStateOf(0) }
+                    ResourcesScreen(
+                        viewModel = appViewModel { ResourcesViewModel(it) },
+                        onOpen = { backStack.add(ResourceDetailRoute(it.toString())) },
+                        onAdd = { addCount++; adding = true },
+                        contentPadding = padding,
+                    )
+                    if (adding) AddResourceSheet(appViewModel(key = "add-resource-$addCount") { AddResourceViewModel(it) }) { adding = false }
+                }
+                entry<ResourceDetailRoute> { route ->
+                    ResourceDetailScreen(
+                        viewModel = appViewModel(key = route.resourceId) { ResourceDetailViewModel(it, UUID.fromString(route.resourceId)) },
+                        onBack = { backStack.remove(route) },
+                    )
+                }
                 entry<ProfileRoute> { Placeholder(R.string.tab_profile, R.string.profile_coming_soon, padding) }
                 entry<CreatePlanRoute> { route ->
                     CreatePlanScreen(

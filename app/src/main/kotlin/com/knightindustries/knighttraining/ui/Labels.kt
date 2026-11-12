@@ -9,6 +9,11 @@ import androidx.compose.material.icons.rounded.Flag
 import androidx.compose.material.icons.rounded.ManageSearch
 import androidx.compose.material.icons.rounded.School
 import androidx.compose.material.icons.rounded.Timer
+import androidx.compose.material.icons.automirrored.rounded.Article
+import androidx.compose.material.icons.automirrored.rounded.MenuBook
+import androidx.compose.material.icons.rounded.GridOn
+import androidx.compose.material.icons.rounded.PlayCircle
+import com.knightindustries.knighttraining.core.model.ResourceKind
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
@@ -45,6 +50,36 @@ fun activityIcon(code: String): ImageVector = when (code) {
     ActivityType.COACHING -> Icons.Rounded.School
     else -> Icons.Rounded.AllInclusive
 }
+
+@StringRes
+fun kindNameRes(code: String): Int = when (code) {
+    ResourceKind.BOOK -> R.string.kind_book
+    ResourceKind.COURSE -> R.string.kind_course
+    ResourceKind.VIDEO -> R.string.kind_video
+    ResourceKind.LICHESS_STUDY -> R.string.kind_lichess_study
+    else -> R.string.kind_article
+}
+
+/** Section headers: "Books", "Lichess Studies". */
+@StringRes
+fun kindPluralRes(code: String): Int = when (code) {
+    ResourceKind.BOOK -> R.string.kinds_book
+    ResourceKind.COURSE -> R.string.kinds_course
+    ResourceKind.VIDEO -> R.string.kinds_video
+    ResourceKind.LICHESS_STUDY -> R.string.kinds_lichess_study
+    else -> R.string.kinds_article
+}
+
+fun kindIcon(code: String): ImageVector = when (code) {
+    ResourceKind.BOOK -> Icons.AutoMirrored.Rounded.MenuBook
+    ResourceKind.COURSE -> Icons.Rounded.School
+    ResourceKind.VIDEO -> Icons.Rounded.PlayCircle
+    ResourceKind.LICHESS_STUDY -> Icons.Rounded.GridOn
+    else -> Icons.AutoMirrored.Rounded.Article
+}
+
+/** The order kinds appear in the library and pickers. */
+val kindOrder = listOf(ResourceKind.BOOK, ResourceKind.COURSE, ResourceKind.VIDEO, ResourceKind.ARTICLE, ResourceKind.LICHESS_STUDY)
 
 /** A goal's own name, or its activity's. */
 @Composable

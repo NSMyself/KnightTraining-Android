@@ -42,6 +42,10 @@ data class WeekLogRoute(val weekStart: String) : Route
 @Serializable
 data class WeeklyReviewRoute(val weeklyPlanId: String) : Route
 
+/** One resource. [resourceId] is a UUID string. */
+@Serializable
+data class ResourceDetailRoute(val resourceId: String) : Route
+
 /** Edit a saved plan. [templateId] is a UUID string. */
 @Serializable
 data class EditPlanRoute(val templateId: String) : Route
