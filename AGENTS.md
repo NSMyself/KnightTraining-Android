@@ -185,4 +185,10 @@ maintainer confirms how interactions *feel* on a device themselves.
    - Lint's resource checks are clean. The code still trips Compose's `NonObservableLocale` and
      `LocalContext*` checks (pre-existing, so `lintDebug` fails); fix those before making lint a
      gate.
-   - Not yet: the weekly coach, a customizable Home, share cards.
+   - **Customizable Home, built 2026-11-12.** The plan card stays pinned; below it the user's tiles
+     (`HomeTile`/`HomeLayout`, ids identical to iOS, saved in DataStore so "Delete all data" keeps
+     them). Wide tiles take a row, small ones pair up. Edited in `EditHomeSheet` (drag handles,
+     add/remove, reset), opened from Home's top bar and Profile. iOS's in-place jiggle mode isn't
+     ported: Android has no such convention. Pinned by `HomeLayoutTest` and `EditHomeTest`;
+     drag-reordering needs a device check.
+   - Not yet: the weekly coach, share cards.

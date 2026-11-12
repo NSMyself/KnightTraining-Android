@@ -476,4 +476,32 @@
     <string name="suggest_reason_lighter">Less %1$s than usual: you\'ve hit %2$s of those goals lately.</string>
     <string name="suggest_reason_coach_target">Keeps your coach\'s target of %s. The other blocks make room for it.</string>
     <string name="suggest_reason_resource">%1$s uses “%2$s”, which you\'ve been studying.</string>
+
+    <!-- Home tiles -->
+    <string name="edit_home">Edit Home</string>
+    <string name="tile_last_week">Last week</string>
+    <string name="tile_completion_rate">Plan completed</string>
+    <string name="tile_weekly_total">Time this week</string>
+    <string name="tile_all_time_total">All-time study time</string>
+    <string name="tile_current_rating">Current rating</string>
+    <string name="tile_last_studied">Last studied</string>
+    <string name="tile_weekly_activity_detail">Your total and a bar for each day</string>
+    <string name="tile_milestones_detail">Your long-term goals</string>
+    <string name="tile_last_week_detail">Last week\'s goals and review notes</string>
+    <string name="tile_current_rating_detail">Your latest Lichess rating</string>
+    <string name="tile_last_studied_detail">The resource you studied most recently</string>
+    <string name="tile_this_week_detail">This week</string>
+    <string name="home_pinned_plan">Weekly plan</string>
+    <string name="home_pinned_plan_detail">Your goals for the week</string>
+    <string name="home_pinned_note">These can\'t be moved or removed.</string>
+    <string name="home_on_home">On Home</string>
+    <string name="home_more_tiles">More tiles</string>
+    <string name="home_only_plan">Only your weekly plan is on Home.</string>
+    <string name="home_all_tiles_added">Every tile is already on Home.</string>
+    <string name="home_reset">Reset to default</string>
+    <string name="home_add_tile">Add %s</string>
+    <string name="home_remove_tile">Remove %s</string>
+    <string name="home_reorder_tile">Reorder %s</string>
+    <string name="last_week_none">You didn\'t plan last week.</string>
+    <string name="last_week_focus">Focus</string>
 </resources>

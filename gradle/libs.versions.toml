@@ -18,6 +18,7 @@ okhttp = "5.5.1"
 coil = "3.6.3"
 browser = "1.10.0"
 glance = "1.2.0"
+reorderable = "2.4.3"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -46,6 +47,7 @@ okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 glance-appwidget-testing = { module = "androidx.glance:glance-appwidget-testing", version.ref = "glance" }
 glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }

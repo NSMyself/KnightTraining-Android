@@ -10,17 +10,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.DashboardCustomize
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -33,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,7 +49,6 @@ import com.knightindustries.knighttraining.core.model.LichessActivityBatch
 import com.knightindustries.knighttraining.core.model.Milestone
 import com.knightindustries.knighttraining.core.model.PlanTemplate
 import com.knightindustries.knighttraining.core.model.WeeklyGoal
-import com.knightindustries.knighttraining.core.model.WeeklyTrainingStats
 import com.knightindustries.knighttraining.core.session.PracticeSession
 import com.knightindustries.knighttraining.core.store.WeeklySurface
 import com.knightindustries.knighttraining.core.store.openGoals
@@ -61,11 +60,9 @@ import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import com.knightindustries.knighttraining.ui.LabeledFab
 import com.knightindustries.knighttraining.ui.activityIcon
 import com.knightindustries.knighttraining.ui.activityName
-import com.knightindustries.knighttraining.ui.durationText
 import com.knightindustries.knighttraining.ui.goalTitle
 import com.knightindustries.knighttraining.ui.progressText
 import java.time.LocalDate
@@ -90,6 +87,11 @@ fun HomeScreen(
     var editingMilestone by remember { mutableStateOf<Milestone?>(null) }
     var addingMilestone by rememberSaveable { mutableStateOf(false) }
     var deletingMilestone by remember { mutableStateOf<Milestone?>(null) }
+    val layout by viewModel.layout.collectAsStateWithLifecycle()
+    var editingHome by rememberSaveable { mutableStateOf(false) }
+    if (editingHome) {
+        EditHomeSheet(layout, onChange = viewModel::setLayout, onReset = viewModel::resetLayout, onDismiss = { editingHome = false })
+    }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refresh() }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var choosingStart by rememberSaveable { mutableStateOf(false) }
@@ -146,6 +148,11 @@ fun HomeScreen(
         topBar = {
             LargeTopAppBar(
                 title = { Text(greeting()) },
+                actions = {
+                    IconButton(onClick = { editingHome = true }) {
+                        Icon(Icons.Rounded.DashboardCustomize, contentDescription = stringResource(R.string.edit_home))
+                    }
+                },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )
@@ -171,18 +178,16 @@ fun HomeScreen(
                     item(key = offer.id) { LichessOfferBanner(offer, onTrack = { tracking = offer }, onDismiss = { viewModel.declineOffer(offer) }) }
                 }
                 item { PlanCard(current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal) { addingMoreTo = it } }
-                item { ActivityCard(current.surface, current.stats) }
-                milestones?.let { snapshot ->
-                    item {
-                        MilestonesCard(
-                            snapshot,
-                            onToggle = viewModel::toggleMilestone,
-                            onAdd = { addingMilestone = true },
-                            onEdit = { editingMilestone = it },
-                            onDelete = { deletingMilestone = it },
-                        )
-                    }
-                }
+                homeTiles(
+                    layout,
+                    TileData(current.surface, current.stats, current.lastWeek, milestones),
+                    MilestoneActions(
+                        onToggle = viewModel::toggleMilestone,
+                        onAdd = { addingMilestone = true },
+                        onEdit = { editingMilestone = it },
+                        onDelete = { deletingMilestone = it },
+                    ),
+                )
             }
         }
     }
@@ -311,39 +316,4 @@ private fun GoalRow(goal: WeeklyGoal, onStart: () -> Unit, onAddMore: () -> Unit
             }
         },
     )
-}
-
-/** Derived figures for this week; hidden figures stay hidden rather than reading zero. */
-@Composable
-private fun ActivityCard(surface: WeeklySurface, stats: WeeklyTrainingStats) {
-    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
-        Column(Modifier.padding(20.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text(stringResource(R.string.this_week_activity), style = MaterialTheme.typography.titleMedium)
-            if (surface.recentActivities.isEmpty()) {
-                Text(stringResource(R.string.no_activity_this_week), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                return@Column
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Stat(stringResource(R.string.total_this_week), durationText(stats.totalSeconds), Modifier.weight(1f))
-                stats.mostTrainedActivityCode?.let { Stat(stringResource(R.string.most_trained), activityName(it), Modifier.weight(1f)) }
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Stat(stringResource(R.string.puzzles_solved), stats.puzzleCount.toString(), Modifier.weight(1f))
-                Stat(stringResource(R.string.games_played), stats.gameCount.toString(), Modifier.weight(1f))
-                Stat(stringResource(R.string.classical_games), stats.classicalGameCount.toString(), Modifier.weight(1f))
-            }
-            // A streak is a caption, never a badge, and never shown below 2 (iOS AGENTS.md §7).
-            if (surface.currentStreak >= 2) {
-                Text(stringResource(R.string.week_streak, surface.currentStreak), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-        }
-    }
-}
-
-@Composable
-private fun Stat(label: String, value: String, modifier: Modifier = Modifier) {
-    Column(modifier) {
-        Text(value, style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-    }
 }

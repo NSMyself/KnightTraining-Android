@@ -21,6 +21,23 @@ private val Context.dataStore by preferencesDataStore(name = "preferences")
 class AppPreferences(private val context: Context) {
     private val firstLaunchKey = longPreferencesKey("first_launch")
     private val onboardingDoneKey = booleanPreferencesKey("has_completed_onboarding")
+    private val homeLayoutKey = stringPreferencesKey("home_layout")
+
+    /**
+     * Home's tile ids in order, or `null` for the default. Lives here, not in the database, so
+     * "Delete all data" keeps it (iOS keeps it in `UserDefaults` for the same reason).
+     */
+    val homeLayout: Flow<List<String>?> = context.dataStore.data.map { prefs ->
+        prefs[homeLayoutKey]?.let { saved -> if (saved.isEmpty()) emptyList() else saved.split(',') }
+    }
+
+    suspend fun setHomeLayout(ids: List<String>) {
+        context.dataStore.edit { it[homeLayoutKey] = ids.joinToString(",") }
+    }
+
+    suspend fun resetHomeLayout() {
+        context.dataStore.edit { it.remove(homeLayoutKey) }
+    }
 
     /**
      * When the app was first opened: the anchor for the first-week grace period

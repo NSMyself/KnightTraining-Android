@@ -3,31 +3,34 @@ package com.knightindustries.knighttraining.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.knightindustries.knighttraining.AppContainer
-import com.knightindustries.knighttraining.core.model.WeekCalendar
-import com.knightindustries.knighttraining.core.model.WeeklyTrainingStats
-import com.knightindustries.knighttraining.core.model.WeeklyGoal
-import com.knightindustries.knighttraining.core.session.PracticeSession
-import com.knightindustries.knighttraining.core.store.addBonusGoal
-import com.knightindustries.knighttraining.core.store.increaseGoalTarget
-import com.knightindustries.knighttraining.core.store.resource
-import com.knightindustries.knighttraining.feature.plan.DraftBlock
-import kotlinx.coroutines.launch
 import com.knightindustries.knighttraining.core.model.LichessActivityBatch
 import com.knightindustries.knighttraining.core.model.Milestone
 import com.knightindustries.knighttraining.core.model.MilestonesSnapshot
+import com.knightindustries.knighttraining.core.model.WeekCalendar
+import com.knightindustries.knighttraining.core.model.WeeklyGoal
+import com.knightindustries.knighttraining.core.model.WeeklyPlan
+import com.knightindustries.knighttraining.core.model.WeeklyReview
+import com.knightindustries.knighttraining.core.model.WeeklyTrainingStats
+import com.knightindustries.knighttraining.core.session.PracticeSession
+import com.knightindustries.knighttraining.core.store.WeeklySurface
 import com.knightindustries.knighttraining.core.store.acceptLichessActivityBatch
+import com.knightindustries.knighttraining.core.store.addBonusGoal
 import com.knightindustries.knighttraining.core.store.completeMilestone
 import com.knightindustries.knighttraining.core.store.declineLichessActivityBatch
 import com.knightindustries.knighttraining.core.store.deleteMilestone
+import com.knightindustries.knighttraining.core.store.increaseGoalTarget
 import com.knightindustries.knighttraining.core.store.observeMilestonesSnapshot
 import com.knightindustries.knighttraining.core.store.observePendingLichessActivityBatches
+import com.knightindustries.knighttraining.core.store.observeWeeklySurface
+import com.knightindustries.knighttraining.core.store.previousWeeklyPlan
 import com.knightindustries.knighttraining.core.store.reopenMilestone
+import com.knightindustries.knighttraining.core.store.resource
 import com.knightindustries.knighttraining.core.store.saveMilestone
+import com.knightindustries.knighttraining.core.store.weeklyReview
+import com.knightindustries.knighttraining.feature.plan.DraftBlock
 import com.knightindustries.knighttraining.feature.session.SessionStart
 import java.time.Instant
 import java.time.LocalDate
-import com.knightindustries.knighttraining.core.store.WeeklySurface
-import com.knightindustries.knighttraining.core.store.observeWeeklySurface
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,12 +38,21 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
+data class LastWeek(val plan: WeeklyPlan, val review: WeeklyReview?)
 
 sealed interface HomeState {
     data object Loading : HomeState
 
     /** [weekEnd] is the exclusive end of this week as Home sees it: 14 days for an extended first week. */
-    data class Loaded(val surface: WeeklySurface, val stats: WeeklyTrainingStats, val weekEnd: LocalDate?) : HomeState
+    data class Loaded(
+        val surface: WeeklySurface,
+        val stats: WeeklyTrainingStats,
+        val weekEnd: LocalDate?,
+        /** The week before this one, for the Last week tile; `null` when it had no plan. */
+        val lastWeek: LastWeek? = null,
+    ) : HomeState
 }
 
 /**
@@ -56,10 +68,12 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         .flatMapLatest {
             val firstLaunch = container.preferences.firstLaunch()
             container.store.observeWeeklySurface(firstLaunch = firstLaunch).map { surface ->
+                val previous = container.store.previousWeeklyPlan(firstLaunch = firstLaunch)
                 HomeState.Loaded(
                     surface = surface,
                     stats = WeeklyTrainingStats.from(surface.recentActivities),
                     weekEnd = surface.plan?.effectiveNextWeekStart(firstLaunch, WeekCalendar.system()),
+                    lastWeek = previous?.let { LastWeek(it, container.store.weeklyReview(it.id)) },
                 )
             }
         }
@@ -98,6 +112,18 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
 
     fun deleteMilestone(milestone: Milestone) {
         viewModelScope.launch { container.store.deleteMilestone(milestone.id) }
+    }
+
+    val layout: StateFlow<HomeLayout> = container.preferences.homeLayout
+        .map { ids -> ids?.let(HomeLayout::fromIds) ?: HomeLayout.DEFAULT }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeLayout.DEFAULT)
+
+    fun setLayout(layout: HomeLayout) {
+        viewModelScope.launch { container.preferences.setHomeLayout(layout.ids) }
+    }
+
+    fun resetLayout() {
+        viewModelScope.launch { container.preferences.resetHomeLayout() }
     }
 
     fun refresh() {

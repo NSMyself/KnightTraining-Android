@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.browser)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.reorderable)
     implementation(libs.glance.appwidget)
     implementation(libs.glance.material3)
     implementation(platform(libs.compose.bom))

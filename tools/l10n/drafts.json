@@ -1729,5 +1729,50 @@
    "one": "Tu as atteint %1$d objectif de la semaine sur %2$d",
    "other": "Tu as atteint %1$d objectifs de la semaine sur %2$d"
   }
+ },
+ "home_on_home": {
+  "pt-PT": "No Início",
+  "es": "En Inicio",
+  "pt-BR": "No Início",
+  "nl": "Op Start",
+  "it": "In Home",
+  "de": "Auf Start",
+  "fr": "Sur Accueil"
+ },
+ "home_more_tiles": {
+  "pt-PT": "Mais cartões",
+  "es": "Más tarjetas",
+  "pt-BR": "Mais cartões",
+  "nl": "Meer tegels",
+  "it": "Altri riquadri",
+  "de": "Weitere Kacheln",
+  "fr": "Autres cartes"
+ },
+ "home_reorder_tile": {
+  "pt-PT": "Reordenar %s",
+  "es": "Reordenar %s",
+  "pt-BR": "Reordenar %s",
+  "nl": "%s verplaatsen",
+  "it": "Riordina %s",
+  "de": "%s verschieben",
+  "fr": "Réordonner %s"
+ },
+ "last_week_none": {
+  "pt-PT": "Não planeaste a semana passada.",
+  "es": "No planeaste la semana pasada.",
+  "pt-BR": "Você não planejou a semana passada.",
+  "nl": "Je hebt vorige week niet gepland.",
+  "it": "La settimana scorsa non l'hai pianificata.",
+  "de": "Letzte Woche hast du nicht geplant.",
+  "fr": "Tu n'as pas planifié la semaine dernière."
+ },
+ "tile_last_week": {
+  "pt-PT": "Semana passada",
+  "es": "Semana pasada",
+  "pt-BR": "Semana passada",
+  "nl": "Vorige week",
+  "it": "Settimana scorsa",
+  "de": "Letzte Woche",
+  "fr": "Semaine dernière"
  }
 }

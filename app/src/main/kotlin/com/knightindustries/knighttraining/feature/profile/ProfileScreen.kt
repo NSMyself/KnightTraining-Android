@@ -63,6 +63,8 @@ import com.knightindustries.knighttraining.core.store.longestStreak
 import com.knightindustries.knighttraining.core.store.observeLichessProfile
 import com.knightindustries.knighttraining.core.store.totalDuration
 import com.knightindustries.knighttraining.core.store.weekCompletionTally
+import com.knightindustries.knighttraining.feature.home.EditHomeSheet
+import com.knightindustries.knighttraining.feature.home.HomeLayout
 import com.knightindustries.knighttraining.lichess.LichessAuth
 import com.knightindustries.knighttraining.reminders.ReminderScheduler
 import com.knightindustries.knighttraining.ui.durationText
@@ -70,6 +72,7 @@ import com.knightindustries.knighttraining.ui.ratingTypeNameRes
 import com.knightindustries.knighttraining.ui.ratingTypeOrder
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -126,6 +129,18 @@ class ProfileViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
+    val homeLayout: StateFlow<HomeLayout> = container.preferences.homeLayout
+        .map { ids -> ids?.let(HomeLayout::fromIds) ?: HomeLayout.DEFAULT }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeLayout.DEFAULT)
+
+    fun setHomeLayout(layout: HomeLayout) {
+        viewModelScope.launch { container.preferences.setHomeLayout(layout.ids) }
+    }
+
+    fun resetHomeLayout() {
+        viewModelScope.launch { container.preferences.resetHomeLayout() }
+    }
+
     fun replayIntro() {
         viewModelScope.launch { container.preferences.setOnboardingCompleted(false) }
     }
@@ -150,6 +165,11 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
     val lichess by viewModel.lichess.collectAsStateWithLifecycle()
     val signIn by viewModel.lichessSignIn.collectAsStateWithLifecycle()
     var confirmingDisconnect by rememberSaveable { mutableStateOf(false) }
+    var editingHome by rememberSaveable { mutableStateOf(false) }
+    val homeLayout by viewModel.homeLayout.collectAsStateWithLifecycle()
+    if (editingHome) {
+        EditHomeSheet(homeLayout, onChange = viewModel::setHomeLayout, onReset = viewModel::resetHomeLayout, onDismiss = { editingHome = false })
+    }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         viewModel.refresh()
         viewModel.refreshLichess()
@@ -239,6 +259,12 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
             }
 
             Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+                ListItem(
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                    headlineContent = { Text(stringResource(R.string.edit_home)) },
+                    modifier = Modifier.clickable { editingHome = true },
+                )
+                HorizontalDivider()
                 ListItem(
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     headlineContent = { Text(stringResource(R.string.replay_intro)) },
