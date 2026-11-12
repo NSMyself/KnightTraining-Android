@@ -43,20 +43,37 @@ object Theme {
 }
 
 /**
- * Material 3 is only the plumbing here: the scheme is filled from the tokens above so stock
- * components don't fall back to Material's own palette. Dark-only, like iOS.
+ * Dark-only, like iOS. The Material 3 scheme is filled from the brand tokens, including the
+ * surface-container ladder, so stock components (cards, sheets, the navigation bar) read as the
+ * app's purple-black rather than Material's neutral greys. Shapes, type and motion stay Material:
+ * the app follows native Android UX (AGENTS.md).
  */
+private val colors = darkColorScheme(
+    primary = Theme.accent,
+    onPrimary = Color.White,
+    primaryContainer = Color(0xFF4A2E85),
+    onPrimaryContainer = Color(0xFFEBDDFF),
+    secondary = Color(0xFFCDBEEB),
+    onSecondary = Color(0xFF2E2347),
+    secondaryContainer = Color(0xFF3A2C57),
+    onSecondaryContainer = Color(0xFFE9DDFF),
+    tertiary = Theme.ratingGold,
+    background = Theme.background,
+    onBackground = Color(0xFFEDE6F7),
+    surface = Theme.background,
+    onSurface = Color(0xFFEDE6F7),
+    surfaceVariant = Color(0xFF2A2236),
+    onSurfaceVariant = Color(0xFFCBC2DB),
+    surfaceContainerLowest = Color(0xFF080110),
+    surfaceContainerLow = Color(0xFF130A1D),
+    surfaceContainer = Color(0xFF1A1126),
+    surfaceContainerHigh = Color(0xFF22182F),
+    surfaceContainerHighest = Color(0xFF2B2039),
+    outline = Color(0xFF5A4E6D),
+    outlineVariant = Color(0xFF3A3047),
+)
+
 @Composable
 fun KnightTrainingTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        colorScheme = darkColorScheme(
-            primary = Theme.accent,
-            onPrimary = Color.White,
-            background = Theme.background,
-            onBackground = Color.White,
-            surface = Theme.background,
-            onSurface = Color.White,
-        ),
-        content = content,
-    )
+    MaterialTheme(colorScheme = colors, content = content)
 }

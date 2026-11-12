@@ -1,0 +1,105 @@
+package com.knightindustries.knighttraining.ui
+
+import androidx.annotation.StringRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountTree
+import androidx.compose.material.icons.rounded.AllInclusive
+import androidx.compose.material.icons.rounded.Extension
+import androidx.compose.material.icons.rounded.Flag
+import androidx.compose.material.icons.rounded.ManageSearch
+import androidx.compose.material.icons.rounded.School
+import androidx.compose.material.icons.rounded.Timer
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import com.knightindustries.knighttraining.R
+import com.knightindustries.knighttraining.core.model.ActivityType
+import com.knightindustries.knighttraining.core.model.TargetType
+import com.knightindustries.knighttraining.core.model.WeeklyGoal
+
+/**
+ * Display text for the codes `core` deals in. Names derive from the code at display time, never
+ * from the database (iOS AGENTS.md §14).
+ */
+@StringRes
+fun activityNameRes(code: String): Int = when (code) {
+    ActivityType.PUZZLES -> R.string.activity_puzzles
+    ActivityType.PLAYING -> R.string.activity_playing
+    ActivityType.ANALYZING -> R.string.activity_analyzing
+    ActivityType.OPENINGS -> R.string.activity_openings
+    ActivityType.ENDGAMES -> R.string.activity_endgames
+    ActivityType.COACHING -> R.string.activity_coaching
+    else -> R.string.activity_general
+}
+
+@Composable
+fun activityName(code: String): String = stringResource(activityNameRes(code))
+
+fun activityIcon(code: String): ImageVector = when (code) {
+    ActivityType.PUZZLES -> Icons.Rounded.Extension
+    ActivityType.PLAYING -> Icons.Rounded.Timer
+    ActivityType.ANALYZING -> Icons.Rounded.ManageSearch
+    ActivityType.OPENINGS -> Icons.Rounded.AccountTree
+    ActivityType.ENDGAMES -> Icons.Rounded.Flag
+    ActivityType.COACHING -> Icons.Rounded.School
+    else -> Icons.Rounded.AllInclusive
+}
+
+/** A goal's own name, or its activity's. */
+@Composable
+fun goalTitle(goal: WeeklyGoal): String = blockTitle(goal.name, goal.activityType.code, goal.timeControlLabel)
+
+/**
+ * A block's title: its own name when it has one (typed, or a preset's), else derived from the
+ * activity, games with their time control: "Playing (15+10)". Derived rather than stored, so it
+ * follows the language (iOS AGENTS.md §14; iOS stores the composed text instead).
+ */
+@Composable
+fun blockTitle(name: String?, activityTypeCode: String, timeControlLabel: String?): String =
+    name ?: activityName(activityTypeCode).let { base -> timeControlLabel?.let { "$base ($it)" } ?: base }
+
+/** "2 h 30 min", "45 min", "2 h". */
+@Composable
+fun durationText(seconds: Int): String {
+    val minutes = seconds / 60
+    val hours = minutes / 60
+    val rest = minutes % 60
+    return when {
+        hours > 0 && rest > 0 -> stringResource(R.string.duration_hours_minutes, hours, rest)
+        hours > 0 -> stringResource(R.string.duration_hours, hours)
+        else -> stringResource(R.string.duration_minutes, minutes)
+    }
+}
+
+/** "50 puzzles", "2 games", "1 h 30 min", "20%". */
+@Composable
+fun targetText(activityTypeCode: String, targetType: TargetType, value: Int): String = when (targetType) {
+    TargetType.DURATION -> durationText(value)
+    TargetType.PROGRESS -> stringResource(R.string.progress_percent, value)
+    TargetType.COUNT -> when (activityTypeCode) {
+        ActivityType.PUZZLES -> pluralStringResource(R.plurals.target_puzzles, value, value)
+        ActivityType.PLAYING -> pluralStringResource(R.plurals.target_games, value, value)
+        else -> value.toString()
+    }
+}
+
+/** "12/50", "45/60 min": a value short of its target never reads as the target. */
+@Composable
+fun progressText(goal: WeeklyGoal): String = when (goal.targetType) {
+    TargetType.DURATION -> stringResource(
+        R.string.progress_minutes,
+        WeeklyGoal.displayMinutes(goal.currentValue, goal.targetValue),
+        goal.targetValue / 60,
+    )
+    TargetType.PROGRESS -> stringResource(R.string.progress_percent, goal.currentValue)
+    TargetType.COUNT -> stringResource(R.string.progress_count, goal.currentValue, goal.targetValue)
+}
+
+/** `MM:SS`, or `H:MM:SS` from an hour. */
+fun clockText(seconds: Int): String {
+    val h = seconds / 3600
+    val m = (seconds % 3600) / 60
+    val s = seconds % 60
+    return if (h > 0) "%d:%02d:%02d".format(h, m, s) else "%02d:%02d".format(m, s)
+}

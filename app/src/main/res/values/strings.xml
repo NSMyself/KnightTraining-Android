@@ -1,4 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Knight Training</string>
+
+    <!-- Tabs -->
+    <string name="tab_home">Home</string>
+    <string name="tab_training">Training</string>
+    <string name="tab_resources">Resources</string>
+    <string name="tab_profile">Profile</string>
+    <string name="coming_soon">Coming soon</string>
+    <string name="resources_coming_soon">Your library of books, courses and studies arrives in a later update.</string>
+    <string name="profile_coming_soon">Lichess sync and your rating history arrive in a later update.</string>
+
+    <!-- Activity types (the chess vocabulary; keep in step with iOS) -->
+    <string name="activity_puzzles">Puzzles</string>
+    <string name="activity_playing">Playing</string>
+    <string name="activity_analyzing">Game analysis</string>
+    <string name="activity_openings">Openings</string>
+    <string name="activity_endgames">Endgames</string>
+    <string name="activity_coaching">Coaching</string>
+    <string name="activity_general">General</string>
+    <string name="general_practice">General practice</string>
+
+    <!-- Targets -->
+    <plurals name="target_puzzles">
+        <item quantity="one">%d puzzle</item>
+        <item quantity="other">%d puzzles</item>
+    </plurals>
+    <plurals name="target_games">
+        <item quantity="one">%d game</item>
+        <item quantity="other">%d games</item>
+    </plurals>
+    <string name="duration_hours_minutes">%1$d h %2$d min</string>
+    <string name="duration_hours">%d h</string>
+    <string name="duration_minutes">%d min</string>
+    <string name="progress_percent">%d%%</string>
+    <string name="progress_count">%1$d/%2$d</string>
+    <string name="progress_minutes">%1$d/%2$d min</string>
+
+    <!-- Plans -->
+    <string name="untitled_plan">Untitled training plan</string>
+    <string name="untitled_plan_numbered">Untitled training plan (%d)</string>
+    <string name="my_training_plan">My Training Plan</string>
+    <string name="create_plan_title">Create a training plan</string>
+    <string name="plan_name_label">Name (optional)</string>
+    <string name="plan_goals_header">Your weekly goals</string>
+    <string name="add_weekly_goal">Add a weekly goal</string>
+    <string name="import_template">Import template</string>
+    <string name="choose_template">Choose a template</string>
+    <string name="template_subtitle">Fast start with proven routines</string>
+    <string name="import_action">Import</string>
+    <string name="estimated_time">About %s a week</string>
+    <string name="estimated_time_floor">About %s+ a week</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="delete">Delete</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="discard_plan_title">Discard this plan?</string>
+    <string name="discard_plan_body">The goals you added will be lost.</string>
+    <string name="block_title_new">What are you training?</string>
+    <string name="block_title_edit">Edit goal</string>
+    <string name="block_target_quantity">Quantity</string>
+    <string name="block_target_time">Time</string>
+    <string name="block_how_many_puzzles">How many puzzles?</string>
+    <string name="block_how_many_games">How many games?</string>
+    <string name="block_minutes">Minutes per week</string>
+    <string name="block_time_control">Time control</string>
+    <string name="block_time_control_none">Any</string>
+    <string name="block_name_label">Name (optional)</string>
+    <string name="add">Add</string>
+    <string name="change">Change</string>
+    <string name="remove_goal">Remove goal</string>
+    <string name="time_control_bullet">Bullet</string>
+    <string name="time_control_blitz">Blitz</string>
+    <string name="time_control_rapid">Rapid</string>
+    <string name="time_control_classical">Classical</string>
+    <string name="time_control_daily">Daily</string>
+    <string name="classical_tip">Slower time controls leave room to think things through. That\'s where you actually improve.</string>
+
+    <!-- Presets (iOS PlanTemplatePreset.all, written 2026-11-03, awaiting a coach's review) -->
+    <string name="preset_tactics_title">Tactics first</string>
+    <string name="preset_tactics_description">Most club games are decided by a tactic. Plenty of puzzles, a few slow games, and a look back at each one.</string>
+    <string name="preset_slow_title">Slow games, deep review</string>
+    <string name="preset_slow_description">Fewer games, more thinking. Play long games to the end and learn from every one.</string>
+    <string name="preset_endgames_title">Endgame foundations</string>
+    <string name="preset_endgames_description">Learn the endings that actually come up in your games. Rook endings first, since they\'re the most common.</string>
+    <string name="preset_openings_title">Opening repertoire</string>
+    <string name="preset_openings_description">Build a small repertoire you understand, then test it in real games. Ideas over long move lists.</string>
+    <string name="preset_busy_title">Busy week</string>
+    <string name="preset_busy_description">For weeks with little time to spare. Short, regular practice that keeps the habit going.</string>
+    <string name="preset_item_puzzles_tactical">Puzzles - Tactical</string>
+    <string name="preset_item_puzzles_calculation">Puzzles - Calculation</string>
+    <string name="preset_item_puzzles_endgame">Puzzles - Endgame</string>
+    <string name="preset_item_playing_rapid">Playing - Rapid</string>
+    <string name="preset_item_playing_classical">Playing - Classical</string>
+    <string name="preset_item_analysis_own">Game analysis - Your own games</string>
+    <string name="preset_item_analysis_opening">Game analysis - Opening review</string>
+    <string name="preset_item_endgames_rook">Endgames - Rook endings</string>
+    <string name="preset_item_endgames_king_pawn">Endgames - King and pawn</string>
+    <string name="preset_item_openings_repertoire">Openings - Build your repertoire</string>
+
+    <!-- Plan this week -->
+    <string name="plan_this_week">Plan this week</string>
+    <string name="plan_this_week_subtitle">Pick the plan you\'re committing to. It\'s set for the week once you commit.</string>
+    <string name="commit_plan">Commit to this plan</string>
+    <string name="create_new_plan">Create a new plan</string>
+    <plurals name="goal_count">
+        <item quantity="one">%d goal</item>
+        <item quantity="other">%d goals</item>
+    </plurals>
+
+    <!-- Home -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="week_range">%1$s – %2$s</string>
+    <string name="no_plan_title">No training plan yet</string>
+    <string name="no_plan_body">Build a weekly plan around what you\'re studying. It takes a minute.</string>
+    <string name="plan_week_title">Plan this week</string>
+    <string name="plan_week_body">Commit to a plan to start tracking this week.</string>
+    <string name="goals_done">%1$d/%2$d goals</string>
+    <string name="goal_done">Done</string>
+    <string name="this_week_activity">This week\'s activity</string>
+    <string name="no_activity_this_week">No activities logged this week</string>
+    <string name="total_this_week">Total this week</string>
+    <string name="most_trained">Most trained</string>
+    <string name="puzzles_solved">Puzzles solved</string>
+    <string name="games_played">Games played</string>
+    <string name="classical_games">Classical games</string>
+    <string name="week_streak">%d weeks in a row</string>
+    <string name="start_session">Start session</string>
+    <string name="start_goal">Start %s</string>
 </resources>
