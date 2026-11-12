@@ -30,6 +30,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.knightindustries.knighttraining.core.store.WeeklyPlanCompleted
 import com.knightindustries.knighttraining.feature.celebration.WeekCompleteDialog
 import com.knightindustries.knighttraining.feature.onboarding.OnboardingScreen
+import com.knightindustries.knighttraining.core.store.previousWeeklyPlan
+import com.knightindustries.knighttraining.feature.review.WeeklyReviewScreen
+import com.knightindustries.knighttraining.feature.review.WeeklyReviewViewModel
 import com.knightindustries.knighttraining.feature.plan.EditPlanScreen
 import com.knightindustries.knighttraining.feature.plan.EditPlanViewModel
 import com.knightindustries.knighttraining.feature.training.TrainingScreen
@@ -106,6 +109,17 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
     }
     celebration?.let { WeekCompleteDialog(it) { celebration = null } }
 
+    // Launch offers last week's review once (iOS `RoutingScreen`), but never over a session
+    // waiting to be saved: that's real tracked time the user wants back first.
+    LaunchedEffect(Unit) {
+        val container = AppContainer.from(application)
+        if (container.sessions.session.value != null) return@LaunchedEffect
+        val previous = container.store.previousWeeklyPlan(firstLaunch = container.preferences.firstLaunch()) ?: return@LaunchedEffect
+        if (container.preferences.lastReviewedWeekStart() != previous.weekStart) {
+            backStack.add(WeeklyReviewRoute(previous.id.toString()))
+        }
+    }
+
     // The timer notification: tapping it opens the session; its Stop opens straight on the review.
     LaunchedEffect(pendingAction) {
         val sessions = AppContainer.from(application).sessions
@@ -171,6 +185,13 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                     WeekLogScreen(
                         viewModel = appViewModel(key = route.weekStart) { WeekLogViewModel(it, LocalDate.parse(route.weekStart)) },
                         onBack = { backStack.removeLastOrNull() },
+                        onReflect = { backStack.add(WeeklyReviewRoute(it.toString())) },
+                    )
+                }
+                entry<WeeklyReviewRoute> { route ->
+                    WeeklyReviewScreen(
+                        viewModel = appViewModel(key = route.weeklyPlanId) { WeeklyReviewViewModel(it, UUID.fromString(route.weeklyPlanId)) },
+                        onDone = { backStack.remove(route) },
                     )
                 }
                 entry<EditPlanRoute> { route ->

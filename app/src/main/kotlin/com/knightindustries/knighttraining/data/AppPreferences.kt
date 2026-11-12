@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -26,6 +28,15 @@ class AppPreferences(private val context: Context) {
         val now = Instant.now()
         context.dataStore.edit { if (it[firstLaunchKey] == null) it[firstLaunchKey] = now.toEpochMilli() }
         return Instant.ofEpochMilli(context.dataStore.data.first()[firstLaunchKey]!!)
+    }
+
+    private val lastReviewedWeekKey = stringPreferencesKey("last_weekly_review_week_start")
+
+    /** The week whose review was last saved, so launch offers each week's review once. */
+    suspend fun lastReviewedWeekStart(): LocalDate? = context.dataStore.data.first()[lastReviewedWeekKey]?.let(LocalDate::parse)
+
+    suspend fun setLastReviewedWeekStart(weekStart: LocalDate) {
+        context.dataStore.edit { it[lastReviewedWeekKey] = weekStart.toString() }
     }
 
     /** Set at the end of onboarding, not the start, so quitting halfway shows it again. */

@@ -49,11 +49,13 @@ import com.knightindustries.knighttraining.ui.progressText
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.UUID
+import androidx.compose.material3.OutlinedButton
 
 /** One week: its goals, then every session, newest first. This week's sessions are editable. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit) {
+fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit, onReflect: (UUID) -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var editing by remember { mutableStateOf<Activity?>(null) }
     var adding by rememberSaveable { mutableStateOf(false) }
@@ -76,6 +78,14 @@ fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit) {
         val current = state ?: return@Scaffold CircularProgressIndicator(Modifier.padding(padding).padding(32.dp))
         LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding(), bottom = 96.dp)) {
             current.plan?.let { plan ->
+                // A finished week can be reflected on, or its reflection edited, at any time.
+                if (!current.isCurrentWeek) {
+                    item {
+                        OutlinedButton(onClick = { onReflect(plan.id) }, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
+                            Text(stringResource(R.string.reflect_on_week))
+                        }
+                    }
+                }
                 item { SectionHeader(stringResource(R.string.goals_done, plan.completedGoalCount, plan.goalCount)) }
                 items(plan.weeklyGoals, key = { it.id }) { goal ->
                     ListItem(

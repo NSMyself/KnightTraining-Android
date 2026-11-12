@@ -230,6 +230,26 @@
     <string name="next">Next</string>
     <string name="get_started">Get started</string>
 
+    <!-- Weekly review -->
+    <string name="review_title">Week %d review</string>
+    <string name="review_goals_completed">You completed %1$d of %2$d weekly goals</string>
+    <string name="review_time_invested">Time invested: %s</string>
+    <string name="review_last_week">With last week\'s comments</string>
+    <string name="review_notes">This week\'s notes</string>
+    <string name="review_went_well">What went well?</string>
+    <string name="review_went_well_hint">e.g. Stayed consistent with puzzles</string>
+    <string name="review_held_back">What held you back?</string>
+    <string name="review_held_back_hint">e.g. Ran out of time mid-week</string>
+    <string name="review_wish">What do you wish you\'d done differently?</string>
+    <string name="review_wish_hint">e.g. Trained earlier in the day</string>
+    <string name="review_next_week">Next week I want to:</string>
+    <string name="intent_keep_same">Keep the same plan</string>
+    <string name="intent_make_easier">Make it easier</string>
+    <string name="intent_push_harder">Push harder</string>
+    <string name="intent_change_focus">Change focus</string>
+    <string name="reflect_on_week">Reflect on this week</string>
+    <string name="edit_reflection">Edit reflection</string>
+
     <!-- Celebration -->
     <string name="week_complete_title">Week complete</string>
     <plurals name="week_complete_body">

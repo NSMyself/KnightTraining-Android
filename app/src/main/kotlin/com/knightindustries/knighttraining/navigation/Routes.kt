@@ -38,6 +38,10 @@ data object SessionRoute : Route
 @Serializable
 data class WeekLogRoute(val weekStart: String) : Route
 
+/** The reflection on one committed week. [weeklyPlanId] is a UUID string. */
+@Serializable
+data class WeeklyReviewRoute(val weeklyPlanId: String) : Route
+
 /** Edit a saved plan. [templateId] is a UUID string. */
 @Serializable
 data class EditPlanRoute(val templateId: String) : Route
