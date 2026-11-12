@@ -103,10 +103,8 @@
     <string name="goal_done">Fertig</string>
     <string name="this_week_activity">Aktivität dieser Woche</string>
     <string name="no_activity_this_week">Diese Woche noch keine Aktivitäten erfasst</string>
-    <string name="total_this_week">Gesamt diese Woche</string>
     <string name="most_trained">Am meisten trainiert</string>
     <string name="puzzles_solved">Gelöste Taktikaufgaben</string>
-    <string name="games_played">Gespielte Partien</string>
     <string name="classical_games">Klassische Partien</string>
     <string name="week_streak">%d Wochen in Folge</string>
     <string name="start_session">Einheit starten</string>

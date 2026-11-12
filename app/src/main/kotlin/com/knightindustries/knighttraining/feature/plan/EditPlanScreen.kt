@@ -36,7 +36,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -56,9 +56,9 @@ import com.knightindustries.knighttraining.core.store.weeklyPlanContaining
 import com.knightindustries.knighttraining.ui.activityIcon
 import com.knightindustries.knighttraining.ui.blockTitle
 import com.knightindustries.knighttraining.ui.targetText
-import kotlinx.coroutines.launch
 import java.time.Instant
 import java.util.UUID
+import kotlinx.coroutines.launch
 
 /** Whether edits reach this week's goals too (iOS AGENTS.md §7's "editable until 2 sessions"). */
 enum class WeekLock { NOT_THIS_WEEK, UNLOCKED, LAST_CHANCE, LOCKED }
@@ -132,7 +132,7 @@ class EditPlanViewModel(private val container: AppContainer, private val templat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditPlanScreen(viewModel: EditPlanViewModel, onClose: () -> Unit) {
-    val context = LocalContext.current
+    val resources = LocalResources.current
     var editing by remember { mutableStateOf<DraftBlock?>(null) }
     var adding by rememberSaveable { mutableStateOf(false) }
     var confirmingDelete by rememberSaveable { mutableStateOf(false) }
@@ -146,7 +146,7 @@ fun EditPlanScreen(viewModel: EditPlanViewModel, onClose: () -> Unit) {
                     TextButton(
                         enabled = viewModel.loaded && viewModel.blocks.isNotEmpty(),
                         onClick = {
-                            viewModel.save(context.getString(R.string.untitled_plan), { context.getString(R.string.untitled_plan_numbered, it) }, onClose)
+                            viewModel.save(resources.getString(R.string.untitled_plan), { resources.getString(R.string.untitled_plan_numbered, it) }, onClose)
                         },
                     ) { Text(stringResource(R.string.save)) }
                 },

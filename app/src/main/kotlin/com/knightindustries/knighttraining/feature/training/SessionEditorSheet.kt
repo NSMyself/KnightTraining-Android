@@ -58,13 +58,13 @@ import com.knightindustries.knighttraining.feature.plan.TimeControlPicker
 import com.knightindustries.knighttraining.feature.session.topicName
 import com.knightindustries.knighttraining.ui.activityIcon
 import com.knightindustries.knighttraining.ui.activityName
+import com.knightindustries.knighttraining.ui.currentLocale
 import com.knightindustries.knighttraining.ui.goalTitle
 import com.knightindustries.knighttraining.ui.progressText
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.time.format.TextStyle
-import java.util.Locale
 import java.util.UUID
 
 /**
@@ -130,7 +130,7 @@ fun SessionEditorSheet(
                         FilterChip(
                             selected = date == day,
                             onClick = { day = date },
-                            label = { Text(date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + " " + date.dayOfMonth) },
+                            label = { Text(date.dayOfWeek.getDisplayName(TextStyle.SHORT, currentLocale()) + " " + date.dayOfMonth) },
                         )
                     }
             }

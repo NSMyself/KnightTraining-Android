@@ -49,10 +49,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.os.ConfigurationCompat
 import com.knightindustries.knighttraining.R
 import com.knightindustries.knighttraining.core.model.CatalogCourse
 import com.knightindustries.knighttraining.core.model.CatalogCourse.LanguageSection
+import com.knightindustries.knighttraining.ui.currentLocale
 import com.knightindustries.knighttraining.ui.kindNameRes
 import com.knightindustries.knighttraining.ui.kindOrder
 
@@ -125,7 +125,7 @@ private fun CatalogBrowser(viewModel: AddResourceViewModel, onDone: () -> Unit) 
             courses.isEmpty() -> Text(stringResource(R.string.catalog_empty), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(16.dp))
             else -> {
                 val shown = courses.filter { it.platform == platform && (query.isBlank() || it.title.contains(query.trim(), true) || it.author?.contains(query.trim(), true) == true) }
-                val language = ConfigurationCompat.getLocales(context.resources.configuration)[0]?.toLanguageTag()
+                val language = currentLocale().toLanguageTag()
                 val sections = if (platform == CatalogCourse.CHESSABLE) CatalogCourse.languageSections(shown, language) else listOf(LanguageSection.Other to shown)
                 LazyColumn(Modifier.fillMaxWidth().height(480.dp)) {
                     if (platform == CatalogCourse.CHESSMOOD) {

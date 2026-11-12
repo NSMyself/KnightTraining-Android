@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.knightindustries.knighttraining.AppContainer
@@ -59,6 +60,7 @@ import com.knightindustries.knighttraining.ui.targetText
 @Composable
 fun CreatePlanScreen(viewModel: CreatePlanViewModel, onClose: () -> Unit, onSaved: () -> Unit) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     var editing by remember { mutableStateOf<DraftBlock?>(null) }
     var addingBlock by rememberSaveable { mutableStateOf(false) }
     var choosingPreset by rememberSaveable { mutableStateOf(false) }
@@ -80,8 +82,8 @@ fun CreatePlanScreen(viewModel: CreatePlanViewModel, onClose: () -> Unit, onSave
                         enabled = viewModel.canSave,
                         onClick = {
                             viewModel.save(
-                                untitledBase = context.getString(R.string.untitled_plan),
-                                untitledNumbered = { context.getString(R.string.untitled_plan_numbered, it) },
+                                untitledBase = resources.getString(R.string.untitled_plan),
+                                untitledNumbered = { resources.getString(R.string.untitled_plan_numbered, it) },
                                 onSaved = onSaved,
                             )
                         },
@@ -169,7 +171,7 @@ fun CreatePlanScreen(viewModel: CreatePlanViewModel, onClose: () -> Unit, onSave
         PresetSheet(
             onDismiss = { choosingPreset = false },
             onImport = { presets ->
-                viewModel.importPresets(presets) { context.getString(it) }
+                viewModel.importPresets(presets) { resources.getString(it) }
                 choosingPreset = false
             },
         )

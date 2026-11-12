@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.DashboardCustomize
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,6 +34,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,20 +60,15 @@ import com.knightindustries.knighttraining.core.store.openGoals
 import com.knightindustries.knighttraining.feature.session.SessionStart
 import com.knightindustries.knighttraining.feature.session.StartSessionSheet
 import com.knightindustries.knighttraining.feature.session.rememberStartWithNotifications
-import androidx.compose.material.icons.rounded.Timer
-import androidx.compose.material.icons.rounded.AddCircleOutline
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import com.knightindustries.knighttraining.ui.LabeledFab
 import com.knightindustries.knighttraining.ui.activityIcon
 import com.knightindustries.knighttraining.ui.activityName
+import com.knightindustries.knighttraining.ui.currentLocale
 import com.knightindustries.knighttraining.ui.goalTitle
 import com.knightindustries.knighttraining.ui.progressText
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -227,7 +227,7 @@ private fun greeting(): String = when (LocalTime.now().hour) {
 /** "9 Nov – 15 Nov", in the locale's own order. */
 @Composable
 fun weekRange(start: LocalDate, endExclusive: LocalDate): String {
-    val formatter = DateTimeFormatter.ofPattern(DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMMd"))
+    val formatter = DateTimeFormatter.ofPattern(DateFormat.getBestDateTimePattern(currentLocale(), "MMMd"))
     return stringResource(R.string.week_range, start.format(formatter), endExclusive.minusDays(1).format(formatter))
 }
 

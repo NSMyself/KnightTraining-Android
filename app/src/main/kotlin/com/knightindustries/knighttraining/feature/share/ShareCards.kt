@@ -31,6 +31,7 @@ import com.knightindustries.knighttraining.feature.home.weekRange
 import com.knightindustries.knighttraining.feature.review.intentName
 import com.knightindustries.knighttraining.ui.activityIcon
 import com.knightindustries.knighttraining.ui.activityName
+import com.knightindustries.knighttraining.ui.currentLocale
 import com.knightindustries.knighttraining.ui.durationText
 import com.knightindustries.knighttraining.ui.goalTitle
 import com.knightindustries.knighttraining.ui.kindIcon
@@ -39,7 +40,6 @@ import com.knightindustries.knighttraining.ui.ratingTypeNameRes
 import java.text.NumberFormat
 import java.time.ZoneId
 import java.time.format.TextStyle
-import java.util.Locale
 
 /** A share card's width: the image is the same size whatever the phone. */
 val SHARE_CARD_WIDTH = 360.dp
@@ -89,7 +89,7 @@ fun WeekShareCard(summary: WeekShareSummary, includesNotes: Boolean, includesRef
             Section(stringResource(R.string.share_notes)) {
                 summary.notes.forEach { note ->
                     Column {
-                        val day = note.startedAt.atZone(ZoneId.systemDefault()).dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+                        val day = note.startedAt.atZone(ZoneId.systemDefault()).dayOfWeek.getDisplayName(TextStyle.FULL, currentLocale())
                         Muted("${activityName(note.activityTypeCode)} · $day")
                         Text(note.text)
                     }
@@ -161,7 +161,7 @@ private fun ShareCardFrame(content: @Composable () -> Unit) {
 @Composable
 private fun Header(label: String, title: String, subtitle: String?, player: SharePlayer?) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(label.uppercase(Locale.getDefault()), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+        Text(label.uppercase(currentLocale()), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
         Text(title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         subtitle?.let { Text(it, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
         player?.let { PlayerLine(it) }
@@ -185,7 +185,7 @@ private fun Total(value: String, label: String, modifier: Modifier) {
 @Composable
 private fun Section(title: String, content: @Composable () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(title.uppercase(Locale.getDefault()), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(title.uppercase(currentLocale()), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         content()
     }
 }
@@ -210,7 +210,7 @@ private fun More(total: Int, limit: Int) {
 @Composable
 private fun Reflection(label: String, text: String) {
     Column {
-        Muted(label.uppercase(Locale.getDefault()))
+        Muted(label.uppercase(currentLocale()))
         Text(text)
     }
 }

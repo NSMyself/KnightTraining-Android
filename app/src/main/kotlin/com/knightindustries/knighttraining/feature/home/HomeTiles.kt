@@ -43,13 +43,13 @@ import com.knightindustries.knighttraining.core.model.MilestonesSnapshot
 import com.knightindustries.knighttraining.core.model.WeeklyTrainingStats
 import com.knightindustries.knighttraining.core.store.WeeklySurface
 import com.knightindustries.knighttraining.ui.activityName
+import com.knightindustries.knighttraining.ui.currentLocale
 import com.knightindustries.knighttraining.ui.durationText
 import com.knightindustries.knighttraining.ui.goalTitle
 import com.knightindustries.knighttraining.ui.progressText
 import com.knightindustries.knighttraining.ui.ratingTypeNameRes
 import java.text.NumberFormat
 import java.time.format.TextStyle
-import java.util.Locale
 
 /** What a tile can draw on: everything Home already loads, nothing tile-specific. */
 data class TileData(
@@ -173,14 +173,15 @@ private fun WeeklyActivityTile(surface: WeeklySurface) {
     val days = (0L until 7L).map { surface.weekStart.plusDays(it) }
     val seconds = days.map { surface.recentDailyDurationSeconds[it] ?: 0 }
     val max = seconds.maxOrNull()?.takeIf { it > 0 } ?: 1
+    val locale = currentLocale()
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
         Column(Modifier.padding(20.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(stringResource(R.string.this_week_activity), style = MaterialTheme.typography.titleMedium)
             Text(durationText(surface.weeklyTrackedSeconds), style = MaterialTheme.typography.headlineSmall)
             Row(Modifier.fillMaxWidth().height(96.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 days.forEachIndexed { index, day ->
-                    val label = day.dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.getDefault())
-                    val spoken = day.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + durationText(seconds[index])
+                    val label = day.dayOfWeek.getDisplayName(TextStyle.NARROW, locale)
+                    val spoken = day.dayOfWeek.getDisplayName(TextStyle.FULL, locale) + " " + durationText(seconds[index])
                     Column(
                         Modifier.weight(1f).fillMaxHeight().semantics { contentDescription = spoken },
                         horizontalAlignment = Alignment.CenterHorizontally,

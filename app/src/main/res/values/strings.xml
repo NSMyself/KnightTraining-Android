@@ -124,10 +124,8 @@
     <string name="goal_done">Done</string>
     <string name="this_week_activity">This week\'s activity</string>
     <string name="no_activity_this_week">No activities logged this week</string>
-    <string name="total_this_week">Total this week</string>
     <string name="most_trained">Most trained</string>
     <string name="puzzles_solved">Puzzles solved</string>
-    <string name="games_played">Games played</string>
     <string name="classical_games">Classical games</string>
     <string name="week_streak">%d weeks in a row</string>
     <string name="start_session">Start session</string>

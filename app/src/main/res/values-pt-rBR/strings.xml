@@ -107,10 +107,8 @@
     <string name="goal_done">OK</string>
     <string name="this_week_activity">Atividade desta semana</string>
     <string name="no_activity_this_week">Sem atividades registradas esta semana</string>
-    <string name="total_this_week">Total esta semana</string>
     <string name="most_trained">Mais treinado</string>
     <string name="puzzles_solved">Táticas resolvidas</string>
-    <string name="games_played">Partidas jogadas</string>
     <string name="classical_games">Partidas clássicas</string>
     <string name="week_streak">%d semanas seguidas</string>
     <string name="start_session">Começar sessão</string>
