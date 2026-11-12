@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -53,16 +55,20 @@ import androidx.lifecycle.viewModelScope
 import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.BuildConfig
 import com.knightindustries.knighttraining.R
+import com.knightindustries.knighttraining.core.model.RatingType
 import com.knightindustries.knighttraining.core.model.ReminderSchedule
+import com.knightindustries.knighttraining.core.model.WeekCalendar
 import com.knightindustries.knighttraining.core.store.LichessProfile
 import com.knightindustries.knighttraining.core.store.WeekCompletionTally
 import com.knightindustries.knighttraining.core.store.currentStreak
 import com.knightindustries.knighttraining.core.store.deleteAllUserData
 import com.knightindustries.knighttraining.core.store.finishedResourceCount
+import com.knightindustries.knighttraining.core.store.lichessAccount
 import com.knightindustries.knighttraining.core.store.longestStreak
 import com.knightindustries.knighttraining.core.store.observeLichessProfile
 import com.knightindustries.knighttraining.core.store.totalDuration
 import com.knightindustries.knighttraining.core.store.weekCompletionTally
+import com.knightindustries.knighttraining.core.store.weeklyEloHistory
 import com.knightindustries.knighttraining.feature.home.EditHomeSheet
 import com.knightindustries.knighttraining.feature.home.HomeLayout
 import com.knightindustries.knighttraining.lichess.LichessAuth
@@ -118,6 +124,31 @@ class ProfileViewModel(private val container: AppContainer) : ViewModel() {
 
     fun refreshLichess() {
         viewModelScope.launch { lichessSignedIn = container.lichessCredentials.token() != null }
+    }
+
+    /** The rating the chart follows; rapid first, as on iOS. */
+    var chartRatingType by mutableStateOf(RatingType.RAPID)
+        private set
+    var chart by mutableStateOf<List<RatingChartPoint>>(emptyList())
+        private set
+
+    fun selectChartRatingType(type: String) {
+        chartRatingType = type
+        loadChart()
+    }
+
+    /** The last [CHART_WEEKS] weeks: time studied in each, and the rating at its end. */
+    fun loadChart() {
+        viewModelScope.launch {
+            val store = container.store
+            val account = store.lichessAccount() ?: run { chart = emptyList(); return@launch }
+            val calendar = WeekCalendar.system()
+            val ratings = store.weeklyEloHistory(account.id, chartRatingType, weeks = CHART_WEEKS)
+            chart = ratings.map { week ->
+                val seconds = store.totalDuration(calendar.startOf(week.weekStart), calendar.startOf(week.weekStart.plusDays(7)))
+                RatingChartPoint(week.weekStart, seconds, week.rating)
+            }
+        }
     }
 
     fun connectLichess(context: android.content.Context) = container.lichessAuth.beginSignIn(context)
@@ -183,6 +214,8 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
     }
     // A finished sign-in changes the login without a resume of its own.
     LaunchedEffect(signIn, lichess?.account?.id) { viewModel.refreshLichess() }
+    // New ratings (a sync) redraw the chart.
+    LaunchedEffect(lichess) { viewModel.loadChart() }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
@@ -216,6 +249,9 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
                 signIn = signIn,
                 onConnect = { viewModel.connectLichess(context) },
                 onDisconnect = { confirmingDisconnect = true },
+                chart = viewModel.chart,
+                chartRatingType = viewModel.chartRatingType,
+                onChartRatingType = viewModel::selectChartRatingType,
             )
 
             Text(stringResource(R.string.settings), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
@@ -347,6 +383,9 @@ private fun LichessCard(
     signIn: LichessAuth.State,
     onConnect: () -> Unit,
     onDisconnect: () -> Unit,
+    chart: List<RatingChartPoint>,
+    chartRatingType: String,
+    onChartRatingType: (String) -> Unit,
 ) {
     Text(stringResource(R.string.lichess), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
@@ -366,17 +405,23 @@ private fun LichessCard(
                 )
                 val ratings = ratingTypeOrder.mapNotNull { type -> profile.ratings[type]?.let { type to it } }
                 if (ratings.isNotEmpty()) {
+                    // Each rating is also the chart's selector: tap one to follow it below.
                     FlowRow(
-                        Modifier.padding(horizontal = 16.dp).padding(bottom = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        Modifier.padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         ratings.forEach { (type, rating) ->
-                            Column {
-                                Text(rating.toString(), style = MaterialTheme.typography.titleMedium)
-                                Text(stringResource(ratingTypeNameRes(type)), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            }
+                            FilterChip(
+                                selected = type == chartRatingType,
+                                onClick = { onChartRatingType(type) },
+                                label = { Text("${stringResource(ratingTypeNameRes(type))} $rating") },
+                            )
                         }
+                    }
+                    if (chart.any { it.rating != null || it.seconds > 0 }) {
+                        RatingChart(chart, Modifier.padding(16.dp))
+                    } else {
+                        Spacer(Modifier.height(16.dp))
                     }
                 }
             }
@@ -396,3 +441,5 @@ private fun LichessCard(
         }
     }
 }
+
+private const val CHART_WEEKS = 4

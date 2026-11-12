@@ -494,4 +494,5 @@
     <string name="share_include_up_next">Incluir recursos sin empezar</string>
     <string name="share_studies_note">Los estudios de Lichess aparecen una vez que los empiezas.</string>
     <string name="share_failed">No se pudo cargar.</string>
+    <string name="rating_chart_caption">Barras: tiempo de estudio de cada semana. Línea: tu clasificación al final de ella.</string>
 </resources>

@@ -479,4 +479,5 @@
     <string name="share_include_up_next">Nog niet begonnen bronnen meesturen</string>
     <string name="share_studies_note">Lichess-studies verschijnen zodra je eraan begonnen bent.</string>
     <string name="share_failed">Kon niet worden geladen.</string>
+    <string name="rating_chart_caption">Balken: studietijd per week. Lijn: je rating aan het eind ervan.</string>
 </resources>

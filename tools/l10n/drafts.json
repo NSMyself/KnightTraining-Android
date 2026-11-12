@@ -1852,5 +1852,14 @@
    "one": "et %d de plus",
    "other": "et %d de plus"
   }
+ },
+ "rating_chart_caption": {
+  "pt-PT": "Barras: tempo de estudo em cada semana. Linha: a tua classificação no fim dela.",
+  "es": "Barras: tiempo de estudio de cada semana. Línea: tu clasificación al final de ella.",
+  "pt-BR": "Barras: tempo de estudo em cada semana. Linha: sua classificação no fim dela.",
+  "nl": "Balken: studietijd per week. Lijn: je rating aan het eind ervan.",
+  "it": "Barre: tempo di studio di ogni settimana. Linea: il tuo punteggio alla fine di essa.",
+  "de": "Balken: Lernzeit pro Woche. Linie: deine Wertungszahl am Ende der Woche.",
+  "fr": "Barres : temps d'étude de chaque semaine. Ligne : ton classement à la fin de celle-ci."
  }
 }

@@ -94,8 +94,11 @@ class LichessProfileTest {
         assertEquals("test-token", runBlocking { com.knightindustries.knighttraining.lichess.LichessCredentials(context).token() })
 
         compose.waitUntilAtLeastOneExists(hasText("FM Tester"), 5_000)
-        compose.waitUntilAtLeastOneExists(hasText("1810"), 5_000)
-        compose.onNodeWithText(text(R.string.rating_puzzle)).assertExists()
+        compose.waitUntilAtLeastOneExists(hasText("${text(R.string.rating_rapid)} 1810"), 5_000)
+        // The chart follows rapid first; picking puzzles switches it.
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.rating_chart_caption)), 5_000)
+        compose.onNodeWithText("${text(R.string.rating_puzzle)} 2050").performScrollTo().performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.rating_chart_caption)), 5_000)
         screenshot("41_lichess_connected")
 
         compose.onNode(hasText(text(R.string.lichess_disconnect)) and hasClickAction()).performScrollTo().performClick()

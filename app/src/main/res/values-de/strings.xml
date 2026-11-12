@@ -479,4 +479,5 @@
     <string name="share_include_up_next">Noch nicht begonnene Ressourcen mitschicken</string>
     <string name="share_studies_note">Lichess-Studien erscheinen, sobald du sie begonnen hast.</string>
     <string name="share_failed">Konnte nicht geladen werden.</string>
+    <string name="rating_chart_caption">Balken: Lernzeit pro Woche. Linie: deine Wertungszahl am Ende der Woche.</string>
 </resources>

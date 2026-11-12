@@ -162,10 +162,12 @@ maintainer confirms how interactions *feel* on a device themselves.
      `LichessStreakDetectionTest` (core), plus `LichessProfileTest` and `LichessHomeTest`
      (instrumented).
 
+   Studies sync and Profile's rating chart followed: new studies join the library, matched by
+   study id (`LichessSyncTest`), and each Profile rating chip picks the rating the 4-week chart
+   draws over time studied (`LichessProfileTest`). "Delete all data" also signs out of Lichess.
+
    Not yet:
    - A real lichess.org sign-in, which needs the maintainer's account on a device.
-   - Lichess studies sync.
-   - The weekly rating chart (`weeklyEloHistory` exists, no UI).
    - The puzzle dashboard for the weekly coach (Phase 6).
 5. Reminders, Glance widget, share-to-app intent. **Built 2026-11-12**: behind-only training
    reminders on picked days (one inexact alarm, re-armed on boot/clock change), the share target
