@@ -100,8 +100,8 @@ export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
    database operations the core loop needs (committing a week, `logSession`, the weekly surface
    and its observation, editing sessions and plans, streaks, archive, delete-all), with their iOS
    tests. Resources, Lichess, milestones, reviews and the plan suggester port in their own
-   phases. Not yet ported, needed by Phase 2's UI: `previousWeeklyPlan` is ported, but the weekly
-   review table's queries and `applyCoachTarget` aren't.
+   phases. The weekly review's queries (and `applyCoachTarget`) aren't ported yet; port them
+   with the review screen.
 2. Core loop UI: onboarding, plan creation + presets, weekly commit, Home (fixed layout),
    practice timer (foreground service + ongoing notification), log/edit sessions, history. First
    tester build.
