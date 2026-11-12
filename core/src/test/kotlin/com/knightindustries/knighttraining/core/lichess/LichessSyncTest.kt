@@ -6,12 +6,14 @@ import com.knightindustries.knighttraining.core.model.RatingType
 import com.knightindustries.knighttraining.core.net.HttpGet
 import com.knightindustries.knighttraining.core.net.HttpResponse
 import com.knightindustries.knighttraining.core.store.StoreTest
+import com.knightindustries.knighttraining.core.store.allResources
 import com.knightindustries.knighttraining.core.store.eloSnapshots
 import com.knightindustries.knighttraining.core.store.ensureLichessAccount
 import com.knightindustries.knighttraining.core.store.lichessAccount
 import com.knightindustries.knighttraining.core.store.milestonesSnapshot
 import com.knightindustries.knighttraining.core.store.pendingLichessActivityBatches
 import com.knightindustries.knighttraining.core.store.saveMilestone
+import com.knightindustries.knighttraining.core.store.saveResource
 import com.knightindustries.knighttraining.core.store.test
 import com.knightindustries.knighttraining.core.store.updateLastGameSyncAt
 import com.knightindustries.knighttraining.core.store.updateLastPuzzleSyncAt
@@ -235,6 +237,37 @@ class LichessSyncTest : StoreTest() {
         http.routes["https://lichess.org/api/account"] = HttpResponse(401, "{}", emptyMap())
         runCatching { client.fetchAccount() }
         assertEquals(1, unauthorized)
+    }
+
+    // MARK: - Studies
+
+    @Test
+    fun newStudiesJoinTheLibraryOnce() = test {
+        store.ensureLichessAccount("Tester", null, null)
+        val kind = store.resourceKind("lichess_study")!!
+        // Added by hand earlier, with a different title: matched by its id, never duplicated.
+        store.saveResource(com.knightindustries.knighttraining.core.model.Resource(kind = kind, title = "My Caro-Kann", url = "https://lichess.org/study/AbCd1234/ch4pt3r1"))
+        http.routes["https://lichess.org/api/study/by/Tester"] = ok(
+            """{"id":"AbCd1234","name":"Caro-Kann repertoire","createdAt":1,"updatedAt":2}
+               {"id":"Zz99Yy88","name":"Rook endgames","createdAt":1,"updatedAt":2,"liked":3}""",
+        )
+        sync.syncStudies()
+        sync.syncStudies()
+
+        val studies = store.allResources().filter { it.kind.code == "lichess_study" }
+        assertEquals(listOf("My Caro-Kann", "Rook endgames"), studies.map { it.title }.sorted())
+        val imported = studies.single { it.title == "Rook endgames" }
+        assertEquals("https://lichess.org/study/Zz99Yy88", imported.url)
+        assertTrue(imported.isAutoImported)
+        assertEquals("Bearer token", http.requests.first().second["Authorization"])
+    }
+
+    @Test
+    fun studyIdsComeFromLichessStudyLinksOnly() {
+        assertEquals("AbCd1234", LichessSync.studyId("https://lichess.org/study/AbCd1234"))
+        assertEquals("AbCd1234", LichessSync.studyId("https://en.lichess.org/study/AbCd1234/xyz"))
+        assertNull(LichessSync.studyId("https://example.com/study/AbCd1234"))
+        assertNull(LichessSync.studyId(null))
     }
 
     @Test

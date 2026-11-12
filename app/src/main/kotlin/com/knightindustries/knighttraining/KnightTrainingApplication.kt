@@ -88,9 +88,9 @@ class AppContainer(application: Application) {
     private var lastLichessSync: Instant? = null
 
     /**
-     * Ratings, then every activity kind, one request at a time, whenever the app comes to the
-     * foreground (iOS's `scenePhase == .active` hook), so offers reach Home without opening Profile.
-     * At most every two minutes, and never two runs at once.
+     * Ratings, every activity kind, then new studies, one request at a time, whenever the app comes
+     * to the foreground (iOS's `scenePhase == .active` hook), so offers reach Home without opening
+     * Profile. At most every two minutes, and never two runs at once.
      */
     fun syncLichessSoon() {
         appScope.launch {
@@ -102,6 +102,7 @@ class AppContainer(application: Application) {
                 lastLichessSync = now
                 lichessSync.syncRatings()
                 lichessSync.syncActivity()
+                lichessSync.syncStudies()
             } finally {
                 lichessSyncLock.unlock()
             }

@@ -89,6 +89,7 @@ class LichessAuth(
         val user = runCatching { client.fetchAccount() }.getOrNull()
         sync.syncRatings(user)
         sync.syncActivity()
+        sync.syncStudies()
         state.value = State.Idle
     }
 

@@ -5,7 +5,10 @@ import com.knightindustries.knighttraining.core.model.LichessActivityBatch
 import com.knightindustries.knighttraining.core.model.LichessStreakDetection
 import com.knightindustries.knighttraining.core.model.Milestone
 import com.knightindustries.knighttraining.core.model.RatingType
+import com.knightindustries.knighttraining.core.model.Resource
+import com.knightindustries.knighttraining.core.model.ResourceKind
 import com.knightindustries.knighttraining.core.store.TrainingStore
+import com.knightindustries.knighttraining.core.store.allResources
 import com.knightindustries.knighttraining.core.store.ensureLichessAccount
 import com.knightindustries.knighttraining.core.store.hasEloHistory
 import com.knightindustries.knighttraining.core.store.hasEloSnapshot
@@ -14,6 +17,7 @@ import com.knightindustries.knighttraining.core.store.lichessBatchedExternalIds
 import com.knightindustries.knighttraining.core.store.reevaluateMilestones
 import com.knightindustries.knighttraining.core.store.saveEloSnapshots
 import com.knightindustries.knighttraining.core.store.saveLichessActivityBatch
+import com.knightindustries.knighttraining.core.store.saveResources
 import com.knightindustries.knighttraining.core.store.updateLastGameSyncAt
 import com.knightindustries.knighttraining.core.store.updateLastPuzzleSyncAt
 import com.knightindustries.knighttraining.core.store.updateStormState
@@ -161,6 +165,22 @@ class LichessSync(
         store.updateStreakState(account.id, result.runsForCurrentDay, result.scoreForCurrentDay, at)
     }
 
+    /**
+     * Adds studies the library doesn't have yet as Lichess Study resources, matched by the study id
+     * in their link, so a study added by hand isn't duplicated. Never removes or renames one.
+     */
+    suspend fun syncStudies() = quietly("studies", Unit) {
+        val account = store.lichessAccount() ?: return@quietly
+        val kind = store.resourceKind(ResourceKind.LICHESS_STUDY) ?: return@quietly
+        val studies = client.fetchStudies(account.username)
+        if (studies.isEmpty()) return@quietly
+        val known = store.allResources().mapNotNull { studyId(it.url) }.toSet()
+        val new = studies.filter { it.id !in known }.map {
+            Resource(kind = kind, title = it.name, url = it.url, isOwned = true, isAutoImported = true, lastAccessedAt = null, createdAt = now())
+        }
+        store.saveResources(new)
+    }
+
     private suspend fun backfillRatings(accountId: UUID, username: String) {
         val calendar = store.calendar()
         val snapshots = client.fetchRatingHistory(username).flatMap { history ->
@@ -193,6 +213,11 @@ class LichessSync(
     }
 
     companion object {
+        /** The study id in a lichess.org study link, or `null` for anything else. */
+        fun studyId(url: String?): String? = url?.let { STUDY_LINK.find(it) }?.groupValues?.get(1)
+
+        private val STUDY_LINK = Regex("""^https?://(?:[a-z]+\.)?lichess\.org/study/([A-Za-z0-9]{8})""")
+
         fun ratingType(lichessName: String): String? = when (lichessName.lowercase()) {
             "bullet" -> RatingType.BULLET
             "blitz" -> RatingType.BLITZ

@@ -79,6 +79,10 @@ class LichessClient(
     suspend fun fetchActivity(username: String): List<LichessActivityFeedDay> =
         getJson("/api/user/${segment(username)}/activity", ListSerializer(LichessActivityFeedDay.serializer()), auth = Auth.NONE)
 
+    /** The user's studies, including private ones (`study:read`, which every Android login asks for). */
+    suspend fun fetchStudies(username: String): List<LichessStudy> =
+        getNdjson("/api/study/by/${segment(username)}", emptyList(), LichessStudy.serializer(), auth = Auth.REQUIRED)
+
     /** Bullet and correspondence never enter the pipeline: filtered server-side by `perfType`. */
     suspend fun fetchGames(username: String, since: Instant, max: Int = 50): List<LichessGame> = getNdjson(
         "/api/games/user/${segment(username)}",

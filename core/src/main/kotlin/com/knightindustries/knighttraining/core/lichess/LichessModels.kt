@@ -139,3 +139,9 @@ data class LichessPuzzleDashboard(val days: Int, val global: Results, val themes
     @Serializable
     data class Theme(val theme: String, val results: Results)
 }
+
+/** One row of `/api/study/by/{name}` (ndjson): name and dates only, no chapters. */
+@Serializable
+data class LichessStudy(val id: String, val name: String, val createdAt: Long = 0, val updatedAt: Long = 0) {
+    val url: String get() = "https://lichess.org/study/$id"
+}
