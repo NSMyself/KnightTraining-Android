@@ -99,6 +99,9 @@ class SessionViewModel(private val container: AppContainer) : ViewModel() {
 
     fun setGoalCredit(credit: PracticeSession.GoalCredit) = sessions.update { it.withGoalCredit(credit) }
 
+    /** Attaching a resource can narrow "Counts toward" to that resource's goals. */
+    fun setResource(id: UUID?) = sessions.update { it.withResource(id) }
+
     fun candidates(code: String, timeControlLabel: String?): List<WeeklyGoal> {
         val current = session.value ?: return emptyList()
         return goalCandidates(current, code, timeControlLabel, weekGoals)

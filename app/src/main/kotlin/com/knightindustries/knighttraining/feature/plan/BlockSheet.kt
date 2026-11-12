@@ -42,6 +42,7 @@ import com.knightindustries.knighttraining.R
 import com.knightindustries.knighttraining.core.model.ActivityType
 import com.knightindustries.knighttraining.core.model.TargetType
 import com.knightindustries.knighttraining.core.model.TimeControl
+import com.knightindustries.knighttraining.feature.resources.ResourcePickerField
 import com.knightindustries.knighttraining.ui.activityIcon
 import com.knightindustries.knighttraining.ui.activityName
 
@@ -64,6 +65,8 @@ fun BlockSheet(
     var minutes by rememberSaveable { mutableStateOf(initial?.takeIf { it.targetType == TargetType.DURATION }?.let { (it.targetValue / 60).toString() } ?: "30") }
     var timeControl by rememberSaveable { mutableStateOf(initial?.timeControlLabel) }
     var name by rememberSaveable { mutableStateOf(initial?.name ?: "") }
+    var resourceId by rememberSaveable { mutableStateOf(initial?.resourceId?.toString()) }
+    var resourceTitle by rememberSaveable { mutableStateOf(initial?.resourceTitle) }
 
     fun pick(newCode: String) {
         code = newCode
@@ -135,6 +138,11 @@ fun BlockSheet(
                 TimeControlPicker(timeControl) { timeControl = it }
             }
 
+            ResourcePickerField(resourceId?.let(java.util.UUID::fromString)) {
+                resourceId = it?.id?.toString()
+                resourceTitle = it?.title
+            }
+
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -156,6 +164,8 @@ fun BlockSheet(
                                 targetType = targetType!!,
                                 targetValue = value!!,
                                 timeControlLabel = timeControl.takeIf { current == ActivityType.PLAYING },
+                                resourceId = resourceId?.let(java.util.UUID::fromString),
+                                resourceTitle = resourceTitle,
                             ),
                         )
                     },

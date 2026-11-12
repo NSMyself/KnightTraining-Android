@@ -9,8 +9,8 @@ import com.knightindustries.knighttraining.core.model.WeeklyGoal
 import com.knightindustries.knighttraining.core.session.PracticeSession
 import com.knightindustries.knighttraining.core.store.addBonusGoal
 import com.knightindustries.knighttraining.core.store.increaseGoalTarget
+import com.knightindustries.knighttraining.core.store.resource
 import com.knightindustries.knighttraining.feature.plan.DraftBlock
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import com.knightindustries.knighttraining.feature.session.SessionStart
 import java.time.Instant
@@ -70,7 +70,7 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             container.store.addBonusGoal(
                 weeklyPlanId, container.store.activityType(block.activityTypeCode)!!, block.targetType, block.targetValue,
-                name = block.name, timeControlLabel = block.timeControlLabel,
+                name = block.name, resource = block.resourceId?.let { container.store.resource(it) }, timeControlLabel = block.timeControlLabel,
             )
         }
     }

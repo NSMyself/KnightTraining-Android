@@ -50,6 +50,7 @@ import com.knightindustries.knighttraining.core.store.nextUntitledPlanTemplateNa
 import com.knightindustries.knighttraining.core.store.planTemplate
 import com.knightindustries.knighttraining.core.store.qualifyingSessionCount
 import com.knightindustries.knighttraining.core.store.renamePlanTemplate
+import com.knightindustries.knighttraining.core.store.resource
 import com.knightindustries.knighttraining.core.store.updatePlanBlocks
 import com.knightindustries.knighttraining.core.store.weeklyPlanContaining
 import com.knightindustries.knighttraining.ui.activityIcon
@@ -83,7 +84,7 @@ class EditPlanViewModel(private val container: AppContainer, private val templat
             name = template.name.orEmpty()
             template.goalTemplates.forEach {
                 existingIds += it.id
-                blocks += DraftBlock(it.id, it.name, it.activityType.code, it.targetType, it.targetValue, it.timeControlLabel)
+                blocks += DraftBlock(it.id, it.name, it.activityType.code, it.targetType, it.targetValue, it.timeControlLabel, it.resource?.id, it.resource?.title)
             }
             val week = container.store.weeklyPlanContaining(Instant.now(), container.preferences.firstLaunch())
             if (week?.planTemplateId == templateId) {
@@ -110,8 +111,8 @@ class EditPlanViewModel(private val container: AppContainer, private val templat
                 blocks = blocks.map { block ->
                     GoalEdit(
                         id = block.id.takeIf { it in existingIds }, name = block.name,
-                        activityType = store.activityType(block.activityTypeCode)!!, targetType = block.targetType,
-                        targetValue = block.targetValue, timeControlLabel = block.timeControlLabel,
+                        activityType = store.activityType(block.activityTypeCode)!!, resource = block.resourceId?.let { store.resource(it) },
+                        targetType = block.targetType, targetValue = block.targetValue, timeControlLabel = block.timeControlLabel,
                     )
                 },
             )
@@ -180,7 +181,7 @@ fun EditPlanScreen(viewModel: EditPlanViewModel, onClose: () -> Unit) {
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                         leadingContent = { Icon(activityIcon(block.activityTypeCode), contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
                         headlineContent = { Text(blockTitle(block.name, block.activityTypeCode, block.timeControlLabel)) },
-                        supportingContent = { Text(targetText(block.activityTypeCode, block.targetType, block.targetValue)) },
+                        supportingContent = { Text(listOfNotNull(targetText(block.activityTypeCode, block.targetType, block.targetValue), block.resourceTitle).joinToString(" · ")) },
                     )
                 }
             }

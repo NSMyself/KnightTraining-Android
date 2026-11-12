@@ -120,7 +120,7 @@ fun CreatePlanScreen(viewModel: CreatePlanViewModel, onClose: () -> Unit, onSave
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                         leadingContent = { Icon(activityIcon(block.activityTypeCode), contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
                         headlineContent = { Text(blockTitle(block.name, block.activityTypeCode, block.timeControlLabel)) },
-                        supportingContent = { Text(targetText(block.activityTypeCode, block.targetType, block.targetValue)) },
+                        supportingContent = { Text(listOfNotNull(targetText(block.activityTypeCode, block.targetType, block.targetValue), block.resourceTitle).joinToString(" · ")) },
                     )
                 }
             }

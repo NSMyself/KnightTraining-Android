@@ -77,6 +77,7 @@ import com.knightindustries.knighttraining.core.session.PracticeSession
 import com.knightindustries.knighttraining.core.session.PracticeSession.Attribution
 import com.knightindustries.knighttraining.core.session.PracticeSession.GoalCredit
 import com.knightindustries.knighttraining.feature.plan.ActivityGrid
+import com.knightindustries.knighttraining.feature.resources.ResourcePickerField
 import com.knightindustries.knighttraining.feature.plan.TimeControlPicker
 import com.knightindustries.knighttraining.ui.activityIcon
 import com.knightindustries.knighttraining.ui.activityName
@@ -376,6 +377,8 @@ private fun ReviewContent(session: PracticeSession, code: String, viewModel: Ses
             )
         }
 
+        // Any session can attach a resource here, not just one started from a linked goal (iOS).
+        ResourcePickerField(session.resourceId) { viewModel.setResource(it?.id) }
         if (ActivityType.hasQuantityUnit(code)) CountField(count) { count = it }
         if (code == ActivityType.PLAYING) TimeControlPicker(timeControl) { timeControl = it }
         if (code == ActivityType.COACHING) {

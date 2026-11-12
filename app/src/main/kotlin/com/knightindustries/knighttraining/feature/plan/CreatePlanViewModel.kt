@@ -13,6 +13,7 @@ import com.knightindustries.knighttraining.core.model.PlanEstimatorBlock
 import com.knightindustries.knighttraining.core.model.TargetType
 import com.knightindustries.knighttraining.core.store.NewBlock
 import com.knightindustries.knighttraining.core.store.createPlan
+import com.knightindustries.knighttraining.core.store.resource
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -25,6 +26,10 @@ data class DraftBlock(
     val targetType: TargetType,
     val targetValue: Int,
     val timeControlLabel: String? = null,
+    /** The linked resource, if any: carried to the goal template, its weekly goals and sessions. */
+    val resourceId: UUID? = null,
+    /** For display only. */
+    val resourceTitle: String? = null,
 )
 
 /**
@@ -57,7 +62,7 @@ class CreatePlanViewModel(
     fun addBlock(block: DraftBlock) {
         val index = blocks.indexOfFirst {
             it.activityTypeCode == block.activityTypeCode && it.targetType == block.targetType &&
-                it.name == block.name && it.timeControlLabel == block.timeControlLabel
+                it.name == block.name && it.timeControlLabel == block.timeControlLabel && it.resourceId == block.resourceId
         }
         if (index >= 0) {
             blocks[index] = blocks[index].copy(targetValue = blocks[index].targetValue + block.targetValue)
@@ -93,7 +98,10 @@ class CreatePlanViewModel(
                 container.store.createPlan(
                     name = name,
                     blocks = blocks.map {
-                        NewBlock(it.name, container.store.activityType(it.activityTypeCode)!!, it.targetType, it.targetValue, it.timeControlLabel)
+                        NewBlock(
+                            it.name, container.store.activityType(it.activityTypeCode)!!, it.targetType, it.targetValue,
+                            it.timeControlLabel, it.resourceId?.let { id -> container.store.resource(id) },
+                        )
                     },
                     untitledBase = untitledBase,
                     untitledNumbered = untitledNumbered,

@@ -142,7 +142,12 @@ maintainer confirms how interactions *feel* on a device themselves.
    3's library), the weekly review screen, "add more" bonus goals from the plan editor, a time
    control when switching to "Something else" mid-session, and crediting an ad-hoc segment when
    several goals fit (it credits only a single fit; iOS asks).
-3. Resources: library, detail screens, catalog sync, book lookup, link metadata.
+3. Resources: library, detail screens, catalog sync, book lookup, link metadata. **Built
+   2026-11-12**: the library tab, a shared kind-aware detail screen, add (link enrichment +
+   catalog browser) and edit (cover photo picker), share-to-app, and resource links on plan
+   blocks, bonus goals and the session review. Not yet: YouTube playlist import (needs an
+   Android-restricted API key from the maintainer), the `shared_course` table and its catalog
+   merge, a "see all" shelf per kind.
 4. Lichess: OAuth (AppAuth), Elo, activity sync (one request at a time, 60s after a 429),
    milestones.
 5. Reminders, Glance widget, share-to-app intent.
