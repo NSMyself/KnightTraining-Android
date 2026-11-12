@@ -23,7 +23,32 @@ re-propose either without a concrete reason.
 
 - **`core`**: plain Kotlin/JVM, no Android. Domain models and persistence, the counterpart of the
   iOS `Core` package. Its tests run on the JVM in seconds, no emulator. Keep it Android-free.
+  - `model/`: pure domain types and rules (`WeeklyPlan`, `WeeklyGoal.creditCandidates`,
+    `TimeControl`, `WeeklyTrainingStats`, the reminder/stretch policies, `PlanEstimator`).
+  - `persistence/`: Room entities, DAOs (the SQL), `Mapping.kt` (entity ↔ domain).
+  - `store/`: `TrainingStore`, the domain-level API the app calls, split by area like iOS's
+    `AppDatabase+*.swift` (`TrainingStoreWeeks.kt`, `TrainingStoreSession.kt`, `WeeklySurface.kt`, …).
 - **`app`**: Android app, Compose UI, platform services. Depends on `core`, never the reverse.
+
+### Where the port differs from iOS on purpose
+
+- **No translated text in `core`**: it has no Android resources. Rules that need words take them as
+  arguments (`PlanTemplate.untitledName(base, numbered)`, `displayName(fallback)`), and
+  `WeeklySurface.planName` is the raw stored name. Display strings (`displayTitle`,
+  `targetDescription`, `progressDescription`, date ranges) live in the app.
+- **Weeks are a `LocalDate` + a `WeekCalendar`** (zone and first weekday), passed explicitly; iOS
+  freezes `weekStart` as an instant against `Calendar.current`. Local wall-clock weeks are the
+  accepted difference if the zone changes mid-week.
+- **Activity types and resource kinds resolve from `Presets` in memory**, never a join: the rows
+  are seeded once and never change. Resources load in one batch per query (iOS does a query per
+  goal).
+- **An activity's resource is the full row.** iOS's join leaves out `description`/`isAutoImported`
+  and lets `lastAccessedAt` default to now.
+- **`findOngoingActivityId` takes the most recently started**; iOS's has no `ORDER BY`.
+- `WeeklyGoal.withProgress`/`addingProgress` weren't ported: no iOS caller, and they'd drop
+  `goalTemplateId`/`isBonus`.
+- Change events are `SharedFlow`s with no replay (iOS's `EventBroadcaster`); live data is
+  `invalidationTracker.createFlow` + a re-read in one transaction (iOS's `ValueObservation`).
 
 ## Persistence (Room)
 
@@ -39,6 +64,13 @@ re-propose either without a concrete reason.
   display time (iOS AGENTS.md §14), and iOS's icons are SF Symbol names.
 - Never `INSERT OR REPLACE` (or `OnConflictStrategy.REPLACE`) a row other tables reference: it's a
   delete, and fires their cascades. Use `@Upsert` or an explicit update.
+- **`@Upsert` only on tables whose sole unique key is `id`.** Room answers *any* unique conflict
+  with an update by id, so on `weekly_plan` (`weekStart`) a new id for a committed week silently
+  did nothing, where iOS throws (found porting `ResaveKeepsChildRowsTests`). Tables with a second
+  unique key get an explicit `INSERT … ON CONFLICT(id) DO UPDATE` instead (`WeekDao.upsertPlan`,
+  `AccountDao.upsert`); `weekly_review`, `shared_course` and `catalog_course` will need the same.
+- Every multi-step write is one transaction (`TrainingStore.write { }`); DAO calls inside it join
+  it, pinned by `WeeklySurfaceTest.aFailedSessionWriteLeavesNothingBehind`.
 
 ## Design
 
@@ -64,7 +96,12 @@ export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 
 0. Skeleton: Gradle, theme tokens, Room schema + seeding. **Done 2026-11-12.** Bugsnag waits
    for an Android project API key.
-1. Port Core's domain rules, tests first. No UI.
+1. Port Core's domain rules, tests first. No UI. **Done 2026-11-12**: the pure rules, and the
+   database operations the core loop needs (committing a week, `logSession`, the weekly surface
+   and its observation, editing sessions and plans, streaks, archive, delete-all), with their iOS
+   tests. Resources, Lichess, milestones, reviews and the plan suggester port in their own
+   phases. Not yet ported, needed by Phase 2's UI: `previousWeeklyPlan` is ported, but the weekly
+   review table's queries and `applyCoachTarget` aren't.
 2. Core loop UI: onboarding, plan creation + presets, weekly commit, Home (fixed layout),
    practice timer (foreground service + ongoing notification), log/edit sessions, history. First
    tester build.

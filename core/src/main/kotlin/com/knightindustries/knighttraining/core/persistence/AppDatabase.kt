@@ -55,6 +55,16 @@ import kotlinx.coroutines.Dispatchers
 abstract class AppDatabase : RoomDatabase() {
     abstract fun lookupDao(): LookupDao
 
+    abstract fun activityDao(): ActivityDao
+
+    abstract fun planDao(): PlanDao
+
+    abstract fun weekDao(): WeekDao
+
+    abstract fun resourceDao(): ResourceDao
+
+    abstract fun accountDao(): AccountDao
+
     companion object {
         const val FILE_NAME = "knighttraining.db"
 
