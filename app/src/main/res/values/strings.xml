@@ -451,4 +451,34 @@
     <string name="milestone_target_title_specific">Earn the %s title</string>
     <string name="milestone_target_title_any">Earn any Lichess title</string>
     <string name="milestone_delete_title">Delete this milestone?</string>
+
+    <!-- Suggest a plan -->
+    <string name="suggest_plan">Suggest a plan</string>
+    <string name="suggest_time_per_week">Time per week</string>
+    <string name="suggest_less_time">Less time</string>
+    <string name="suggest_more_time">More time</string>
+    <string name="suggest_focus">What do you want to work on?</string>
+    <string name="suggest_rating">Your rating (optional)</string>
+    <string name="suggest_rating_hint">e.g. 1450</string>
+    <string name="suggest_site_chesscom">Chess.com</string>
+    <string name="suggest_go">Suggest my plan</string>
+    <string name="suggest_result_title">Here\'s your plan</string>
+    <string name="suggest_budget">About %s a week</string>
+    <string name="suggest_add">Add to plan</string>
+    <string name="suggest_change">Change answers</string>
+    <string name="suggest_partner">From our partner ChessMood</string>
+    <string name="suggest_view_course">View on ChessMood</string>
+    <string name="suggest_course_block">For your %s goal</string>
+    <plurals name="suggest_course_weeks">
+        <item quantity="one">About %d week at this pace</item>
+        <item quantity="other">About %d weeks at this pace</item>
+    </plurals>
+    <string name="suggest_reason_calibrated">You asked for %1$s. Lately you\'ve trained about %2$s a week and hit %3$s of your goals, so this starts at %4$s. It\'s a floor: do more whenever you can.</string>
+    <string name="suggest_reason_lichess_rating">Sized for your Lichess rating of %d.</string>
+    <string name="suggest_reason_rating">Sized for a rating of %d.</string>
+    <string name="suggest_reason_no_rating">No rating given, so this is sized for a typical club player.</string>
+    <string name="suggest_reason_focus">Extra time for %s.</string>
+    <string name="suggest_reason_lighter">Less %1$s than usual: you\'ve hit %2$s of those goals lately.</string>
+    <string name="suggest_reason_coach_target">Keeps your coach\'s target of %s. The other blocks make room for it.</string>
+    <string name="suggest_reason_resource">%1$s uses “%2$s”, which you\'ve been studying.</string>
 </resources>

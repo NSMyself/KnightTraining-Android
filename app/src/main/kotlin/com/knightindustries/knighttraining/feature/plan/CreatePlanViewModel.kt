@@ -10,12 +10,14 @@ import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.core.model.PlanEstimate
 import com.knightindustries.knighttraining.core.model.PlanEstimator
 import com.knightindustries.knighttraining.core.model.PlanEstimatorBlock
+import com.knightindustries.knighttraining.core.model.PlanSuggestionHistory
 import com.knightindustries.knighttraining.core.model.TargetType
 import com.knightindustries.knighttraining.core.store.NewBlock
 import com.knightindustries.knighttraining.core.store.createPlan
+import com.knightindustries.knighttraining.core.store.planSuggestionHistory
 import com.knightindustries.knighttraining.core.store.resource
-import kotlinx.coroutines.launch
 import java.util.UUID
+import kotlinx.coroutines.launch
 
 /** A training block being built, before anything is saved. */
 data class DraftBlock(
@@ -88,6 +90,20 @@ class CreatePlanViewModel(
                 addBlock(DraftBlock(name = title(item.title), activityTypeCode = item.activityTypeCode, targetType = item.targetType, targetValue = item.targetValue, timeControlLabel = item.timeControlLabel))
             }
         }
+    }
+
+    /** What "Suggest a plan" knows about the player; loaded when the sheet opens. */
+    var suggestionHistory by mutableStateOf<PlanSuggestionHistory?>(null)
+        private set
+
+    fun loadSuggestionHistory() {
+        viewModelScope.launch { suggestionHistory = container.store.planSuggestionHistory() }
+    }
+
+    /** A suggested plan's blocks, through [addBlock] like a preset's. */
+    fun importSuggestion(drafts: List<DraftBlock>) {
+        hasImportedTemplate = true
+        drafts.forEach(::addBlock)
     }
 
     fun save(untitledBase: String, untitledNumbered: (Int) -> String, onSaved: () -> Unit) {

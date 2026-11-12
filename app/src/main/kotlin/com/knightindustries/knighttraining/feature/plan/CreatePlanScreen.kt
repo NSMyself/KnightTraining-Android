@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.R
 import com.knightindustries.knighttraining.core.model.PlanEstimate
 import com.knightindustries.knighttraining.ui.activityIcon
@@ -61,6 +62,7 @@ fun CreatePlanScreen(viewModel: CreatePlanViewModel, onClose: () -> Unit, onSave
     var editing by remember { mutableStateOf<DraftBlock?>(null) }
     var addingBlock by rememberSaveable { mutableStateOf(false) }
     var choosingPreset by rememberSaveable { mutableStateOf(false) }
+    var suggesting by rememberSaveable { mutableStateOf(false) }
     var confirmingDiscard by rememberSaveable { mutableStateOf(false) }
 
     fun close() = if (viewModel.hasUnsavedChanges) confirmingDiscard = true else onClose()
@@ -132,9 +134,12 @@ fun CreatePlanScreen(viewModel: CreatePlanViewModel, onClose: () -> Unit, onSave
             }
             if (!viewModel.hasImportedTemplate) {
                 item {
-                    TextButton(onClick = { choosingPreset = true }, modifier = Modifier.fillMaxWidth()) {
+                    TextButton(onClick = { viewModel.loadSuggestionHistory(); suggesting = true }, modifier = Modifier.fillMaxWidth()) {
                         Icon(Icons.Rounded.AutoAwesome, contentDescription = null)
-                        Text(stringResource(R.string.import_template), modifier = Modifier.padding(start = 8.dp))
+                        Text(stringResource(R.string.suggest_plan), modifier = Modifier.padding(start = 8.dp))
+                    }
+                    TextButton(onClick = { choosingPreset = true }, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(R.string.import_template))
                     }
                 }
             }
@@ -150,6 +155,14 @@ fun CreatePlanScreen(viewModel: CreatePlanViewModel, onClose: () -> Unit, onSave
             onDismiss = { editing = null },
             onSave = { viewModel.updateBlock(it); editing = null },
             onRemove = { viewModel.removeBlock(block.id); editing = null },
+        )
+    }
+    if (suggesting) {
+        SuggestPlanSheet(
+            container = AppContainer.from(context.applicationContext as android.app.Application),
+            history = viewModel.suggestionHistory,
+            onDismiss = { suggesting = false },
+            onAdd = { viewModel.importSuggestion(it); suggesting = false },
         )
     }
     if (choosingPreset) {
