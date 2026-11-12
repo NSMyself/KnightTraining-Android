@@ -64,7 +64,7 @@ data class CatalogCourse(
         /** The maintainer's affiliate link: referred users get 20% off. */
         const val CHESSMOOD_REFERRAL_URL = "https://chessmood.com/?r=KnightTraining"
 
-        private val suggestableTopicCodes = setOf(ActivityType.OPENINGS, ActivityType.ENDGAMES, ActivityType.PUZZLES)
+        val suggestableTopicCodes = setOf(ActivityType.OPENINGS, ActivityType.ENDGAMES, ActivityType.PUZZLES)
 
         /** The catalog's `topic` as an activity code; the catalog says `tactics` for puzzles. */
         fun topicCode(catalogTopic: String?): String? {
