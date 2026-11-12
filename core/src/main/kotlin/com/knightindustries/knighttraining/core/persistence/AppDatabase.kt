@@ -67,6 +67,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun reviewDao(): ReviewDao
 
+    abstract fun libraryDao(): LibraryDao
+
     companion object {
         const val FILE_NAME = "knighttraining.db"
 
