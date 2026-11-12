@@ -1,18 +1,26 @@
 package com.knightindustries.knighttraining.core.persistence
 
+import com.knightindustries.knighttraining.core.model.Account
 import com.knightindustries.knighttraining.core.model.Activity
 import com.knightindustries.knighttraining.core.model.ActivitySource
 import com.knightindustries.knighttraining.core.model.ActivityType
 import com.knightindustries.knighttraining.core.model.CoachingTopic
+import com.knightindustries.knighttraining.core.model.EloSnapshot
 import com.knightindustries.knighttraining.core.model.GoalTemplate
+import com.knightindustries.knighttraining.core.model.LichessActivityBatch
+import com.knightindustries.knighttraining.core.model.Milestone
 import com.knightindustries.knighttraining.core.model.PlanTemplate
 import com.knightindustries.knighttraining.core.model.Resource
 import com.knightindustries.knighttraining.core.model.ResourceKind
 import com.knightindustries.knighttraining.core.model.TargetType
 import com.knightindustries.knighttraining.core.model.WeeklyGoal
 import com.knightindustries.knighttraining.core.model.WeeklyPlan
+import com.knightindustries.knighttraining.core.persistence.entities.AccountEntity
 import com.knightindustries.knighttraining.core.persistence.entities.ActivityEntity
+import com.knightindustries.knighttraining.core.persistence.entities.EloSnapshotEntity
 import com.knightindustries.knighttraining.core.persistence.entities.GoalTemplateEntity
+import com.knightindustries.knighttraining.core.persistence.entities.LichessActivityBatchEntity
+import com.knightindustries.knighttraining.core.persistence.entities.MilestoneEntity
 import com.knightindustries.knighttraining.core.persistence.entities.PlanTemplateEntity
 import com.knightindustries.knighttraining.core.persistence.entities.ResourceEntity
 import com.knightindustries.knighttraining.core.persistence.entities.WeeklyGoalEntity
@@ -114,4 +122,40 @@ internal fun WeeklyPlanEntity.toDomain(goals: List<WeeklyGoal>) = WeeklyPlan(
 
 internal fun WeeklyPlan.toEntity() = WeeklyPlanEntity(
     id = id, planTemplateId = planTemplateId, weekStart = weekStart, createdAt = createdAt,
+)
+
+internal fun AccountEntity.toDomain() = Account(
+    id, platform, username, title, flag, lastGameSyncAt, lastPuzzleSyncAt, lastStormDayId, lastStormRunsForDay,
+    lastStormSecondsForDay, lastStreakRuns, lastStreakScore, lastStreakSyncAt, createdAt, updatedAt,
+)
+
+/** Tokens stay out of the database on Android (see [Account]); the columns are always written empty. */
+internal fun Account.toEntity() = AccountEntity(
+    id = id, platform = platform, username = username, accessToken = null, refreshToken = null, tokenExpiresAt = null,
+    createdAt = createdAt, updatedAt = updatedAt, title = title, lastGameSyncAt = lastGameSyncAt,
+    lastPuzzleSyncAt = lastPuzzleSyncAt, lastStormDayId = lastStormDayId, lastStormRunsForDay = lastStormRunsForDay,
+    lastStormSecondsForDay = lastStormSecondsForDay, lastStreakRuns = lastStreakRuns, lastStreakScore = lastStreakScore,
+    lastStreakSyncAt = lastStreakSyncAt, flag = flag,
+)
+
+internal fun EloSnapshot.toEntity() = EloSnapshotEntity(id, accountId, rating, ratingType, capturedAt)
+
+internal fun EloSnapshotEntity.toDomain() = EloSnapshot(id, accountId, rating, ratingType, capturedAt)
+
+internal fun MilestoneEntity.toDomain() = Milestone(id, kind, ratingType, targetRating, targetTitle, text, completedAt, createdAt)
+
+internal fun Milestone.toEntity() = MilestoneEntity(id, kind, ratingType, targetRating, targetTitle, text, completedAt, createdAt)
+
+internal fun LichessActivityBatchEntity.toDomain() = LichessActivityBatch(
+    id = id, accountId = accountId, kind = kind, category = category,
+    externalIds = externalIds.split(',').filter { it.isNotEmpty() }, itemCount = itemCount,
+    totalDurationSeconds = totalDurationSeconds, timeControlLabel = timeControlLabel, firstItemAt = firstItemAt,
+    lastItemAt = lastItemAt, bestScore = bestScore, status = status, activityId = activityId, createdAt = createdAt,
+)
+
+internal fun LichessActivityBatch.toEntity() = LichessActivityBatchEntity(
+    id = id, accountId = accountId, kind = kind, category = category, externalIds = externalIds.joinToString(","),
+    itemCount = itemCount, totalDurationSeconds = totalDurationSeconds, timeControlLabel = timeControlLabel,
+    firstItemAt = firstItemAt, lastItemAt = lastItemAt, status = status, activityId = activityId, createdAt = createdAt,
+    bestScore = bestScore,
 )

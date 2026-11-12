@@ -8,8 +8,9 @@ import java.time.Instant
 import java.util.UUID
 
 /**
- * A connected Lichess or Chess.com account. The iOS app keeps tokens in this row too; revisit
- * when Lichess sign-in lands (Phase 4), since Android Keystore is the safer home for them.
+ * A connected Lichess or Chess.com account. The token columns exist for schema parity with iOS but
+ * are always `NULL` on Android: the login lives in a Keystore-encrypted file instead (see the app's
+ * `LichessCredentials`).
  */
 @Entity(tableName = "account", indices = [Index(value = ["platform"], unique = true)])
 data class AccountEntity(
