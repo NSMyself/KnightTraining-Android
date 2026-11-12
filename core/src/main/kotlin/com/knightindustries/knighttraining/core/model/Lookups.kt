@@ -23,6 +23,19 @@ data class ActivityType(val id: UUID, val code: String) {
          * the translated name, which only the app knows.
          */
         val pickableCodes: List<String> = listOf(PUZZLES, PLAYING, ANALYZING, OPENINGS, ENDGAMES, COACHING)
+
+        /**
+         * The target types a plan block of this kind can have (iOS `targetCapability`): puzzles by
+         * count or time, games by count only, everything else by time.
+         */
+        fun targetTypes(code: String): List<TargetType> = when (code) {
+            PUZZLES -> listOf(TargetType.COUNT, TargetType.DURATION)
+            PLAYING -> listOf(TargetType.COUNT)
+            else -> listOf(TargetType.DURATION)
+        }
+
+        /** Whether a session of this kind is asked "how many did you complete?". */
+        fun hasQuantityUnit(code: String): Boolean = TargetType.COUNT in targetTypes(code)
     }
 }
 

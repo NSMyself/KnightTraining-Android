@@ -2,6 +2,7 @@
 // SwiftUI: it keeps the rules testable on the JVM in seconds, without an emulator.
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
 }
@@ -30,6 +31,7 @@ dependencies {
     api(libs.room.runtime)
     api(libs.sqlite.bundled)
     api(libs.kotlinx.coroutines.core)
+    api(libs.kotlinx.serialization.json)
     ksp(libs.room.compiler)
 
     testImplementation(libs.junit)
