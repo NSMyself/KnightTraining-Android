@@ -14,9 +14,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -67,17 +67,17 @@ import com.knightindustries.knighttraining.feature.home.EditHomeSheet
 import com.knightindustries.knighttraining.feature.home.HomeLayout
 import com.knightindustries.knighttraining.lichess.LichessAuth
 import com.knightindustries.knighttraining.reminders.ReminderScheduler
+import com.knightindustries.knighttraining.ui.currentLocale
 import com.knightindustries.knighttraining.ui.durationText
 import com.knightindustries.knighttraining.ui.ratingTypeNameRes
 import com.knightindustries.knighttraining.ui.ratingTypeOrder
+import java.time.DayOfWeek
+import java.time.format.TextStyle
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.DayOfWeek
-import java.time.format.TextStyle
-import java.util.Locale
 
 data class ProfileStats(val tally: WeekCompletionTally, val currentStreak: Int, val longestStreak: Int, val totalSeconds: Int, val resourcesFinished: Int)
 
@@ -145,11 +145,18 @@ class ProfileViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch { container.preferences.setOnboardingCompleted(false) }
     }
 
+    /**
+     * Wipes every user table and signs out of Lichess, like iOS's `UserDataEraser`. The token is
+     * revoked and forgotten first, while it can still be read. Preferences, the Home layout and the
+     * course catalog survive.
+     */
     fun deleteAll() {
         viewModelScope.launch {
             container.sessions.clear()
+            container.lichessAuth.signOut()
             container.store.deleteAllUserData()
             refresh()
+            refreshLichess()
         }
     }
 }
@@ -239,7 +246,7 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
                                         val days = if (day in reminders.weekdays) reminders.weekdays - day else reminders.weekdays + day
                                         viewModel.setReminders(reminders.copy(weekdays = days), context)
                                     },
-                                    label = { Text(day.getDisplayName(TextStyle.SHORT, Locale.getDefault())) },
+                                    label = { Text(day.getDisplayName(TextStyle.SHORT, currentLocale())) },
                                 )
                             }
                         }

@@ -111,4 +111,26 @@ class LichessProfileTest {
         assertNull(runBlocking { container.store.lichessAccount() })
         assertNull(runBlocking { container.lichessCredentials.token() })
     }
+
+    @Test
+    fun deletingAllDataSignsOutOfLichess() {
+        runBlocking {
+            container.lichessCredentials.save("test-token")
+            container.store.ensureLichessAccount("Tester", null, null)
+        }
+        openProfile()
+        compose.waitUntilAtLeastOneExists(hasText("Tester"), 5_000)
+
+        compose.onNodeWithText(text(R.string.delete_all_data)).performScrollTo().performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.delete_all_title)), 5_000)
+        compose.onAllNodes(hasText(text(R.string.delete)) and hasClickAction()).let { nodes ->
+            // The dialog's button is the last one composed.
+            nodes[nodes.fetchSemanticsNodes().size - 1].performClick()
+        }
+
+        compose.waitUntil(5_000) { runBlocking { container.lichessCredentials.token() } == null }
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.lichess_connect_body)), 5_000)
+        assertNull(runBlocking { container.store.lichessAccount() })
+        assertNull("A fresh reader finds no login either", runBlocking { com.knightindustries.knighttraining.lichess.LichessCredentials(context).token() })
+    }
 }
