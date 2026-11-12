@@ -18,7 +18,12 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import android.app.Application
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import com.knightindustries.knighttraining.AppContainer
+import com.knightindustries.knighttraining.session.SessionNotifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -39,6 +44,8 @@ import com.knightindustries.knighttraining.feature.plan.CreatePlanScreen
 import com.knightindustries.knighttraining.feature.plan.CreatePlanViewModel
 import com.knightindustries.knighttraining.feature.plan.PlanThisWeekScreen
 import com.knightindustries.knighttraining.feature.plan.PlanThisWeekViewModel
+import com.knightindustries.knighttraining.feature.session.SessionScreen
+import com.knightindustries.knighttraining.feature.session.SessionViewModel
 import com.knightindustries.knighttraining.ui.appViewModel
 
 private data class Tab(val route: TabRoute, val label: Int, val icon: ImageVector)
@@ -55,9 +62,22 @@ private val tabs = listOf(
  * back from any tab returns Home before leaving the app (Material's navigation guidance).
  */
 @Composable
-fun KnightTrainingApp() {
+fun KnightTrainingApp(pendingAction: String? = null, onActionHandled: () -> Unit = {}) {
     val backStack = rememberNavBackStack(HomeRoute)
     val top = backStack.lastOrNull()
+    val application = LocalContext.current.applicationContext as Application
+
+    // The timer notification: tapping it opens the session; its Stop opens straight on the review.
+    LaunchedEffect(pendingAction) {
+        val sessions = AppContainer.from(application).sessions
+        when (pendingAction) {
+            SessionNotifier.ACTION_STOP -> sessions.session.value?.takeIf { it.isRunning }?.let { sessions.stop() }
+            SessionNotifier.ACTION_OPEN -> Unit
+            else -> return@LaunchedEffect
+        }
+        if (sessions.session.value != null) backStack.openSession()
+        onActionHandled()
+    }
 
     Scaffold(
         contentWindowInsets = WindowInsets(0),
@@ -87,9 +107,15 @@ fun KnightTrainingApp() {
                         viewModel = appViewModel { HomeViewModel(it) },
                         onCreatePlan = { backStack.add(CreatePlanRoute(commit = true)) },
                         onPlanThisWeek = { backStack.add(PlanThisWeekRoute) },
-                        onStartGoal = { },
-                        onStartSession = { },
+                        onOpenSession = { backStack.openSession() },
                         contentPadding = padding,
+                    )
+                }
+                entry<SessionRoute> {
+                    SessionScreen(
+                        viewModel = appViewModel { SessionViewModel(it) },
+                        onLeave = { backStack.removeLastOrNull() },
+                        onFinished = { backStack.remove(SessionRoute) },
                     )
                 }
                 entry<TrainingRoute> { Placeholder(R.string.tab_training, R.string.coming_soon, padding) }
@@ -113,6 +139,14 @@ fun KnightTrainingApp() {
                 }
             },
         )
+    }
+}
+
+/** At most one session screen on the stack. */
+fun NavBackStack<NavKey>.openSession() {
+    if (lastOrNull() != SessionRoute) {
+        remove(SessionRoute)
+        add(SessionRoute)
     }
 }
 

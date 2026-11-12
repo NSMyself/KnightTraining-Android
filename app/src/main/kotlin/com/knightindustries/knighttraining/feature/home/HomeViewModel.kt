@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.core.model.WeekCalendar
 import com.knightindustries.knighttraining.core.model.WeeklyTrainingStats
+import com.knightindustries.knighttraining.core.session.PracticeSession
+import com.knightindustries.knighttraining.feature.session.SessionStart
+import java.time.Instant
 import java.time.LocalDate
 import com.knightindustries.knighttraining.core.store.WeeklySurface
 import com.knightindustries.knighttraining.core.store.observeWeeklySurface
@@ -45,7 +48,16 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeState.Loading)
 
+    /** The session in progress, if any: Home shows a way back to it. */
+    val session: StateFlow<PracticeSession?> = container.sessions.session
+
     fun refresh() {
         refreshes.value++
+    }
+
+    /** One session at a time: if one is already running, this only reopens it. */
+    fun start(start: SessionStart) {
+        if (container.sessions.session.value != null) return
+        container.sessions.start(PracticeSession.start(Instant.now(), start.attribution, start.resourceId, start.availableGoalIds))
     }
 }

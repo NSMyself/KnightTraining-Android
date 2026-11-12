@@ -29,3 +29,7 @@ data class CreatePlanRoute(val commit: Boolean = true) : Route
 /** Pick which saved plan this week commits to. */
 @Serializable
 data object PlanThisWeekRoute : Route
+
+/** The practice timer and its review: the session in `SessionRepository`. */
+@Serializable
+data object SessionRoute : Route

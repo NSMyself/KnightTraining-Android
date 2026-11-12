@@ -48,7 +48,17 @@ import com.knightindustries.knighttraining.R
 import com.knightindustries.knighttraining.core.model.PlanTemplate
 import com.knightindustries.knighttraining.core.model.WeeklyGoal
 import com.knightindustries.knighttraining.core.model.WeeklyTrainingStats
+import com.knightindustries.knighttraining.core.session.PracticeSession
 import com.knightindustries.knighttraining.core.store.WeeklySurface
+import com.knightindustries.knighttraining.core.store.openGoals
+import com.knightindustries.knighttraining.feature.session.SessionStart
+import com.knightindustries.knighttraining.feature.session.StartSessionSheet
+import com.knightindustries.knighttraining.feature.session.rememberStartWithNotifications
+import androidx.compose.material.icons.rounded.Timer
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import com.knightindustries.knighttraining.ui.activityIcon
 import com.knightindustries.knighttraining.ui.activityName
 import com.knightindustries.knighttraining.ui.durationText
@@ -65,13 +75,34 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     onCreatePlan: () -> Unit,
     onPlanThisWeek: () -> Unit,
-    onStartGoal: (WeeklyGoal) -> Unit,
-    onStartSession: () -> Unit,
+    onOpenSession: () -> Unit,
     contentPadding: PaddingValues,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val session by viewModel.session.collectAsStateWithLifecycle()
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refresh() }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    var choosingStart by rememberSaveable { mutableStateOf(false) }
+    var pendingStart by remember { mutableStateOf<SessionStart?>(null) }
+    val startWithNotifications = rememberStartWithNotifications {
+        pendingStart?.let(viewModel::start)
+        pendingStart = null
+        onOpenSession()
+    }
+
+    fun start(start: SessionStart) {
+        choosingStart = false
+        if (session != null) return onOpenSession()
+        pendingStart = start
+        startWithNotifications()
+    }
+    val openGoals = (state as? HomeState.Loaded)?.surface?.plan?.openGoals().orEmpty()
+    val onStartSession = { if (session != null) onOpenSession() else choosingStart = true }
+    val onStartGoal = { goal: WeeklyGoal -> start(SessionStart.goals(listOf(goal) + openGoals.filter { it.id != goal.id })) }
+
+    if (choosingStart) {
+        StartSessionSheet(openGoals, onDismiss = { choosingStart = false }, onStart = ::start)
+    }
 
     Scaffold(
         modifier = Modifier.padding(contentPadding).nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -83,11 +114,11 @@ fun HomeScreen(
             )
         },
         floatingActionButton = {
-            if ((state as? HomeState.Loaded)?.surface?.plan != null || (state as? HomeState.Loaded)?.surface?.hasPlanTemplates == true) {
+            if (state is HomeState.Loaded) {
                 ExtendedFloatingActionButton(
                     onClick = onStartSession,
                     icon = { Icon(Icons.Rounded.PlayArrow, contentDescription = null) },
-                    text = { Text(stringResource(R.string.start_session)) },
+                    text = { Text(stringResource(if (session != null) R.string.session_in_progress else R.string.start_session)) },
                 )
             }
         },
@@ -102,10 +133,35 @@ fun HomeScreen(
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = padding.calculateTopPadding(), bottom = 96.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
+                session?.let { item { SessionBanner(it, onOpenSession) } }
                 item { PlanCard(current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal) }
                 item { ActivityCard(current.surface, current.stats) }
             }
         }
+    }
+}
+
+/** The way back to a session left running (or stopped and not yet saved). */
+@Composable
+private fun SessionBanner(session: PracticeSession, onOpen: () -> Unit) {
+    Card(onClick = onOpen, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
+        ListItem(
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+            leadingContent = { Icon(Icons.Rounded.Timer, contentDescription = null) },
+            headlineContent = {
+                Text(
+                    stringResource(
+                        when {
+                            !session.isRunning -> R.string.session_needs_saving
+                            session.isPaused -> R.string.session_paused
+                            else -> R.string.session_in_progress
+                        },
+                    ),
+                )
+            },
+            supportingContent = session.attribution.activityTypeCode?.let { { Text(activityName(it)) } },
+            trailingContent = { Text(stringResource(R.string.open), style = MaterialTheme.typography.labelLarge) },
+        )
     }
 }
 

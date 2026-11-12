@@ -6,6 +6,8 @@ import com.knightindustries.knighttraining.core.persistence.AppDatabase
 import com.knightindustries.knighttraining.core.persistence.AppDatabase.Companion.configure
 import com.knightindustries.knighttraining.core.store.TrainingStore
 import com.knightindustries.knighttraining.data.AppPreferences
+import com.knightindustries.knighttraining.session.SessionNotifier
+import com.knightindustries.knighttraining.session.SessionRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
@@ -39,6 +41,9 @@ class AppContainer(application: Application) {
     val store = TrainingStore(database)
 
     val preferences = AppPreferences(application)
+
+    /** The practice session in progress, if any, and its notification. */
+    val sessions = SessionRepository(application, SessionNotifier(application))
 
     companion object {
         fun from(application: Application): AppContainer = (application as KnightTrainingApplication).container
