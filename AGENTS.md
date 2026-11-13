@@ -134,8 +134,7 @@ maintainer confirms how interactions *feel* on a device themselves.
    database operations the core loop needs (committing a week, `logSession`, the weekly surface
    and its observation, editing sessions and plans, streaks, archive, delete-all), with their iOS
    tests. Resources, Lichess, milestones, reviews and the plan suggester port in their own
-   phases. The weekly review's queries (and `applyCoachTarget`) aren't ported yet; port them
-   with the review screen.
+   phases. The weekly review's queries and `applyCoachTarget` followed with the coach (Phase 6).
 2. Core loop UI: onboarding, plan creation + presets, weekly commit, Home (fixed layout),
    practice timer (ongoing notification), log/edit sessions, history. **Built 2026-11-12**, pending
    the maintainer's device check. The weekly review screen and resource picking followed. Not yet:
@@ -168,7 +167,6 @@ maintainer confirms how interactions *feel* on a device themselves.
 
    Not yet:
    - A real lichess.org sign-in, which needs the maintainer's account on a device.
-   - The puzzle dashboard for the weekly coach (Phase 6).
 5. Reminders, Glance widget, share-to-app intent. **Built 2026-11-12**: behind-only training
    reminders on picked days (one inexact alarm, re-armed on boot/clock change), the share target
    (Phase 3), and a Home Screen widget (`widget/WeekWidget.kt`): plan, goals, minutes and the
