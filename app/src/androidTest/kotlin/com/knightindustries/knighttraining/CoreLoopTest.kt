@@ -133,8 +133,14 @@ class CoreLoopTest {
 
         // The week's only goal is now met: the celebration fires.
         compose.waitUntilAtLeastOneExists(hasText(text(R.string.week_complete_title)), 10_000)
+        // Into the confetti, which waits (in real time) for the sound's mating move. The clock is
+        // held, or waiting for idle would play the confetti to its end before the capture.
+        compose.mainClock.autoAdvance = false
+        Thread.sleep(1_500)
+        compose.mainClock.advanceTimeBy(1_200)
         screenshot("12_week_complete")
-        compose.onNodeWithText(text(R.string.done)).performClick()
+        compose.mainClock.autoAdvance = true
+        compose.onNodeWithText(text(R.string.continue_action)).performClick()
         compose.waitUntilAtLeastOneExists(hasText("10/10"), 5_000)
         screenshot("13_week_log")
 

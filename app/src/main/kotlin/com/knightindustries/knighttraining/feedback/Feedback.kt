@@ -111,6 +111,19 @@ class Feedback(context: Context, private val preferences: AppPreferences, privat
         scope.launch { preferences.setHapticsEnabled(on) }
     }
 
+    private val weekComplete = WeekCompleteSequence(context)
+
+    /**
+     * The celebration's sound and its taps. Returns whether anything plays, so the screen knows to
+     * hold its confetti for the mate ([WeekCompleteSequence.MATE_MILLIS]).
+     */
+    fun playWeekComplete(): Boolean {
+        val vibrated = hapticsEnabled.value && weekComplete.vibrate()
+        val sounded = soundsEnabled.value
+        if (sounded) playSound(FeedbackSound.WeekComplete)
+        return vibrated || sounded
+    }
+
     /** Plays [event] in full: its haptic through [haptics] and its sound. */
     fun play(event: FeedbackEvent, haptics: HapticFeedback) {
         if (hapticsEnabled.value) event.haptic?.let(haptics::performHapticFeedback)

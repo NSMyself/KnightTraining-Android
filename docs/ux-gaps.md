@@ -16,7 +16,7 @@ Items 1–5 are mostly about that.
 |---|-----|--------|--------|
 | 1 | ~~Timer has no animated mesh gradient~~ Done 2026-11-19 | High | M |
 | 2 | ~~No haptics or sounds (and no settings toggles)~~ Done 2026-11-19 | High | S–M |
-| 3 | Week-complete celebration is a plain dialog | High | M |
+| 3 | ~~Week-complete celebration is a plain dialog~~ Done 2026-11-19 (review prompt not yet) | High | M |
 | 4 | Nothing animates: numbers, progress, state changes | High | M |
 | 5 | Timer controls and study card lack hierarchy | High | S |
 | 6 | Switching tabs throws away each tab's state | High | S–M |

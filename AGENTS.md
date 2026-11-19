@@ -117,6 +117,11 @@ scheme, surface-container ladder included.
   them. "Goal completed" is heard from the app-wide weekly-surface observer
   (`GoalCompletionSnapshot`); its "whole week" rule is the celebration's own (bonus goals don't
   count), where iOS counts every goal.
+- **The week-complete celebration** (`feature/celebration/`) is a full-screen dialog: iOS's sound
+  with a vibration pattern on the same measured hits (`WeekCompleteSequence`, pinned to the WAV by
+  `WeekCompleteSoundTest`), confetti ported count for count and held for the mating move, skipped
+  under battery saver or with animations off. iOS also asks for an App Store review here; Play's
+  in-app review isn't wired yet.
 
 ## Build & test
 
