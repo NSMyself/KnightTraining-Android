@@ -317,6 +317,7 @@
     <string name="reminder_days">Dagen</string>
     <string name="reminder_time">Tijd</string>
     <string name="reminder_no_days">Geen dagen gekozen: je krijgt geen herinneringen.</string>
+    <string name="mesh_dimmed">Gedimd om batterij te sparen · Tik om te tonen</string>
     <string name="sounds">Geluiden</string>
     <string name="sounds_body">Als je een doel haalt of de week afrondt</string>
     <string name="haptics">Haptische feedback</string>

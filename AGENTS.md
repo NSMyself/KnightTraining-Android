@@ -93,6 +93,12 @@ scheme, surface-container ladder included.
   `onboarding`, `celebration`). ViewModels come from `appViewModel { … }`, built from
   `AppContainer` by hand.
 - `ui/Labels.kt`: every code → display text/icon mapping. Strings live in `strings.xml`.
+- **The timer's background** (`feature/session/TimerBackground.kt`, `designsystem/Backgrounds.kt`):
+  iOS's purple glow with its drifting mesh over it, the blob physics ported constant for constant.
+  Same battery rules: first 10 running minutes only, frozen while paused, off under battery saver,
+  and a notice that brings it back. Android adds one: off when system animations are removed.
+  Blur needs API 31; below that the blobs are radial gradients. The frame loop uses
+  `withInfiniteAnimationFrameNanos`, or UI tests never go idle. Pinned by `TimerBackgroundTest`.
 - **No foreground service for the timer.** `PracticeSession` (core) derives elapsed time from
   timestamps and `SessionRepository` writes it to a file on every change, so the process can die
   mid-session and resume intact. The ongoing notification's clock is a system chronometer; Pause

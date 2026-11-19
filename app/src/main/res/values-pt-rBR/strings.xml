@@ -324,6 +324,7 @@
     <string name="reminder_days">Dias</string>
     <string name="reminder_time">Tempo</string>
     <string name="reminder_no_days">Nenhum dia escolhido: você não vai receber lembretes.</string>
+    <string name="mesh_dimmed">Modo de economia de bateria · Toque para mostrar</string>
     <string name="sounds">Sons</string>
     <string name="sounds_body">Quando você atinge um objetivo ou acaba a semana</string>
     <string name="haptics">Tátil</string>

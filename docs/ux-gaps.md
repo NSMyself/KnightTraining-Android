@@ -14,7 +14,7 @@ Items 1–5 are mostly about that.
 
 | # | Gap | Impact | Effort |
 |---|-----|--------|--------|
-| 1 | Timer has no animated mesh gradient | High | M |
+| 1 | ~~Timer has no animated mesh gradient~~ Done 2026-11-19 | High | M |
 | 2 | ~~No haptics or sounds (and no settings toggles)~~ Done 2026-11-19 | High | S–M |
 | 3 | Week-complete celebration is a plain dialog | High | M |
 | 4 | Nothing animates: numbers, progress, state changes | High | M |

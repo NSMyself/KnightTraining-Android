@@ -77,6 +77,7 @@ import com.knightindustries.knighttraining.core.session.PracticeSession
 import com.knightindustries.knighttraining.core.session.PracticeSession.Attribution
 import com.knightindustries.knighttraining.core.session.PracticeSession.GoalCredit
 import com.knightindustries.knighttraining.feature.plan.ActivityGrid
+import androidx.compose.foundation.layout.Box
 import com.knightindustries.knighttraining.feedback.FeedbackEvent
 import com.knightindustries.knighttraining.feedback.rememberFeedback
 import com.knightindustries.knighttraining.feature.resources.ResourcePickerField
@@ -113,25 +114,37 @@ fun SessionScreen(viewModel: SessionViewModel, onLeave: () -> Unit, onFinished: 
         return
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.training_session)) },
-                navigationIcon = {
-                    // Leaving never ends the session: it carries on in the notification and on Home.
-                    IconButton(onClick = onLeave) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null) }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-            )
-        },
-        containerColor = MaterialTheme.colorScheme.background,
-    ) { padding ->
-        Column(Modifier.fillMaxSize().padding(padding).navigationBarsPadding()) {
-            when (val phase = current.phase) {
-                PracticeSession.Phase.Running -> TimerContent(current, viewModel)
-                PracticeSession.Phase.Categorizing -> CategorizeContent(viewModel)
-                is PracticeSession.Phase.Reviewing -> ReviewContent(current, phase.activityTypeCode, viewModel)
-            }
+    val running = current.phase == PracticeSession.Phase.Running
+    val now = rememberNow(ticking = running && !current.isPaused)
+    val background = rememberTimerBackground(current, now)
+
+    Box(Modifier.fillMaxSize()) {
+        TimerBackground(running, background)
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(R.string.training_session)) },
+                    navigationIcon = {
+                        // Leaving never ends the session: it carries on in the notification and on Home.
+                        IconButton(onClick = onLeave) { Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null) }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                )
+            },
+            containerColor = Color.Transparent,
+        ) { padding ->
+            SessionPhases(current, viewModel, now, background, Modifier.padding(padding))
+        }
+    }
+}
+
+@Composable
+private fun SessionPhases(current: PracticeSession, viewModel: SessionViewModel, now: Instant, background: TimerBackgroundState, modifier: Modifier) {
+    Column(modifier.fillMaxSize().navigationBarsPadding()) {
+        when (val phase = current.phase) {
+            PracticeSession.Phase.Running -> TimerContent(current, viewModel, now, background)
+            PracticeSession.Phase.Categorizing -> CategorizeContent(viewModel)
+            is PracticeSession.Phase.Reviewing -> ReviewContent(current, phase.activityTypeCode, viewModel)
         }
     }
 }
@@ -158,8 +171,7 @@ private fun attributionTitle(session: PracticeSession, goals: Map<java.util.UUID
     }
 
 @Composable
-private fun TimerContent(session: PracticeSession, viewModel: SessionViewModel) {
-    val now = rememberNow(ticking = !session.isPaused)
+private fun TimerContent(session: PracticeSession, viewModel: SessionViewModel, now: Instant, background: TimerBackgroundState) {
     var changing by rememberSaveable { mutableStateOf(false) }
     var pendingChange by remember { mutableStateOf<Attribution?>(null) }
     val code = session.attribution.activityTypeCode
@@ -174,9 +186,11 @@ private fun TimerContent(session: PracticeSession, viewModel: SessionViewModel) 
         Text(attributionTitle(session, viewModel.goals), style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
         Text(
             clockText(session.segmentElapsedSeconds(now)),
-            style = MaterialTheme.typography.displayLarge.copy(fontFeatureSettings = "tnum"),
+            // The shadow keeps the digits legible as the bright blobs drift behind them.
+            style = MaterialTheme.typography.displayLarge.copy(fontFeatureSettings = "tnum", shadow = clockShadow()),
             color = if (session.isPaused) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
         )
+        DimmedNotice(background)
         if (session.isPaused) Text(stringResource(R.string.session_paused), color = MaterialTheme.colorScheme.onSurfaceVariant)
         if (session.hasMultipleSegments) {
             Text(stringResource(R.string.total_this_session, clockText(session.elapsedSeconds(now))), color = MaterialTheme.colorScheme.onSurfaceVariant)

@@ -317,6 +317,7 @@
     <string name="reminder_days">Tage</string>
     <string name="reminder_time">Zeit</string>
     <string name="reminder_no_days">Keine Tage gewählt: Es kommen keine Erinnerungen.</string>
+    <string name="mesh_dimmed">Gedimmt, um Akku zu sparen · Zum Anzeigen tippen</string>
     <string name="sounds">Töne</string>
     <string name="sounds_body">Wenn du ein Ziel erreichst oder die Woche abschließt</string>
     <string name="haptics">Haptik</string>

@@ -360,6 +360,7 @@
     <string name="reminder_days">Days</string>
     <string name="reminder_time">Time</string>
     <string name="reminder_no_days">No days selected: no reminders will arrive.</string>
+    <string name="mesh_dimmed">Dimmed to save battery · Tap to show</string>
     <string name="sounds">Sounds</string>
     <string name="sounds_body">When you reach a goal or finish the week</string>
     <string name="haptics">Haptics</string>
