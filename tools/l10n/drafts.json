@@ -2087,5 +2087,32 @@
   "it": "Tocca per scegliere una statistica",
   "de": "Tippe, um eine Statistik zu wählen",
   "fr": "Touche pour choisir une statistique"
+ },
+ "remind_me": {
+  "de": "Erinnere mich",
+  "es": "Recuérdamelo",
+  "fr": "Me le rappeler",
+  "it": "Ricordamelo",
+  "nl": "Herinner me",
+  "pt-BR": "Lembre-me",
+  "pt-PT": "Lembra-me"
+ },
+ "notifications_blocked": {
+  "de": "Mitteilungen für Knight Training sind in den Android-Einstellungen deaktiviert, daher können keine Erinnerungen ankommen.",
+  "es": "Las notificaciones de Knight Training están desactivadas en la Configuración de Android, así que los recordatorios no pueden entregarse.",
+  "fr": "Les notifications de Knight Training sont désactivées dans les Réglages Android, les rappels ne peuvent donc pas être envoyés.",
+  "it": "Le notifiche di Knight Training sono disattivate nelle Impostazioni di Android, quindi i promemoria non possono arrivare.",
+  "nl": "Meldingen staan uit voor Knight Training in de Android-instellingen, dus herinneringen kunnen niet worden afgeleverd.",
+  "pt-BR": "As notificações do Knight Training estão desativadas nos Ajustes do Android, por isso os lembretes não podem ser entregues.",
+  "pt-PT": "As notificações do Knight Training estão desativadas nas Definições do Android, por isso os lembretes não podem ser entregues."
+ },
+ "open_settings": {
+  "de": "Einstellungen öffnen",
+  "es": "Abrir Configuración",
+  "fr": "Ouvrir les Réglages",
+  "it": "Apri le Impostazioni",
+  "nl": "Instellingen openen",
+  "pt-BR": "Abrir os Ajustes",
+  "pt-PT": "Abrir as Definições"
  }
 }

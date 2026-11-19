@@ -124,6 +124,7 @@ class CreatePlanViewModel(
                     commit = commitsToCurrentWeek,
                     firstLaunch = container.preferences.firstLaunch(),
                 )
+                if (commitsToCurrentWeek) container.preferences.queueRemindersOffer()
                 onSaved()
             } finally {
                 isSaving = false

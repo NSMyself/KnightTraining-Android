@@ -192,6 +192,7 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                             onPlanThisWeek = { backStack.add(PlanThisWeekRoute) },
                             onOpenSession = { backStack.openSession() },
                             onOpenHistory = { backStack.add(TrainingHistoryRoute) },
+                            onEditPlan = { backStack.add(EditPlanRoute(it.planTemplateId.toString())) },
                             contentPadding = padding,
                         )
                     }

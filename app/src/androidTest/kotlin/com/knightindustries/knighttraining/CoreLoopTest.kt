@@ -54,6 +54,7 @@ class CoreLoopTest {
     fun startClean() {
         runBlocking {
             container.store.deleteAllUserData()
+            container.preferences.resetRemindersOffer()
             container.preferences.completeOnboarding()
         }
         container.sessions.clear()
@@ -83,6 +84,12 @@ class CoreLoopTest {
         compose.waitUntilAtLeastOneExists(hasText(text(R.string.preset_item_puzzles_tactical)), 5_000)
         screenshot("03_plan_builder")
         compose.onNodeWithText(text(R.string.save)).performClick()
+
+        // Committing a week offers reminders, once.
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.reminder_offer_title)), 10_000)
+        screenshot("04a_reminders_offer")
+        compose.onNodeWithText(text(R.string.review_tip_not_now)).performClick()
+        compose.waitUntilDoesNotExist(hasText(text(R.string.reminder_offer_title)), 5_000)
 
         compose.waitUntilAtLeastOneExists(hasText("0/60"), 10_000)
         screenshot("04_home_committed")

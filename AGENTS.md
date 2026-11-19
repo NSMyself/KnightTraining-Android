@@ -110,6 +110,12 @@ scheme, surface-container ladder included.
   subtitle and detail, the first page's text staged in once. "Let's go" grows a white circle into
   the Lao Tzu quote; Skip crossfades to it. A Next button stays alongside swiping, so the pager
   never relies on a gesture alone, which is why iOS's "Swipe to continue" hint isn't ported.
+- **Home's plan header** (iOS `TodayTasksHeader`): the week's tracked time at the trailing edge,
+  "Well done!" once every counting goal is done, and a menu with Edit plan and Share my week.
+  Committing a week (Plan this week, or a new plan from Home) queues a one-time "Want a nudge?"
+  sheet (`RemindersOfferSheet`, iOS `EnableRemindersSheet`), answered once either way. Profile
+  warns when reminders are on but notifications are blocked, with a link to fix it. Pinned by
+  `PlanHeaderTest` and `CoreLoopTest`; tests reset the offer with `resetRemindersOffer()`.
 - **Tapping a goal on Home** opens `GoalDetailsSheet` (iOS `ActivityDetailsSheet`): title,
   resource, target and progress, and Start / Train again. Per-goal reminders, iOS's other half of
   that sheet, will go there. Pinned by `GoalDetailsTest`.

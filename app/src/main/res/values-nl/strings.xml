@@ -548,4 +548,11 @@
     <string name="chart_hours">Uren</string>
     <string name="chart_no_training">Nog geen training geregistreerd</string>
     <string name="chart_no_training_body">Registreer een sessie om hier je uren en rating te zien.</string>
+    <string name="well_done">Goed gedaan!</string>
+    <string name="reminder_offer_title">Wil je een duwtje in de rug?</string>
+    <string name="reminder_offer_body">We nemen alleen contact op op dagen dat je nog niet hebt getraind, zolang het weekplan nog niet af is. Rond de week af en we blijven stil.</string>
+    <string name="remind_me">Herinner me</string>
+    <string name="reminder_offer_footer">Je kunt dit op elk moment wijzigen in Instellingen.</string>
+    <string name="notifications_blocked">Meldingen staan uit voor Knight Training in de Android-instellingen, dus herinneringen kunnen niet worden afgeleverd.</string>
+    <string name="open_settings">Instellingen openen</string>
 </resources>

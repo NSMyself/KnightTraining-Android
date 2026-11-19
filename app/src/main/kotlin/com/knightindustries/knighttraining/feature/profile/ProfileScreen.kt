@@ -1,5 +1,13 @@
 package com.knightindustries.knighttraining.feature.profile
 
+import androidx.compose.runtime.remember
+import androidx.compose.material3.Icon
+import android.provider.Settings
+import android.content.Intent
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.NotificationsOff
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.core.app.NotificationManagerCompat
 import com.knightindustries.knighttraining.designsystem.glowTopAppBarColors
 import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
 import androidx.compose.foundation.clickable
@@ -296,6 +304,30 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
                         )
                     },
                 )
+                // Reminders on but notifications blocked would otherwise fail silently: say so, and
+                // open the system page that fixes it (iOS's Settings notice).
+                var notificationsBlocked by remember { mutableStateOf(false) }
+                LifecycleResumeEffect(Unit) {
+                    notificationsBlocked = !NotificationManagerCompat.from(context).areNotificationsEnabled()
+                    onPauseOrDispose { }
+                }
+                if (reminders.isEnabled && notificationsBlocked) {
+                    ListItem(
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        leadingContent = { Icon(Icons.Rounded.NotificationsOff, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
+                        headlineContent = { Text(stringResource(R.string.notifications_blocked), style = MaterialTheme.typography.bodyMedium) },
+                        supportingContent = {
+                            TextButton(
+                                onClick = {
+                                    context.startActivity(
+                                        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName),
+                                    )
+                                },
+                                contentPadding = PaddingValues(0.dp),
+                            ) { Text(stringResource(R.string.open_settings)) }
+                        },
+                    )
+                }
                 if (reminders.isEnabled) {
                     Column(Modifier.padding(horizontal = 16.dp).padding(bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(stringResource(R.string.reminder_days), style = MaterialTheme.typography.labelLarge)

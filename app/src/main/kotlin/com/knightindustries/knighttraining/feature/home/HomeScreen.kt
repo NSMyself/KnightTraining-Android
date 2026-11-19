@@ -1,5 +1,15 @@
 package com.knightindustries.knighttraining.feature.home
 
+import androidx.compose.ui.platform.LocalContext
+import com.knightindustries.knighttraining.ui.durationText
+import com.knightindustries.knighttraining.ui.rememberWithNotificationPermission
+import com.knightindustries.knighttraining.feature.share.ShareWeekSheet
+import com.knightindustries.knighttraining.core.model.WeeklyPlan
+import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.foundation.clickable
 import com.knightindustries.knighttraining.designsystem.glowTopAppBarColors
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -92,6 +102,7 @@ fun HomeScreen(
     onPlanThisWeek: () -> Unit,
     onOpenSession: () -> Unit,
     onOpenHistory: () -> Unit = {},
+    onEditPlan: (WeeklyPlan) -> Unit = {},
     contentPadding: PaddingValues,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -141,6 +152,20 @@ fun HomeScreen(
         StartSessionSheet(openGoals, onDismiss = { choosingStart = false }, onStart = ::start)
     }
     var addingMoreTo by remember { mutableStateOf<WeeklyGoal?>(null) }
+    var sharingWeek by rememberSaveable { mutableStateOf(false) }
+    (state as? HomeState.Loaded)?.surface?.plan?.takeIf { sharingWeek }?.let { ShareWeekSheet(it, onDismiss = { sharingWeek = false }) }
+
+    // Once, after a week is committed. Remind me asks for notifications first.
+    val offerDue by viewModel.remindersOfferDue.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val withNotifications = rememberWithNotificationPermission()
+    if (offerDue && session == null) {
+        RemindersOfferSheet(
+            onRemind = { withNotifications { viewModel.answerRemindersOffer(true, context) } },
+            onDecline = { viewModel.answerRemindersOffer(false, context) },
+        )
+    }
+
     // By id, so the sheet follows the goal's live progress.
     var openGoalId by rememberSaveable { mutableStateOf<String?>(null) }
     (state as? HomeState.Loaded)?.surface?.plan?.weeklyGoals?.firstOrNull { it.id.toString() == openGoalId }?.let { goal ->
@@ -211,7 +236,13 @@ fun HomeScreen(
                 offers.firstOrNull()?.let { offer ->
                     item(key = offer.id) { Box(Modifier.animateItem()) { LichessOfferBanner(offer, onTrack = { tracking = offer }, onDismiss = { viewModel.declineOffer(offer) }) } }
                 }
-                item(key = "plan") { PlanCard(current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal, { openGoalId = it.id.toString() }, Modifier.animateItem()) { addingMoreTo = it } }
+                item(key = "plan") { PlanCard(
+                        current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal,
+                        onOpenGoal = { openGoalId = it.id.toString() },
+                        onEditPlan = onEditPlan,
+                        onShareWeek = { sharingWeek = true },
+                        modifier = Modifier.animateItem(),
+                    ) { addingMoreTo = it } }
                 homeTiles(
                     layout,
                     TileData(current.surface, current.stats, current.lastWeek, milestones),
@@ -278,6 +309,8 @@ private fun PlanCard(
     onPlanThisWeek: () -> Unit,
     onStartGoal: (WeeklyGoal) -> Unit,
     onOpenGoal: (WeeklyGoal) -> Unit,
+    onEditPlan: (WeeklyPlan) -> Unit,
+    onShareWeek: (WeeklyPlan) -> Unit,
     modifier: Modifier = Modifier,
     onAddMore: (WeeklyGoal) -> Unit,
 ) {
@@ -294,19 +327,54 @@ private fun PlanCard(
                 stringResource(R.string.plan_this_week), onPlanThisWeek,
             )
             else -> Column(Modifier.padding(vertical = 8.dp)) {
-                Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Text(
-                        PlanTemplate.displayName(surface.planName, stringResource(R.string.my_training_plan)),
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                    AnimatedValueText(
-                        pluralStringResource(R.plurals.goals_done, plan.goalCount, plan.completedGoalCount, plan.goalCount) + " · " +
-                            weekRange(plan.weekStart, weekEnd ?: plan.nextWeekStart),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
+                PlanHeader(surface, plan, weekEnd, onEditPlan, onShareWeek)
                 plan.weeklyGoals.forEach { goal -> GoalRow(goal, onOpen = { onOpenGoal(goal) }, onStart = { onStartGoal(goal) }, onAddMore = { onAddMore(goal) }) }
+            }
+        }
+    }
+}
+
+/**
+ * The plan's name and where the week stands (iOS `TodayTasksHeader`): "Well done!" once every
+ * goal is done, the week's tracked time large at the trailing edge (shown at 0 too), and a menu
+ * to edit the plan or share the week.
+ */
+@Composable
+private fun PlanHeader(surface: WeeklySurface, plan: WeeklyPlan, weekEnd: LocalDate?, onEditPlan: (WeeklyPlan) -> Unit, onShareWeek: (WeeklyPlan) -> Unit) {
+    var menu by remember { mutableStateOf(false) }
+    Row(Modifier.padding(start = 16.dp, end = 4.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) {
+            Text(
+                PlanTemplate.displayName(surface.planName, stringResource(R.string.my_training_plan)),
+                style = MaterialTheme.typography.titleLarge,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            AnimatedValueText(
+                if (plan.isFullyCompleted) {
+                    stringResource(R.string.well_done)
+                } else {
+                    pluralStringResource(R.plurals.goals_done, plan.goalCount, plan.completedGoalCount, plan.goalCount) + " · " +
+                        weekRange(plan.weekStart, weekEnd ?: plan.nextWeekStart)
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        AnimatedValueText(durationText(surface.weeklyTrackedSeconds), style = MaterialTheme.typography.headlineSmall, maxLines = 1, modifier = Modifier.padding(start = 12.dp))
+        Box {
+            IconButton(onClick = { menu = true }) { Icon(Icons.Rounded.MoreVert, contentDescription = stringResource(R.string.more_options)) }
+            DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.edit_plan)) },
+                    leadingIcon = { Icon(Icons.Rounded.Edit, contentDescription = null) },
+                    onClick = { menu = false; onEditPlan(plan) },
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.share_week_title)) },
+                    leadingIcon = { Icon(Icons.Rounded.Share, contentDescription = null) },
+                    onClick = { menu = false; onShareWeek(plan) },
+                )
             }
         }
     }

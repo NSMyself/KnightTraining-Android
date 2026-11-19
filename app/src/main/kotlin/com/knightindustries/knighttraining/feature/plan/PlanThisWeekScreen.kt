@@ -76,6 +76,7 @@ class PlanThisWeekViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             try {
                 container.store.createWeeklyPlan(id, container.preferences.firstLaunch())
+                container.preferences.queueRemindersOffer()
                 onCommitted()
             } finally {
                 isCommitting = false

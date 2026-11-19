@@ -26,7 +26,7 @@ Items 1–5 are mostly about that.
 | 10 | ~~Flat backgrounds and neutral cards: brand glow missing~~ Done 2026-11-19 | Medium | S |
 | 11 | ~~One widget, one size~~ Done 2026-11-19 | Medium | M–L |
 | 12 | ~~Profile: no activity grid, simpler rating chart~~ Done 2026-11-19 | Medium | M |
-| 13 | Home plan header is missing actions and states | Medium | S |
+| 13 | ~~Home plan header is missing actions and states~~ Done 2026-11-19 | Medium | S |
 | 14 | Library cards, detail and empty/loading states are plain | Medium | M |
 | 15 | Weekly review and week log show less | Medium | M |
 

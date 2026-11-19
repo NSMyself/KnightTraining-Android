@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.home
 
+import kotlinx.coroutines.flow.first
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.knightindustries.knighttraining.AppContainer
@@ -81,6 +82,22 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
 
     /** The session in progress, if any: Home shows a way back to it. */
     val session: StateFlow<PracticeSession?> = container.sessions.session
+
+    /** Whether to ask "Want a nudge?" now: once, after a week is committed. */
+    val remindersOfferDue: StateFlow<Boolean> = container.preferences.remindersOfferDue
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
+    /** Answers the offer: on turns reminders on with their defaults; either way, it's not asked again. */
+    fun answerRemindersOffer(enable: Boolean, context: android.content.Context) {
+        viewModelScope.launch {
+            if (enable) {
+                val current = container.preferences.reminderSchedule.first()
+                container.preferences.setReminderSchedule(current.copy(isEnabled = true))
+                com.knightindustries.knighttraining.reminders.ReminderScheduler.reschedule(context)
+            }
+            container.preferences.markRemindersOffered()
+        }
+    }
 
     /** Pending Lichess offers, oldest first; Home shows the first. */
     val lichessOffers: StateFlow<List<LichessActivityBatch>> = container.store.observePendingLichessActivityBatches()

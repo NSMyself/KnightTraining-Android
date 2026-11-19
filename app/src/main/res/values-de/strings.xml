@@ -548,4 +548,11 @@
     <string name="chart_hours">Stunden</string>
     <string name="chart_no_training">Noch kein Training erfasst</string>
     <string name="chart_no_training_body">Erfasse eine Einheit, um hier deine Stunden und Wertungszahl zu sehen.</string>
+    <string name="well_done">Gut gemacht!</string>
+    <string name="reminder_offer_title">Möchtest du eine Erinnerung?</string>
+    <string name="reminder_offer_body">Wir melden uns nur an Tagen, an denen du nicht trainiert hast, solange im Plan dieser Woche noch etwas offen ist. Schließ die Woche ab, und wir bleiben still.</string>
+    <string name="remind_me">Erinnere mich</string>
+    <string name="reminder_offer_footer">Du kannst das jederzeit in den Einstellungen ändern.</string>
+    <string name="notifications_blocked">Mitteilungen für Knight Training sind in den Android-Einstellungen deaktiviert, daher können keine Erinnerungen ankommen.</string>
+    <string name="open_settings">Einstellungen öffnen</string>
 </resources>

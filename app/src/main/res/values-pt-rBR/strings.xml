@@ -563,4 +563,11 @@
     <string name="chart_hours">Horas</string>
     <string name="chart_no_training">Ainda sem treinos registrados</string>
     <string name="chart_no_training_body">Registre uma sessão para ver suas horas e classificação aqui.</string>
+    <string name="well_done">Muito bem!</string>
+    <string name="reminder_offer_title">Quer um empurrãozinho?</string>
+    <string name="reminder_offer_body">Só entramos em contato nos dias em que você não treinou, enquanto o plano desta semana ainda tiver trabalho por fazer. Acabe a semana e ficamos calados.</string>
+    <string name="remind_me">Lembre-me</string>
+    <string name="reminder_offer_footer">Você pode mudar isso quando quiser nos Ajustes.</string>
+    <string name="notifications_blocked">As notificações do Knight Training estão desativadas nos Ajustes do Android, por isso os lembretes não podem ser entregues.</string>
+    <string name="open_settings">Abrir os Ajustes</string>
 </resources>

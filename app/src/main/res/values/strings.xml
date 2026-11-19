@@ -610,4 +610,11 @@
     <string name="chart_hours">Hours</string>
     <string name="chart_no_training">No training logged yet</string>
     <string name="chart_no_training_body">Log a session to see your hours and rating here.</string>
+    <string name="well_done">Well done!</string>
+    <string name="reminder_offer_title">Want a nudge?</string>
+    <string name="reminder_offer_body">We\'ll only get in touch on days you haven\'t trained, while this week\'s plan still has work left. Finish the week and we stay quiet.</string>
+    <string name="remind_me">Remind me</string>
+    <string name="reminder_offer_footer">You can change this any time in Settings.</string>
+    <string name="notifications_blocked">Notifications are turned off for Knight Training in Android settings, so reminders can\'t be delivered.</string>
+    <string name="open_settings">Open settings</string>
 </resources>

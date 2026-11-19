@@ -119,6 +119,38 @@ class AppPreferences(private val context: Context) {
         }
     }
 
+    private val remindersOfferedKey = booleanPreferencesKey("has_offered_reminders")
+    private val remindersOfferPendingKey = booleanPreferencesKey("reminders_offer_pending")
+
+    /**
+     * The "Want a nudge?" sheet (iOS `EnableRemindersSheet`): asked once, right after a week is
+     * committed, and never again once answered either way.
+     */
+    val remindersOfferDue: Flow<Boolean> = context.dataStore.data.map {
+        it[remindersOfferPendingKey] == true && it[remindersOfferedKey] != true && it[reminderEnabledKey] != true
+    }
+
+    /** A week was just committed: offer reminders on Home, unless they were offered before. */
+    suspend fun queueRemindersOffer() {
+        context.dataStore.edit { it[remindersOfferPendingKey] = true }
+    }
+
+    /** Back to never offered: for tests, which share one app's preferences. */
+    suspend fun resetRemindersOffer() {
+        context.dataStore.edit {
+            it.remove(remindersOfferedKey)
+            it.remove(remindersOfferPendingKey)
+            it[reminderEnabledKey] = false
+        }
+    }
+
+    suspend fun markRemindersOffered() {
+        context.dataStore.edit {
+            it[remindersOfferedKey] = true
+            it[remindersOfferPendingKey] = false
+        }
+    }
+
     private val soundsEnabledKey = booleanPreferencesKey("feedback_sounds_enabled")
     private val hapticsEnabledKey = booleanPreferencesKey("feedback_haptics_enabled")
 
