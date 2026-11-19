@@ -526,4 +526,24 @@
     <string name="time_evenings">Abends</string>
     <string name="time_late_nights">Spät nachts</string>
     <string name="back">Zurück</string>
+    <string name="widget_week_name">Wochenfortschritt</string>
+    <string name="widget_daily_description">Deine letzten Trainingsaktivitäten, Tag für Tag.</string>
+    <string name="widget_stat_name">Trainingsstatistik</string>
+    <string name="widget_stat_description">Wähle eine Statistik, die du im Blick behalten willst: Elo, Einheiten oder Trainingszeit dieser Woche, Serie oder Gesamtstunden.</string>
+    <string name="widget_open_app">Öffne Knight Training, um loszulegen</string>
+    <string name="widget_no_training">Diese Woche kein Training erfasst</string>
+    <string name="widget_this_week">Diese Woche</string>
+    <string name="goals_fraction">%1$d/%2$d Ziele</string>
+    <string name="stat_choose_hint">Lange drücken, um eine Statistik zu wählen</string>
+    <string name="stat_connect_lichess">Melde dich mit Lichess an, um deine Wertungszahl zu verfolgen</string>
+    <string name="stat_not_enough_data">Noch nicht genug Daten</string>
+    <string name="stat_sessions_week">Einheiten diese Woche</string>
+    <string name="stat_time_week">Zeit diese Woche</string>
+    <string name="stat_week_streak">Wochenserie</string>
+    <string name="stat_hours_studied">Lernstunden</string>
+    <string name="stat_streak_empty">Schließe eine ganze Woche ab, um eine Serie zu starten</string>
+    <string name="stat_rating">Wertungszahl</string>
+    <string name="stat_training_streak">Trainingsserie</string>
+    <string name="stat_choose_title">Wähle eine Statistik</string>
+    <string name="stat_choose_hint_tap">Tippe, um eine Statistik zu wählen</string>
 </resources>

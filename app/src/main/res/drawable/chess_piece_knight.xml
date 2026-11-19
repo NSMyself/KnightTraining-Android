@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from iOS KnightTrainingWidgets/Assets.xcassets/ChessPiece-knight. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp" android:height="96dp"
+    android:viewportWidth="1140" android:viewportHeight="1140">
+    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd" android:pathData="M 354 0 L 397 0 C 441 7 480 23 512 51 C 522 60 531 70 545 73 C 585 76 620 84 654 98 C 733 130 793 183 829 252 C 867 326 881 413 882 494 C 883 595 871 681 853 779 C 844 833 848 910 867 989 L 314 989 C 304 921 316 858 343 799 C 363 757 394 718 438 682 C 486 642 519 593 536 534 C 543 512 544 487 546 463 C 586 431 608 387 614 339 C 616 321 615 302 612 290 C 609 279 600 272 587 272 C 571 272 562 281 561 297 C 564 344 552 385 523 412 C 494 438 454 450 405 451 C 395 451 389 451 383 455 L 251 538 C 231 550 212 549 192 536 L 166 518 C 143 502 132 482 133 456 C 134 441 141 426 153 410 L 404 126 C 413 116 414 105 410 95 L 354 0 Z M 375 243 C 382 232 394 219 404 216 C 415 212 426 216 431 225 C 436 235 431 246 423 254 L 404 272 C 395 279 383 278 376 271 C 368 263 368 254 375 243 Z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 545 7 C 673 4 772 38 847 101 C 932 172 978 276 1001 411 C 1008 449 1010 476 1004 493 C 996 520 979 545 960 553 L 937 561 C 940 425 916 321 858 220 C 792 106 694 48 559 22 L 545 7 Z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 220 1042 H 962 V 1140 H 220 Z" />
+</vector>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from iOS KnightTrainingWidgets/Assets.xcassets/ChessPiece-queen. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp" android:height="96dp"
+    android:viewportWidth="1140" android:viewportHeight="1140">
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 339 113 L 430 249 L 455 74 L 540 228 L 570 47 L 600 228 L 685 74 L 710 249 L 801 113 L 755 350 C 751 371 732 386 710 386 H 430 C 408 386 389 371 385 350 L 339 113 Z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 397 378 H 743 C 754 378 763 387 763 398 V 425 C 763 446 749 464 729 470 L 704 478 C 689 483 682 499 687 514 C 719 607 742 695 758 774 C 773 848 801 910 840 956 C 851 969 843 989 826 989 H 314 C 297 989 289 969 300 956 C 339 910 367 848 382 774 C 398 695 421 607 453 514 C 458 499 451 483 436 478 L 411 470 C 391 464 377 446 377 425 V 398 C 377 387 386 378 397 378 Z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 220 1042 H 962 V 1140 H 220 Z" />
+</vector>

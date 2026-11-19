@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from iOS KnightTrainingWidgets/Assets.xcassets/ChessPiece-rook. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp" android:height="96dp"
+    android:viewportWidth="1140" android:viewportHeight="1140">
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 350 95 H 430 V 175 H 505 V 95 H 635 V 175 H 710 V 95 H 790 V 300 C 790 324 770 344 746 344 H 394 C 370 344 350 324 350 300 V 95 Z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 392 324 H 748 C 765 324 779 338 779 355 V 390 C 779 410 765 428 745 433 L 714 441 C 698 445 689 462 693 478 C 714 564 720 653 707 742 C 695 823 714 887 768 932 C 785 946 804 955 825 962 C 842 968 837 989 819 989 H 321 C 303 989 298 968 315 962 C 336 955 355 946 372 932 C 426 887 445 823 433 742 C 420 653 426 564 447 478 C 451 462 442 445 426 441 L 395 433 C 375 428 361 410 361 390 V 355 C 361 338 375 324 392 324 Z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 220 1042 H 962 V 1140 H 220 Z" />
+</vector>

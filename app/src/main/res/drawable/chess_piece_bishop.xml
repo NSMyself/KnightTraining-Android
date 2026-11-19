@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from iOS KnightTrainingWidgets/Assets.xcassets/ChessPiece-bishop. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp" android:height="96dp"
+    android:viewportWidth="1140" android:viewportHeight="1140">
+    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd" android:pathData="M 570 38 C 535 82 467 147 451 219 C 434 294 474 353 530 376 C 505 395 493 421 498 451 H 642 C 647 421 635 395 610 376 C 666 353 706 294 689 219 C 673 147 605 82 570 38 Z M 590 137 C 603 145 608 161 600 175 L 542 278 C 534 293 516 298 503 288 C 492 280 490 264 498 251 L 558 149 C 565 136 579 131 590 137 Z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 471 438 H 669 C 696 438 718 460 718 487 C 718 505 708 521 692 530 C 671 542 664 565 675 585 C 710 651 737 730 755 808 C 770 870 796 923 829 956 C 842 969 833 989 815 989 H 325 C 307 989 298 969 311 956 C 344 923 370 870 385 808 C 403 730 430 651 465 585 C 476 565 469 542 448 530 C 432 521 422 505 422 487 C 422 460 444 438 471 438 Z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 220 1042 H 962 V 1140 H 220 Z" />
+</vector>

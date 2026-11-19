@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from iOS KnightTrainingWidgets/Assets.xcassets/ChessPiece-pawn. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp" android:height="96dp"
+    android:viewportWidth="1140" android:viewportHeight="1140">
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 468 326 C 497 342 532 350 570 350 C 608 350 643 342 672 326 C 682 321 694 324 700 333 L 731 380 C 748 406 744 441 721 462 C 701 480 690 502 690 527 C 690 625 718 733 770 837 C 790 877 818 918 846 955 C 857 970 847 989 829 989 H 311 C 293 989 283 970 294 955 C 322 918 350 877 370 837 C 422 733 450 625 450 527 C 450 502 439 480 419 462 C 396 441 392 406 409 380 L 440 333 C 446 324 458 321 468 326 Z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M 220 1042 H 962 V 1140 H 220 Z" />
+</vector>

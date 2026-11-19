@@ -15,7 +15,7 @@ import com.knightindustries.knighttraining.core.store.GoalCompletionSnapshot
 import com.knightindustries.knighttraining.core.store.observeWeeklySurface
 import com.knightindustries.knighttraining.feedback.Feedback
 import com.knightindustries.knighttraining.feedback.FeedbackEvent
-import com.knightindustries.knighttraining.widget.WeekWidget
+import com.knightindustries.knighttraining.widget.WidgetStyle
 import android.util.Log
 import com.knightindustries.knighttraining.core.lichess.LichessClient
 import com.knightindustries.knighttraining.core.lichess.LichessSync
@@ -46,7 +46,7 @@ class KnightTrainingApplication : Application() {
             container.preferences.firstLaunch()
             container.catalogSync.syncIfNeeded()
         }
-        // The widget redraws whenever the week changes, like iOS's widget writer off the same
+        // The widgets redraw whenever the week changes, like iOS's widget writer off the same
         // surface. Every way a goal moves lands here too, so this is where a goal is heard
         // crossing its target.
         container.appScope.launch {
@@ -56,7 +56,7 @@ class KnightTrainingApplication : Application() {
                 val completion = GoalCompletionSnapshot.of(surface)
                 if (GoalCompletionSnapshot.isMoment(lastCompletion, completion)) container.feedback.playSound(FeedbackEvent.GoalCompleted)
                 lastCompletion = completion
-                WeekWidget().updateAll(this@KnightTrainingApplication)
+                WidgetStyle.updateAll(this@KnightTrainingApplication)
             }
         }
     }

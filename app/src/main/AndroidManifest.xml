@@ -68,9 +68,10 @@
             </intent-filter>
         </activity>
 
-        <!-- The Home Screen widget: this week at a glance. -->
+        <!-- Home Screen widgets: the week at three sizes, the daily grid, and a chosen stat. -->
         <receiver
             android:name=".widget.WeekWidgetReceiver"
+            android:label="@string/widget_week_name"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -79,6 +80,36 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/week_widget_info" />
         </receiver>
+        <receiver
+            android:name=".widget.DailyActivityWidgetReceiver"
+            android:label="@string/daily_activity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/daily_activity_widget_info" />
+        </receiver>
+        <receiver
+            android:name=".widget.StatWidgetReceiver"
+            android:label="@string/widget_stat_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stat_widget_info" />
+        </receiver>
+        <activity
+            android:name=".widget.StatWidgetConfigActivity"
+            android:exported="true"
+            android:theme="@style/Theme.KnightTraining">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
 
         <!-- "Share → Knight Training": saves the shared link to the library, no screen of its own. -->
         <activity

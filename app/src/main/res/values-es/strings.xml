@@ -541,4 +541,24 @@
     <string name="time_evenings">Noches</string>
     <string name="time_late_nights">Madrugadas</string>
     <string name="back">Atrás</string>
+    <string name="widget_week_name">Progreso semanal</string>
+    <string name="widget_daily_description">Tu actividad de entrenamiento reciente, día a día.</string>
+    <string name="widget_stat_name">Estadística de entrenamiento</string>
+    <string name="widget_stat_description">Elige una estadística para seguir de cerca: clasificación, sesiones o tiempo entrenado esta semana, racha, u horas totales.</string>
+    <string name="widget_open_app">Abre Knight Training para empezar</string>
+    <string name="widget_no_training">Sin entrenamientos esta semana</string>
+    <string name="widget_this_week">Esta semana</string>
+    <string name="goals_fraction">%1$d/%2$d objetivos</string>
+    <string name="stat_choose_hint">Mantén pulsado para elegir una estadística</string>
+    <string name="stat_connect_lichess">Inicia sesión con Lichess para seguir tu clasificación</string>
+    <string name="stat_not_enough_data">Aún no hay suficientes datos</string>
+    <string name="stat_sessions_week">Sesiones de esta semana</string>
+    <string name="stat_time_week">Tiempo entrenado esta semana</string>
+    <string name="stat_week_streak">Racha semanal</string>
+    <string name="stat_hours_studied">Horas estudiadas</string>
+    <string name="stat_streak_empty">Completa una semana entera para empezar una racha</string>
+    <string name="stat_rating">Clasificación</string>
+    <string name="stat_training_streak">Racha de entrenamiento</string>
+    <string name="stat_choose_title">Elige una estadística</string>
+    <string name="stat_choose_hint_tap">Toca para elegir una estadística</string>
 </resources>

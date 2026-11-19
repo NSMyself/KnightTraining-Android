@@ -1987,5 +1987,105 @@
   "it": "Indietro",
   "de": "Zurück",
   "fr": "Retour"
+ },
+ "widget_week_name": {
+  "de": "Wochenfortschritt",
+  "es": "Progreso semanal",
+  "fr": "Progression de la semaine",
+  "it": "Progressi settimanali",
+  "nl": "Wekelijkse voortgang",
+  "pt-BR": "Progresso semanal",
+  "pt-PT": "Progresso semanal"
+ },
+ "widget_stat_name": {
+  "de": "Trainingsstatistik",
+  "es": "Estadística de entrenamiento",
+  "fr": "Statistique d'entraînement",
+  "it": "Statistica di allenamento",
+  "nl": "Trainingsstatistiek",
+  "pt-BR": "Estatística de treino",
+  "pt-PT": "Estatística de treino"
+ },
+ "widget_this_week": {
+  "de": "Diese Woche",
+  "es": "Esta semana",
+  "fr": "Cette semaine",
+  "it": "Questa settimana",
+  "nl": "Deze week",
+  "pt-BR": "Esta semana",
+  "pt-PT": "Esta semana"
+ },
+ "goals_fraction": {
+  "de": "%1$d/%2$d Ziele",
+  "en": "%1$d/%2$d Goals",
+  "es": "%1$d/%2$d objetivos",
+  "fr": "%1$d/%2$d objectifs",
+  "it": "%1$d/%2$d obiettivi",
+  "nl": "%1$d/%2$d doelen",
+  "pt-BR": "%1$d/%2$d objetivos",
+  "pt-PT": "%1$d/%2$d objetivos"
+ },
+ "stat_sessions_week": {
+  "de": "Einheiten diese Woche",
+  "es": "Sesiones de esta semana",
+  "fr": "Séances cette semaine",
+  "it": "Sessioni settimanali",
+  "nl": "Sessies deze week",
+  "pt-BR": "Sessões desta semana",
+  "pt-PT": "Sessões desta semana"
+ },
+ "stat_time_week": {
+  "de": "Zeit diese Woche",
+  "es": "Tiempo entrenado esta semana",
+  "fr": "Temps d'entraînement cette semaine",
+  "it": "Tempo settimanale",
+  "nl": "Getrainde tijd deze week",
+  "pt-BR": "Tempo treinado esta semana",
+  "pt-PT": "Tempo treinado esta semana"
+ },
+ "stat_week_streak": {
+  "de": "Wochenserie",
+  "es": "Racha semanal",
+  "fr": "Semaines d'affilée",
+  "it": "Serie settimanale",
+  "nl": "Wekelijkse reeks",
+  "pt-BR": "Sequência semanal",
+  "pt-PT": "Sequência semanal"
+ },
+ "stat_hours_studied": {
+  "de": "Lernstunden",
+  "es": "Horas estudiadas",
+  "fr": "Heures d'étude",
+  "it": "Ore di studio",
+  "nl": "Gestudeerde uren",
+  "pt-BR": "Horas estudadas",
+  "pt-PT": "Horas estudadas"
+ },
+ "stat_training_streak": {
+  "de": "Trainingsserie",
+  "es": "Racha de entrenamiento",
+  "fr": "Série d'entraînement",
+  "it": "Serie di allenamenti",
+  "nl": "Trainingsreeks",
+  "pt-BR": "Sequência de treino",
+  "pt-PT": "Sequência de treino"
+ },
+ "stat_choose_title": {
+  "pt-PT": "Escolhe uma estatística",
+  "es": "Elige una estadística",
+  "pt-BR": "Escolha uma estatística",
+  "nl": "Kies een statistiek",
+  "it": "Scegli una statistica",
+  "de": "Wähle eine Statistik",
+  "fr": "Choisis une statistique"
+ },
+ "stat_choose_hint_tap": {
+  "pt-PT": "Toca para escolher uma estatística",
+  "es": "Toca para elegir una estadística",
+  "pt-BR": "Toque para escolher uma estatística",
+  "nl": "Tik om een statistiek te kiezen",
+  "it": "Tocca per scegliere una statistica",
+  "de": "Tippe, um eine Statistik zu wählen",
+  "fr": "Touche pour choisir une statistique"
  }
 }

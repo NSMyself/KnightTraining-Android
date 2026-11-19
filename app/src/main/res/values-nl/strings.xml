@@ -526,4 +526,24 @@
     <string name="time_evenings">Avonden</string>
     <string name="time_late_nights">Late avonden</string>
     <string name="back">Terug</string>
+    <string name="widget_week_name">Wekelijkse voortgang</string>
+    <string name="widget_daily_description">Je recente trainingsactiviteit, dag voor dag.</string>
+    <string name="widget_stat_name">Trainingsstatistiek</string>
+    <string name="widget_stat_description">Kies één statistiek om in de gaten te houden: rating, sessies of getrainde tijd deze week, reeks, of totaal aantal uren.</string>
+    <string name="widget_open_app">Open Knight Training om te beginnen</string>
+    <string name="widget_no_training">Geen training geregistreerd deze week</string>
+    <string name="widget_this_week">Deze week</string>
+    <string name="goals_fraction">%1$d/%2$d doelen</string>
+    <string name="stat_choose_hint">Houd ingedrukt om een statistiek te kiezen</string>
+    <string name="stat_connect_lichess">Log in met Lichess om je rating te volgen</string>
+    <string name="stat_not_enough_data">Nog niet genoeg gegevens</string>
+    <string name="stat_sessions_week">Sessies deze week</string>
+    <string name="stat_time_week">Getrainde tijd deze week</string>
+    <string name="stat_week_streak">Wekelijkse reeks</string>
+    <string name="stat_hours_studied">Gestudeerde uren</string>
+    <string name="stat_streak_empty">Voltooi een hele week om een reeks te starten</string>
+    <string name="stat_rating">Rating</string>
+    <string name="stat_training_streak">Trainingsreeks</string>
+    <string name="stat_choose_title">Kies een statistiek</string>
+    <string name="stat_choose_hint_tap">Tik om een statistiek te kiezen</string>
 </resources>

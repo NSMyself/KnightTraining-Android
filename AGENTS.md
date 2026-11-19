@@ -221,10 +221,16 @@ maintainer confirms how interactions *feel* on a device themselves.
    - A real lichess.org sign-in, which needs the maintainer's account on a device.
 5. Reminders, Glance widget, share-to-app intent. **Built 2026-11-12**: behind-only training
    reminders on picked days (one inexact alarm, re-armed on boot/clock change), the share target
-   (Phase 3), and a Home Screen widget (`widget/WeekWidget.kt`): plan, goals, minutes and the
-   continue line, redrawn by the app on every weekly-surface change (it runs in-process, so it
-   reads the database directly, no App Group snapshot). Its layout is pinned by
-   `WeekWidgetTest`. Not yet: per-block activity reminders.
+   (Phase 3), and Home Screen widgets (`widget/`), all redrawn by the app on every weekly-surface
+   change (they run in-process, so they read the database directly, no App Group snapshot):
+   - `WeekWidget`, responsive: small is iOS's Weekly Progress ring, medium its Progress Report
+     (what's left), large the full goal list with the continue line.
+   - `DailyActivityWidget`, iOS's weeks-by-days grid, drawn as one bitmap.
+   - `StatWidget`, one chosen stat (iOS's Training Stat) over a chess piece converted from iOS's
+     SVGs, picked in `StatWidgetConfigActivity`. Launchers reopen it only on Android 12+; before
+     that, an unset widget's tap opens the chooser, and a set one is changed by re-adding it.
+   - Glance has no determinate ring, so `WidgetStyle.ring` draws one into a bitmap.
+   Layouts are pinned by `WeekWidgetTest`. Not yet: per-block activity reminders.
 6. Suggest a plan, weekly coach (Gemini Nano where available), customizable Home, share cards,
    translations converted from the iOS `.xcstrings`.
    - **Suggest a plan, built 2026-11-12.** `PlanSuggestionEngine`, `RatingScale` and
