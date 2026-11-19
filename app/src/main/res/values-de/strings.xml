@@ -560,4 +560,7 @@
     <string name="mark_watched">Als angesehen markieren</string>
     <string name="library_empty_link_hint">Verknüpfe eine Ressource mit einer Einheit, um zu sehen, wie viel Zeit du damit verbringst.</string>
     <string name="no_matches_body">Versuche eine andere Suche oder einen anderen Filter</string>
+    <string name="reflection">Rückblick</string>
+    <string name="show_all_count">Alle anzeigen (%1$d)</string>
+    <string name="show_less">Weniger anzeigen</string>
 </resources>

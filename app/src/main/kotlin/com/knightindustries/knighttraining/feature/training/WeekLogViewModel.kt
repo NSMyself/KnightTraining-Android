@@ -1,5 +1,9 @@
 package com.knightindustries.knighttraining.feature.training
 
+import com.knightindustries.knighttraining.core.store.weeklyReview
+import com.knightindustries.knighttraining.core.model.WeeklyReview
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.knightindustries.knighttraining.AppContainer
@@ -39,6 +43,8 @@ data class WeekLogState(
     val activities: List<Activity>,
     /** Only the current week's sessions can be logged, edited or deleted (iOS AGENTS.md §7). */
     val isCurrentWeek: Boolean,
+    /** What was written about the week, once it's been reflected on. */
+    val review: WeeklyReview? = null,
 )
 
 /** What the session editor hands back, for a new session or a correction. */
@@ -58,7 +64,12 @@ data class SessionDraft(
 class WeekLogViewModel(private val container: AppContainer, private val weekStart: LocalDate) : ViewModel() {
     private val calendar get() = WeekCalendar.system()
 
-    val state: StateFlow<WeekLogState?> = flow { emit(container.preferences.firstLaunch()) }
+    /** Bumped on returning to the screen: a reflection saved elsewhere has no change event. */
+    private val refreshes = MutableStateFlow(0)
+
+    fun refresh() = refreshes.update { it + 1 }
+
+    val state: StateFlow<WeekLogState?> = refreshes.flatMapLatest { flow { emit(container.preferences.firstLaunch()) } }
         .flatMapLatest { firstLaunch ->
             val plans = container.store.observeWeeklyPlans(limit = 52).map { list -> list.firstOrNull { it.weekStart == weekStart } }
             plans.flatMapLatest { plan ->
@@ -70,6 +81,7 @@ class WeekLogViewModel(private val container: AppContainer, private val weekStar
                         plan = plan,
                         activities = activities,
                         isCurrentWeek = WeeklyPlan.effectiveWeekStart(Instant.now(), firstLaunch, calendar) == weekStart,
+                        review = plan?.let { container.store.weeklyReview(it.id) },
                     )
                 }
             }

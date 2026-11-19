@@ -560,4 +560,7 @@
     <string name="mark_watched">Markeren als bekeken</string>
     <string name="library_empty_link_hint">Koppel een bron aan een sessie om bij te houden hoeveel tijd je eraan besteedt.</string>
     <string name="no_matches_body">Probeer een andere zoekopdracht of filter</string>
+    <string name="reflection">Reflectie</string>
+    <string name="show_all_count">Alles tonen (%1$d)</string>
+    <string name="show_less">Minder tonen</string>
 </resources>

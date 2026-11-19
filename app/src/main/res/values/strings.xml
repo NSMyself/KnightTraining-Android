@@ -622,4 +622,7 @@
     <string name="mark_watched">Mark as watched</string>
     <string name="library_empty_link_hint">Link a resource to a session to track how much time you spend on it.</string>
     <string name="no_matches_body">Try a different search or filter</string>
+    <string name="reflection">Reflection</string>
+    <string name="show_all_count">Show all (%1$d)</string>
+    <string name="show_less">Show less</string>
 </resources>

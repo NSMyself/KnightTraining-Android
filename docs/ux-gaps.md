@@ -28,7 +28,7 @@ Items 1–5 are mostly about that.
 | 12 | ~~Profile: no activity grid, simpler rating chart~~ Done 2026-11-19 | Medium | M |
 | 13 | ~~Home plan header is missing actions and states~~ Done 2026-11-19 | Medium | S |
 | 14 | ~~Library cards, detail and empty/loading states are plain~~ Done 2026-11-19 (no error/Retry state: the library is a local flow) | Medium | M |
-| 15 | Weekly review and week log show less | Medium | M |
+| 15 | ~~Weekly review and week log show less~~ Done 2026-11-19 (delete is confirmed, not undone) | Medium | M |
 
 ---
 

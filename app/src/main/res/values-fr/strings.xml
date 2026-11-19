@@ -575,4 +575,7 @@
     <string name="mark_watched">Marquer comme vu</string>
     <string name="library_empty_link_hint">Lie une ressource à une séance pour suivre le temps que tu y consacres.</string>
     <string name="no_matches_body">Essaie une autre recherche ou un autre filtre</string>
+    <string name="reflection">Bilan</string>
+    <string name="show_all_count">Tout afficher (%1$d)</string>
+    <string name="show_less">Afficher moins</string>
 </resources>

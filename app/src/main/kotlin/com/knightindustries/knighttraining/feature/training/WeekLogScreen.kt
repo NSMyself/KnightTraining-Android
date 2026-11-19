@@ -1,5 +1,26 @@
 package com.knightindustries.knighttraining.feature.training
 
+import com.knightindustries.knighttraining.feature.review.intentName
+import com.knightindustries.knighttraining.core.model.WeeklyReview
+import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.Lifecycle
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.LocalTextStyle
 import com.knightindustries.knighttraining.ui.AnimatedValueText
 import com.knightindustries.knighttraining.ui.AnimatedLinearProgress
@@ -63,7 +84,10 @@ import androidx.compose.material3.OutlinedButton
 @Composable
 fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit, onReflect: (UUID) -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val deleteLabel = stringResource(R.string.delete_session)
     var editing by remember { mutableStateOf<Activity?>(null) }
+    var deleting by remember { mutableStateOf<Activity?>(null) }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refresh() }
     var adding by rememberSaveable { mutableStateOf(false) }
     var sharing by rememberSaveable { mutableStateOf(false) }
     state?.plan?.takeIf { sharing }?.let { plan -> ShareWeekSheet(plan, onDismiss = { sharing = false }) }
@@ -91,11 +115,17 @@ fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit, onReflect: (U
         val current = state ?: return@Scaffold CircularProgressIndicator(Modifier.padding(padding).padding(32.dp))
         LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding(), bottom = 96.dp)) {
             current.plan?.let { plan ->
-                // A finished week can be reflected on, or its reflection edited, at any time.
+                // A finished week can be reflected on, or its reflection edited, at any time; what
+                // was written shows here (iOS's week log does).
                 if (!current.isCurrentWeek) {
                     item {
-                        OutlinedButton(onClick = { onReflect(plan.id) }, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
-                            Text(stringResource(R.string.reflect_on_week))
+                        val review = current.review
+                        if (review != null && review.hasContent()) {
+                            ReflectionCard(review, onEdit = { onReflect(plan.id) })
+                        } else {
+                            OutlinedButton(onClick = { onReflect(plan.id) }, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
+                                Text(stringResource(R.string.reflect_on_week))
+                            }
                         }
                     }
                 }
@@ -122,8 +152,45 @@ fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit, onReflect: (U
                 item { Text(stringResource(R.string.past_weeks_read_only), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 16.dp)) }
             }
             items(current.activities, key = { it.id }) { activity ->
-                ActivityRow(activity, Modifier.animateItem().then(if (current.isCurrentWeek) Modifier.clickable { editing = activity } else Modifier))
+                if (current.isCurrentWeek) {
+                    // Swipe to delete, confirmed first: it takes the time back from the week's goals.
+                    val swipe = rememberSwipeToDismissBoxState()
+                    LaunchedEffect(swipe.currentValue) {
+                        if (swipe.currentValue == SwipeToDismissBoxValue.EndToStart) {
+                            deleting = activity
+                            swipe.snapTo(SwipeToDismissBoxValue.Settled)
+                        }
+                    }
+                    SwipeToDismissBox(
+                        swipe,
+                        enableDismissFromStartToEnd = false,
+                        backgroundContent = {
+                            Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.errorContainer).padding(horizontal = 24.dp), contentAlignment = Alignment.CenterEnd) {
+                                Icon(Icons.Rounded.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.onErrorContainer)
+                            }
+                        },
+                        modifier = Modifier.animateItem(),
+                    ) {
+                        ActivityRow(
+                            activity,
+                            Modifier.background(MaterialTheme.colorScheme.background).clickable { editing = activity }
+                                .semantics { customActions = listOf(CustomAccessibilityAction(deleteLabel) { deleting = activity; true }) },
+                        )
+                    }
+                } else {
+                    ActivityRow(activity, Modifier.animateItem())
+                }
             }
+        }
+
+        deleting?.let { activity ->
+            AlertDialog(
+                onDismissRequest = { deleting = null },
+                title = { Text(stringResource(R.string.delete_session_title)) },
+                text = { Text(stringResource(R.string.delete_session_body)) },
+                confirmButton = { TextButton(onClick = { viewModel.delete(activity); deleting = null }) { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) } },
+                dismissButton = { TextButton(onClick = { deleting = null }) { Text(stringResource(R.string.cancel)) } },
+            )
         }
 
         if (adding) {
@@ -139,6 +206,37 @@ fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit, onReflect: (U
                 onSave = { viewModel.edit(activity, it); editing = null },
                 onDelete = { viewModel.delete(activity); editing = null },
             )
+        }
+    }
+}
+
+private fun WeeklyReview.hasContent() =
+    listOfNotNull(wentWell, heldBack, wishIDone, nextWeekIntent, nextWeekFocus).any { it.isNotBlank() }
+
+/** The week's saved reflection, answer by answer, with a way back in to edit it. */
+@Composable
+private fun ReflectionCard(review: WeeklyReview, onEdit: () -> Unit) {
+    Card(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(R.string.reflection), style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                TextButton(onClick = onEdit) { Text(stringResource(R.string.edit)) }
+            }
+            listOf(R.string.review_went_well to review.wentWell, R.string.review_held_back to review.heldBack, R.string.review_wish to review.wishIDone)
+                .forEach { (question, answer) ->
+                    answer?.takeIf { it.isNotBlank() }?.let {
+                        Text(stringResource(question), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(it, style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+            review.nextWeekIntent?.let {
+                Text(stringResource(R.string.review_next_week), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(intentName(it)), style = MaterialTheme.typography.bodyMedium)
+            }
+            review.nextWeekFocus?.takeIf { it.isNotBlank() }?.let {
+                Text(stringResource(R.string.last_week_focus), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(it, style = MaterialTheme.typography.bodyMedium)
+            }
         }
     }
 }

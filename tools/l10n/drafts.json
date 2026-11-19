@@ -2123,5 +2123,23 @@
   "nl": "Markeren als bekeken",
   "pt-BR": "Marcar como visto",
   "pt-PT": "Marcar como visto"
+ },
+ "show_all_count": {
+  "pt-PT": "Ver tudo (%1$d)",
+  "es": "Ver todo (%1$d)",
+  "pt-BR": "Ver tudo (%1$d)",
+  "nl": "Alles tonen (%1$d)",
+  "it": "Mostra tutto (%1$d)",
+  "de": "Alle anzeigen (%1$d)",
+  "fr": "Tout afficher (%1$d)"
+ },
+ "show_less": {
+  "pt-PT": "Ver menos",
+  "es": "Ver menos",
+  "pt-BR": "Ver menos",
+  "nl": "Minder tonen",
+  "it": "Mostra meno",
+  "de": "Weniger anzeigen",
+  "fr": "Afficher moins"
  }
 }

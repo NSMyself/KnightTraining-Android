@@ -116,6 +116,12 @@ scheme, surface-container ladder included.
   sheet (`RemindersOfferSheet`, iOS `EnableRemindersSheet`), answered once either way. Profile
   warns when reminders are on but notifications are blocked, with a link to fix it. Pinned by
   `PlanHeaderTest` and `CoreLoopTest`; tests reset the offer with `resetRemindersOffer()`.
+- **Weekly review and week log**: the review lists each goal's result, shows last week's words
+  and focus in a card that opens Training History, and folds notes past three. A finished
+  week's log shows its saved reflection (with Edit) instead of only "Reflect on this week", and
+  this week's sessions swipe to delete, confirmed first as on iOS (also a TalkBack action). The
+  log re-reads on resume, since a saved reflection has no change event. Pinned by
+  `ReviewAndLogTest`.
 - **Tapping a goal on Home** opens `GoalDetailsSheet` (iOS `ActivityDetailsSheet`): title,
   resource, target and progress, and Start / Train again. Per-goal reminders, iOS's other half of
   that sheet, will go there. Pinned by `GoalDetailsTest`.

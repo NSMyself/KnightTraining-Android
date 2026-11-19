@@ -1,5 +1,15 @@
 package com.knightindustries.knighttraining.feature.review
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.animation.animateContentSize
+import com.knightindustries.knighttraining.ui.progressText
+import com.knightindustries.knighttraining.ui.goalTitle
+import com.knightindustries.knighttraining.ui.activityIcon
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.rounded.CheckCircle
 import com.knightindustries.knighttraining.ui.AnimatedLinearProgress
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
@@ -182,7 +192,7 @@ class WeeklyReviewViewModel(private val container: AppContainer, private val wee
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun WeeklyReviewScreen(viewModel: WeeklyReviewViewModel, onDone: () -> Unit) {
+fun WeeklyReviewScreen(viewModel: WeeklyReviewViewModel, onDone: () -> Unit, onOpenHistory: (() -> Unit)? = null) {
     val context = viewModel.context
     // The application context, so the debug toast outlives this screen closing.
     val appContext = LocalContext.current.applicationContext
@@ -225,23 +235,54 @@ fun WeeklyReviewScreen(viewModel: WeeklyReviewViewModel, onDone: () -> Unit) {
                     Text(pluralStringResource(R.plurals.review_goals_completed, plan.goalCount, plan.completedGoalCount, plan.goalCount), style = MaterialTheme.typography.titleMedium)
                     AnimatedLinearProgress((plan.completionPercentage / 100).toFloat(), Modifier.fillMaxWidth())
                     Text(stringResource(R.string.review_time_invested, durationText(context.timeInvestedSeconds)), style = MaterialTheme.typography.bodyMedium)
-                }
-            }
-
-            context.previous?.let { previous ->
-                val quotes = listOfNotNull(previous.heldBack, previous.wishIDone)
-                if (quotes.isNotEmpty()) {
-                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(stringResource(R.string.review_last_week), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
-                        quotes.forEach { Text("“$it”", style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic), color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                    // Goal by goal, as iOS lists them under "You completed X of Y".
+                    plan.weeklyGoals.forEach { goal ->
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Icon(
+                                if (goal.isCompleted) Icons.Rounded.CheckCircle else activityIcon(goal.activityType.code),
+                                contentDescription = if (goal.isCompleted) stringResource(R.string.goal_done) else null,
+                                tint = if (goal.isCompleted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(20.dp),
+                            )
+                            Text(goalTitle(goal), style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+                            Text(progressText(goal), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                     }
                 }
             }
 
+            context.previous?.let { previous ->
+                val quotes = listOfNotNull(previous.heldBack, previous.wishIDone).map { it.trim() }.filter { it.isNotEmpty() }
+                val focus = previous.nextWeekFocus?.trim()?.takeIf { it.isNotEmpty() }
+                if (quotes.isNotEmpty() || focus != null) {
+                    // Last week's words, and a way into the longer trend (iOS's LastWeekCard).
+                    val colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+                    val content: @Composable () -> Unit = {
+                        Column(Modifier.padding(16.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text(stringResource(R.string.review_last_week), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+                            quotes.forEach { Text("“$it”", style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic), color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                            focus?.let {
+                                Text(stringResource(R.string.last_week_focus), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                                Text(it, style = MaterialTheme.typography.bodyMedium)
+                            }
+                        }
+                    }
+                    if (onOpenHistory != null) Card(onClick = onOpenHistory, colors = colors) { content() } else Card(colors = colors) { content() }
+                }
+            }
+
             if (context.notedActivities.isNotEmpty()) {
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                // Long weeks have many notes: the first three, then all of them on request.
+                var showsAll by rememberSaveable { mutableStateOf(false) }
+                val notes = context.notedActivities
+                Column(Modifier.animateContentSize(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(stringResource(R.string.review_notes), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
-                    context.notedActivities.forEach { Text("${activityName(it.activityType.code)}: ${it.notes}", style = MaterialTheme.typography.bodyMedium) }
+                    (if (showsAll) notes else notes.take(3)).forEach { Text("${activityName(it.activityType.code)}: ${it.notes}", style = MaterialTheme.typography.bodyMedium) }
+                    if (notes.size > 3) {
+                        TextButton(onClick = { showsAll = !showsAll }, contentPadding = PaddingValues(0.dp)) {
+                            Text(if (showsAll) stringResource(R.string.show_less) else stringResource(R.string.show_all_count, notes.size))
+                        }
+                    }
                 }
             }
 

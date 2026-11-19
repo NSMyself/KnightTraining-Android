@@ -230,6 +230,7 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                     WeeklyReviewScreen(
                         viewModel = appViewModel(key = route.weeklyPlanId) { WeeklyReviewViewModel(it, UUID.fromString(route.weeklyPlanId)) },
                         onDone = { backStack.remove(route) },
+                        onOpenHistory = { backStack.add(TrainingHistoryRoute) },
                     )
                 }
                 entry<EditPlanRoute> { route ->
