@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.resources
 
+import androidx.compose.foundation.lazy.rememberLazyListState
+import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -92,6 +94,8 @@ fun ResourcesScreen(viewModel: ResourcesViewModel, onOpen: (UUID) -> Unit, onAdd
     var kindFilter by rememberSaveable { mutableStateOf<String?>(null) }
     var statusFilter by rememberSaveable { mutableStateOf<ResourceStatus?>(null) }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val listState = rememberLazyListState()
+    ScrollToTopOnReselect(list = listState, topBar = scrollBehavior)
     var sharing by rememberSaveable { mutableStateOf(false) }
     if (sharing) ShareLibrarySheet(onDismiss = { sharing = false })
 
@@ -122,7 +126,7 @@ fun ResourcesScreen(viewModel: ResourcesViewModel, onOpen: (UUID) -> Unit, onAdd
         floatingActionButton = { LabeledFab(Icons.Rounded.Add, stringResource(R.string.add_resource), onAdd) },
         containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
-        LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding(), bottom = 96.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyColumn(state = listState, contentPadding = PaddingValues(top = padding.calculateTopPadding(), bottom = 96.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             if (searching) {
                 item {
                     OutlinedTextField(

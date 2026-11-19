@@ -19,7 +19,7 @@ Items 1–5 are mostly about that.
 | 3 | ~~Week-complete celebration is a plain dialog~~ Done 2026-11-19 (review prompt not yet) | High | M |
 | 4 | ~~Nothing animates: numbers, progress, state changes~~ Done 2026-11-19 | High | M |
 | 5 | ~~Timer controls and study card lack hierarchy~~ Done 2026-11-19 | High | S |
-| 6 | Switching tabs throws away each tab's state | High | S–M |
+| 6 | ~~Switching tabs throws away each tab's state~~ Done 2026-11-19 | High | S–M |
 | 7 | No Training History screen (chart + activity grid) | High | L |
 | 8 | Tapping a goal on Home does nothing | Medium–High | M |
 | 9 | Onboarding has no artwork, motion or closing quote | Medium | M |

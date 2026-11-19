@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.training
 
+import androidx.compose.foundation.lazy.rememberLazyListState
+import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -72,6 +74,8 @@ fun TrainingScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val listState = rememberLazyListState()
+    ScrollToTopOnReselect(list = listState, topBar = scrollBehavior)
 
     Scaffold(
         modifier = Modifier.padding(contentPadding).nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -92,7 +96,7 @@ fun TrainingScreen(
             CircularProgressIndicator(Modifier.padding(padding).padding(32.dp))
             return@Scaffold
         }
-        LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding(), bottom = 24.dp)) {
+        LazyColumn(state = listState, contentPadding = PaddingValues(top = padding.calculateTopPadding(), bottom = 24.dp)) {
             item { SectionHeader(stringResource(R.string.your_weeks)) }
             if (current.weeks.isEmpty()) item { Empty(stringResource(R.string.no_weeks_yet)) }
             items(current.weeks, key = { it.id }) { week ->

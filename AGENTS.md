@@ -89,6 +89,11 @@ scheme, surface-container ladder included.
 - `navigation/`: one Navigation 3 back stack (`KnightTrainingApp`). The bottom bar shows on tab
   roots only; non-Home tabs sit on top of Home, so back returns Home first. Onboarding gates the
   whole app until finished, and the week-complete dialog listens app-wide.
+- **Tabs keep their state** (iOS keeps every tab alive): `rememberTabKeepingStateDecorator`
+  (`navigation/TabState.kt`) skips forgetting saveable state for entries marked `TabRootMetadata`,
+  so search, filters and scroll survive a switch. ViewModels are still rebuilt; they only re-read
+  the store. Re-tapping the current tab scrolls it to the top (`ScrollToTopOnReselect`). Pinned by
+  `TabStateTest`.
 - `feature/<area>/`: a screen and its ViewModel per area (`home`, `plan`, `session`, `training`,
   `onboarding`, `celebration`). ViewModels come from `appViewModel { … }`, built from
   `AppContainer` by hand.

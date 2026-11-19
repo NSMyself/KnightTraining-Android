@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.home
 
+import androidx.compose.foundation.lazy.rememberLazyListState
+import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.animation.Crossfade
@@ -103,6 +105,8 @@ fun HomeScreen(
     }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refresh() }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val listState = rememberLazyListState()
+    ScrollToTopOnReselect(list = listState, topBar = scrollBehavior)
     var choosingStart by rememberSaveable { mutableStateOf(false) }
     var pendingStart by remember { mutableStateOf<SessionStart?>(null) }
     val feedback = rememberFeedback()
@@ -183,6 +187,7 @@ fun HomeScreen(
                 CircularProgressIndicator()
             }
             is HomeState.Loaded -> LazyColumn(
+                state = listState,
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = padding.calculateTopPadding(), bottom = 96.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {

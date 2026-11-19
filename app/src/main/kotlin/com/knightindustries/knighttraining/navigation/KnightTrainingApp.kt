@@ -50,6 +50,10 @@ import com.knightindustries.knighttraining.feature.training.TrainingViewModel
 import com.knightindustries.knighttraining.feature.training.WeekLogScreen
 import com.knightindustries.knighttraining.feature.training.WeekLogViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emptyFlow
+import androidx.compose.runtime.CompositionLocalProvider
+import com.knightindustries.knighttraining.ui.LocalTabReselections
 import java.time.LocalDate
 import java.util.UUID
 import androidx.compose.ui.platform.LocalContext
@@ -66,7 +70,6 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.knightindustries.knighttraining.R
 import com.knightindustries.knighttraining.feature.home.HomeScreen
@@ -142,6 +145,9 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
         onActionHandled()
     }
 
+    // Re-tapping the current tab: its root scrolls to the top.
+    val reselections = remember { MutableSharedFlow<Unit>(extraBufferCapacity = 1) }
+
     Scaffold(
         contentWindowInsets = WindowInsets(0),
         bottomBar = {
@@ -150,7 +156,9 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                     tabs.forEach { tab ->
                         NavigationBarItem(
                             selected = top == tab.route,
-                            onClick = { backStack.selectTab(tab.route) },
+                            onClick = {
+                                if (top == tab.route) reselections.tryEmit(Unit) else backStack.selectTab(tab.route)
+                            },
                             icon = { Icon(tab.icon, contentDescription = null) },
                             label = { Text(stringResource(tab.label)) },
                         )
@@ -162,17 +170,23 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
         NavDisplay(
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() },
-            entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator(), rememberViewModelStoreNavEntryDecorator()),
+            entryDecorators = listOf(rememberTabKeepingStateDecorator(), rememberViewModelStoreNavEntryDecorator()),
             modifier = Modifier.consumeWindowInsets(padding),
             entryProvider = entryProvider {
-                entry<HomeRoute> {
-                    HomeScreen(
-                        viewModel = appViewModel { HomeViewModel(it) },
-                        onCreatePlan = { backStack.add(CreatePlanRoute(commit = true)) },
-                        onPlanThisWeek = { backStack.add(PlanThisWeekRoute) },
-                        onOpenSession = { backStack.openSession() },
-                        contentPadding = padding,
-                    )
+                // Only the tab showing hears its own reselection.
+                @Composable fun TabRoot(route: TabRoute, content: @Composable () -> Unit) =
+                    CompositionLocalProvider(LocalTabReselections provides if (top == route) reselections else emptyFlow(), content = content)
+
+                entry<HomeRoute>(metadata = TabRootMetadata) {
+                    TabRoot(HomeRoute) {
+                        HomeScreen(
+                            viewModel = appViewModel { HomeViewModel(it) },
+                            onCreatePlan = { backStack.add(CreatePlanRoute(commit = true)) },
+                            onPlanThisWeek = { backStack.add(PlanThisWeekRoute) },
+                            onOpenSession = { backStack.openSession() },
+                            contentPadding = padding,
+                        )
+                    }
                 }
                 entry<SessionRoute> {
                     SessionScreen(
@@ -181,15 +195,17 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                         onFinished = { backStack.remove(SessionRoute) },
                     )
                 }
-                entry<TrainingRoute> {
-                    TrainingScreen(
-                        viewModel = appViewModel { TrainingViewModel(it) },
-                        onOpenWeek = { backStack.add(WeekLogRoute(it.toString())) },
-                        onEditPlan = { backStack.add(EditPlanRoute(it.id.toString())) },
-                        // An extra plan from here doesn't reassign the week: that's Plan this week's job.
-                        onCreatePlan = { backStack.add(CreatePlanRoute(commit = false)) },
-                        contentPadding = padding,
-                    )
+                entry<TrainingRoute>(metadata = TabRootMetadata) {
+                    TabRoot(TrainingRoute) {
+                        TrainingScreen(
+                            viewModel = appViewModel { TrainingViewModel(it) },
+                            onOpenWeek = { backStack.add(WeekLogRoute(it.toString())) },
+                            onEditPlan = { backStack.add(EditPlanRoute(it.id.toString())) },
+                            // An extra plan from here doesn't reassign the week: that's Plan this week's job.
+                            onCreatePlan = { backStack.add(CreatePlanRoute(commit = false)) },
+                            contentPadding = padding,
+                        )
+                    }
                 }
                 entry<WeekLogRoute> { route ->
                     WeekLogScreen(
@@ -210,17 +226,19 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                         onClose = { backStack.removeLastOrNull() },
                     )
                 }
-                entry<ResourcesRoute> {
-                    var adding by rememberSaveable { mutableStateOf(false) }
-                    // Each opening of the sheet starts blank: a fresh ViewModel per opening.
-                    var addCount by rememberSaveable { mutableStateOf(0) }
-                    ResourcesScreen(
-                        viewModel = appViewModel { ResourcesViewModel(it) },
-                        onOpen = { backStack.add(ResourceDetailRoute(it.toString())) },
-                        onAdd = { addCount++; adding = true },
-                        contentPadding = padding,
-                    )
-                    if (adding) AddResourceSheet(appViewModel(key = "add-resource-$addCount") { AddResourceViewModel(it) }) { adding = false }
+                entry<ResourcesRoute>(metadata = TabRootMetadata) {
+                    TabRoot(ResourcesRoute) {
+                        var adding by rememberSaveable { mutableStateOf(false) }
+                        // Each opening of the sheet starts blank: a fresh ViewModel per opening.
+                        var addCount by rememberSaveable { mutableStateOf(0) }
+                        ResourcesScreen(
+                            viewModel = appViewModel { ResourcesViewModel(it) },
+                            onOpen = { backStack.add(ResourceDetailRoute(it.toString())) },
+                            onAdd = { addCount++; adding = true },
+                            contentPadding = padding,
+                        )
+                        if (adding) AddResourceSheet(appViewModel(key = "add-resource-$addCount") { AddResourceViewModel(it) }) { adding = false }
+                    }
                 }
                 entry<ResourceDetailRoute> { route ->
                     ResourceDetailScreen(
@@ -228,12 +246,14 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                         onBack = { backStack.remove(route) },
                     )
                 }
-                entry<ProfileRoute> {
-                    ProfileScreen(
-                        viewModel = appViewModel { ProfileViewModel(it) },
-                        onRequestNotifications = rememberWithNotificationPermission(),
-                        contentPadding = padding,
-                    )
+                entry<ProfileRoute>(metadata = TabRootMetadata) {
+                    TabRoot(ProfileRoute) {
+                        ProfileScreen(
+                            viewModel = appViewModel { ProfileViewModel(it) },
+                            onRequestNotifications = rememberWithNotificationPermission(),
+                            contentPadding = padding,
+                        )
+                    }
                 }
                 entry<CreatePlanRoute> { route ->
                     CreatePlanScreen(

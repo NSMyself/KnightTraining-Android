@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.profile
 
+import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.ui.semantics.Role
@@ -220,6 +221,8 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
     // New ratings (a sync) redraw the chart.
     LaunchedEffect(lichess) { viewModel.loadChart() }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val scrollState = rememberScrollState()
+    ScrollToTopOnReselect(scroll = scrollState, topBar = scrollBehavior)
 
     Scaffold(
         modifier = Modifier.padding(contentPadding).nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -232,7 +235,7 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
         },
         containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
-        Column(Modifier.padding(padding).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Column(Modifier.padding(padding).verticalScroll(scrollState).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             viewModel.stats?.let { stats ->
                 Text(stringResource(R.string.your_training), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
