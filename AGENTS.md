@@ -121,6 +121,11 @@ scheme, surface-container ladder included.
   them. "Goal completed" is heard from the app-wide weekly-surface observer
   (`GoalCompletionSnapshot`); its "whole week" rule is the celebration's own (bonus goals don't
   count), where iOS counts every goal.
+- **Motion** (`ui/Motion.kt`): progress bars animate to new values (`AnimatedLinearProgress`),
+  changing numbers roll (`AnimatedValueText`, iOS's `numericText`), and Home's greeting eases in
+  once (`RevealedTitle`). Lazy list items use `animateItem()`; cards that change size use
+  `animateContentSize()`. Use these rather than a bare `LinearProgressIndicator` or `Text` for live
+  values, except on share cards and the widget, which render a still frame.
 - **The week-complete celebration** (`feature/celebration/`) is a full-screen dialog: iOS's sound
   with a vibration pattern on the same measured hits (`WeekCompleteSequence`, pinned to the WAV by
   `WeekCompleteSoundTest`), confetti ported count for count and held for the mating move, skipped

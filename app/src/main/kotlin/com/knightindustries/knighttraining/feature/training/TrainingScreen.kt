@@ -109,7 +109,7 @@ fun TrainingScreen(
                         else CircularProgressIndicator(progress = { (week.completionPercentage / 100).toFloat() }, modifier = Modifier.padding(2.dp))
                     },
                     trailingContent = { Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, contentDescription = null) },
-                    modifier = Modifier.clickable { onOpenWeek(week.weekStart) },
+                    modifier = Modifier.animateItem().clickable { onOpenWeek(week.weekStart) },
                 )
             }
             item { HorizontalDivider(Modifier.padding(vertical = 8.dp)) }
@@ -121,7 +121,7 @@ fun TrainingScreen(
                     headlineContent = { Text(plan.displayName(stringResource(R.string.my_training_plan))) },
                     supportingContent = { Text(pluralStringResource(R.plurals.goal_count, plan.goalCount, plan.goalCount)) },
                     trailingContent = { Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, contentDescription = null) },
-                    modifier = Modifier.clickable { onEditPlan(plan) },
+                    modifier = Modifier.animateItem().clickable { onEditPlan(plan) },
                 )
             }
         }

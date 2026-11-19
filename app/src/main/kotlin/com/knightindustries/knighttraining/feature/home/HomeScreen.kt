@@ -1,5 +1,12 @@
 package com.knightindustries.knighttraining.feature.home
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
+import com.knightindustries.knighttraining.ui.AnimatedLinearProgress
+import com.knightindustries.knighttraining.ui.AnimatedValueText
+import com.knightindustries.knighttraining.ui.RevealedTitle
 import com.knightindustries.knighttraining.feedback.FeedbackEvent
 import com.knightindustries.knighttraining.feedback.rememberFeedback
 import android.text.format.DateFormat
@@ -153,7 +160,7 @@ fun HomeScreen(
         modifier = Modifier.padding(contentPadding).nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = { Text(greeting()) },
+                title = { RevealedTitle(greeting()) },
                 actions = {
                     IconButton(onClick = { editingHome = true }) {
                         Icon(Icons.Rounded.DashboardCustomize, contentDescription = stringResource(R.string.edit_home))
@@ -179,11 +186,11 @@ fun HomeScreen(
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = padding.calculateTopPadding(), bottom = 96.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                session?.let { item { SessionBanner(it, onOpenSession) } }
+                session?.let { item(key = "session") { SessionBanner(it, onOpenSession, Modifier.animateItem()) } }
                 offers.firstOrNull()?.let { offer ->
-                    item(key = offer.id) { LichessOfferBanner(offer, onTrack = { tracking = offer }, onDismiss = { viewModel.declineOffer(offer) }) }
+                    item(key = offer.id) { Box(Modifier.animateItem()) { LichessOfferBanner(offer, onTrack = { tracking = offer }, onDismiss = { viewModel.declineOffer(offer) }) } }
                 }
-                item { PlanCard(current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal) { addingMoreTo = it } }
+                item(key = "plan") { PlanCard(current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal, Modifier.animateItem()) { addingMoreTo = it } }
                 homeTiles(
                     layout,
                     TileData(current.surface, current.stats, current.lastWeek, milestones),
@@ -204,8 +211,8 @@ fun HomeScreen(
 
 /** The way back to a session left running (or stopped and not yet saved). */
 @Composable
-private fun SessionBanner(session: PracticeSession, onOpen: () -> Unit) {
-    Card(onClick = onOpen, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
+private fun SessionBanner(session: PracticeSession, onOpen: () -> Unit, modifier: Modifier = Modifier) {
+    Card(onClick = onOpen, modifier = modifier, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
         ListItem(
             colors = ListItemDefaults.colors(containerColor = Color.Transparent),
             leadingContent = { Icon(Icons.Rounded.Timer, contentDescription = null) },
@@ -248,10 +255,12 @@ private fun PlanCard(
     onCreatePlan: () -> Unit,
     onPlanThisWeek: () -> Unit,
     onStartGoal: (WeeklyGoal) -> Unit,
+    modifier: Modifier = Modifier,
     onAddMore: (WeeklyGoal) -> Unit,
 ) {
     val plan = surface.plan
-    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+    // Grows and shrinks smoothly as the plan changes state or gains a bonus goal.
+    Card(modifier.animateContentSize(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
         when {
             plan == null && !surface.hasPlanTemplates -> CallToAction(
                 stringResource(R.string.no_plan_title), stringResource(R.string.no_plan_body),
@@ -267,7 +276,7 @@ private fun PlanCard(
                         PlanTemplate.displayName(surface.planName, stringResource(R.string.my_training_plan)),
                         style = MaterialTheme.typography.titleLarge,
                     )
-                    Text(
+                    AnimatedValueText(
                         pluralStringResource(R.plurals.goals_done, plan.goalCount, plan.completedGoalCount, plan.goalCount) + " · " +
                             weekRange(plan.weekStart, weekEnd ?: plan.nextWeekStart),
                         style = MaterialTheme.typography.bodyMedium,
@@ -300,18 +309,18 @@ private fun GoalRow(goal: WeeklyGoal, onStart: () -> Unit, onAddMore: () -> Unit
     ListItem(
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         leadingContent = {
-            if (goal.isCompleted) Icon(Icons.Rounded.CheckCircle, contentDescription = stringResource(R.string.goal_done), tint = MaterialTheme.colorScheme.primary)
-            else Icon(activityIcon(goal.activityType.code), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+            // The check pops in when a goal completes, instead of swapping in place.
+            Crossfade(goal.isCompleted, label = "done") { done ->
+                if (done) Icon(Icons.Rounded.CheckCircle, contentDescription = stringResource(R.string.goal_done), tint = MaterialTheme.colorScheme.primary)
+                else Icon(activityIcon(goal.activityType.code), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+            }
         },
         overlineContent = if (goal.isBonus) ({ Text(stringResource(R.string.bonus)) }) else null,
         headlineContent = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         supportingContent = {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(progressText(goal))
-                LinearProgressIndicator(
-                    progress = { (goal.progressPercentage / 100).toFloat() },
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                AnimatedValueText(progressText(goal), style = LocalTextStyle.current)
+                AnimatedLinearProgress((goal.progressPercentage / 100).toFloat(), Modifier.fillMaxWidth())
             }
         },
         trailingContent = {

@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.home
 
+import androidx.compose.animation.animateContentSize
+import com.knightindustries.knighttraining.ui.AnimatedLinearProgress
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -93,7 +95,8 @@ fun MilestonesCard(
     val hasCompleted = snapshot.milestones.any { it.isCompleted }
     val shown = if (showingAll) snapshot.milestones else snapshot.milestones.filter { !it.isCompleted }
 
-    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+    // "See all" and completing a milestone resize the card smoothly.
+    Card(Modifier.animateContentSize(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
         Row(Modifier.fillMaxWidth().padding(start = 16.dp, end = 4.dp, top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(R.string.milestones), style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
             if (hasCompleted) {
@@ -155,7 +158,7 @@ private fun MilestoneRow(milestone: Milestone, snapshot: MilestonesSnapshot, mod
                 {
                     val progress = milestone.eloProgress(milestone.ratingType?.let(snapshot.latestRatings::get))
                     if (progress != null) {
-                        LinearProgressIndicator(progress = { progress.toFloat() }, modifier = Modifier.fillMaxWidth().padding(top = 6.dp).height(6.dp))
+                        AnimatedLinearProgress(progress.toFloat(), Modifier.fillMaxWidth().padding(top = 6.dp).height(6.dp))
                     } else {
                         Text(stringResource(R.string.milestone_connect_lichess))
                     }

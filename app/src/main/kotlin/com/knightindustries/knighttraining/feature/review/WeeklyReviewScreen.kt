@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.review
 
+import com.knightindustries.knighttraining.ui.AnimatedLinearProgress
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
@@ -222,7 +223,7 @@ fun WeeklyReviewScreen(viewModel: WeeklyReviewViewModel, onDone: () -> Unit) {
                 Column(Modifier.padding(16.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(weekRange(plan.weekStart, context.weekEnd), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(pluralStringResource(R.plurals.review_goals_completed, plan.goalCount, plan.completedGoalCount, plan.goalCount), style = MaterialTheme.typography.titleMedium)
-                    LinearProgressIndicator(progress = { (plan.completionPercentage / 100).toFloat() }, modifier = Modifier.fillMaxWidth())
+                    AnimatedLinearProgress((plan.completionPercentage / 100).toFloat(), Modifier.fillMaxWidth())
                     Text(stringResource(R.string.review_time_invested, durationText(context.timeInvestedSeconds)), style = MaterialTheme.typography.bodyMedium)
                 }
             }

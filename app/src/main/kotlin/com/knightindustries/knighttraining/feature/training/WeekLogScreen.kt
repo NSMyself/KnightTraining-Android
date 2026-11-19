@@ -1,5 +1,8 @@
 package com.knightindustries.knighttraining.feature.training
 
+import androidx.compose.material3.LocalTextStyle
+import com.knightindustries.knighttraining.ui.AnimatedValueText
+import com.knightindustries.knighttraining.ui.AnimatedLinearProgress
 import android.text.format.DateFormat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -99,13 +102,14 @@ fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit, onReflect: (U
                 item { SectionHeader(pluralStringResource(R.plurals.goals_done, plan.goalCount, plan.completedGoalCount, plan.goalCount)) }
                 items(plan.weeklyGoals, key = { it.id }) { goal ->
                     ListItem(
+                        modifier = Modifier.animateItem(),
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                         leadingContent = { Icon(activityIcon(goal.activityType.code), contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
                         headlineContent = { Text(goalTitle(goal)) },
                         supportingContent = {
                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Text(progressText(goal))
-                                LinearProgressIndicator(progress = { (goal.progressPercentage / 100).toFloat() }, modifier = Modifier.fillMaxWidth())
+                                AnimatedValueText(progressText(goal), style = LocalTextStyle.current)
+                                AnimatedLinearProgress((goal.progressPercentage / 100).toFloat(), Modifier.fillMaxWidth())
                             }
                         },
                     )
@@ -118,7 +122,7 @@ fun WeekLogScreen(viewModel: WeekLogViewModel, onBack: () -> Unit, onReflect: (U
                 item { Text(stringResource(R.string.past_weeks_read_only), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 16.dp)) }
             }
             items(current.activities, key = { it.id }) { activity ->
-                ActivityRow(activity, Modifier.then(if (current.isCurrentWeek) Modifier.clickable { editing = activity } else Modifier))
+                ActivityRow(activity, Modifier.animateItem().then(if (current.isCurrentWeek) Modifier.clickable { editing = activity } else Modifier))
             }
         }
 

@@ -1,5 +1,8 @@
 package com.knightindustries.knighttraining.feature.home
 
+import androidx.compose.runtime.getValue
+import androidx.compose.animation.core.animateFloatAsState
+import com.knightindustries.knighttraining.ui.AnimatedValueText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,10 +73,10 @@ data class MilestoneActions(
 fun LazyListScope.homeTiles(layout: HomeLayout, data: TileData, milestoneActions: MilestoneActions) {
     for (section in layout.sections) {
         when (section) {
-            is HomeLayout.Section.Wide -> item(key = section.tile.id) { WideTile(section.tile, data, milestoneActions) }
+            is HomeLayout.Section.Wide -> item(key = section.tile.id) { Box(Modifier.animateItem()) { WideTile(section.tile, data, milestoneActions) } }
             is HomeLayout.Section.Small -> section.tiles.chunked(2).forEach { pair ->
                 item(key = pair.joinToString(",") { it.id }) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(Modifier.animateItem(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         pair.forEach { SmallTile(it, data, Modifier.weight(1f)) }
                         if (pair.size == 1) Spacer(Modifier.weight(1f))
                     }
@@ -161,7 +164,7 @@ private fun SmallTile(tile: HomeTile, data: TileData, modifier: Modifier) {
     Card(modifier, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
         Column(Modifier.padding(16.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Icon(tile.icon(), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-            Text(value, style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            AnimatedValueText(value, style = MaterialTheme.typography.titleLarge, maxLines = 1)
             Text(caption, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
         }
     }
@@ -177,7 +180,7 @@ private fun WeeklyActivityTile(surface: WeeklySurface) {
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
         Column(Modifier.padding(20.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(stringResource(R.string.this_week_activity), style = MaterialTheme.typography.titleMedium)
-            Text(durationText(surface.weeklyTrackedSeconds), style = MaterialTheme.typography.headlineSmall)
+            AnimatedValueText(durationText(surface.weeklyTrackedSeconds), style = MaterialTheme.typography.headlineSmall)
             Row(Modifier.fillMaxWidth().height(96.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 days.forEachIndexed { index, day ->
                     val label = day.dayOfWeek.getDisplayName(TextStyle.NARROW, locale)
@@ -187,9 +190,9 @@ private fun WeeklyActivityTile(surface: WeeklySurface) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.BottomCenter) {
-                            val fraction = seconds[index].toFloat() / max
+                            val fraction by animateFloatAsState(maxOf(seconds[index].toFloat() / max, 0.04f), label = "bar")
                             Box(
-                                Modifier.fillMaxWidth().fillMaxHeight(maxOf(fraction, 0.04f))
+                                Modifier.fillMaxWidth().fillMaxHeight(fraction)
                                     .background(
                                         if (seconds[index] > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
                                         RoundedCornerShape(6.dp),
