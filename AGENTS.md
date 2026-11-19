@@ -202,7 +202,12 @@ maintainer confirms how interactions *feel* on a device themselves.
 3. Resources: library, detail screens, catalog sync, book lookup, link metadata. **Built
    2026-11-12**: the library tab, a shared kind-aware detail screen, add (link enrichment +
    catalog browser) and edit (cover photo picker), share-to-app, and resource links on plan
-   blocks, bonus goals and the session review. Not yet: YouTube playlist import (needs an
+   blocks, bonus goals and the session review. The library follows iOS's polish: covers carry
+   badges (Reading/Studying, Completed, automatically imported), the detail screen is washed in
+   the cover's averaged color (`coverAccent`, iOS's normalization) over a blurred cover, videos
+   are "watched" rather than "finished", each completion is numbered with the time that pass took,
+   and the list has loading, empty and no-match states. iOS's load-error state has no Android
+   counterpart: the library is a local Room flow. Not yet: YouTube playlist import (needs an
    Android-restricted API key from the maintainer), the `shared_course` table and its catalog
    merge, a "see all" shelf per kind.
 4. Lichess: OAuth, Elo, activity sync (one request at a time, 60s after a 429), milestones.
