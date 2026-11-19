@@ -156,7 +156,7 @@ class CoreLoopTest {
         screenshot("14_after_correction")
     }
 
-    /** Onboarding shows until finished; Skip appears on the middle pages only. */
+    /** Onboarding shows until finished, ending on the quote; Skip appears on the middle pages only. */
     @Test
     fun onboardingRunsOnceToTheEnd() {
         runBlocking { container.preferences.setOnboardingCompleted(false) }
@@ -168,8 +168,12 @@ class CoreLoopTest {
         compose.onNodeWithText(text(R.string.next)).performClick()
         compose.waitUntilAtLeastOneExists(hasText(text(R.string.onboarding_commit_title)), 5_000)
         compose.onNodeWithText(text(R.string.next)).performClick()
-        compose.waitUntilAtLeastOneExists(hasText(text(R.string.get_started)), 5_000)
-        compose.onNodeWithText(text(R.string.get_started)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.lets_go)), 5_000)
+        screenshot("22_onboarding_4")
+        compose.onNodeWithText(text(R.string.lets_go)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.onboarding_quote)), 5_000)
+        compose.mainClock.advanceTimeBy(800)
+        screenshot("23_onboarding_quote")
         compose.waitUntilAtLeastOneExists(hasText(text(R.string.no_plan_title)), 10_000)
     }
 }

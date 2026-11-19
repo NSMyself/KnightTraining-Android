@@ -221,8 +221,14 @@
     <string name="onboarding_commit_body">Your week\'s plan is set the moment you commit to it</string>
     <string name="onboarding_floor_title">Hit your target, then keep going</string>
     <string name="onboarding_floor_body">A weekly target, not a daily grind</string>
+    <string name="onboarding_brand_detail">One training session at a time</string>
+    <string name="onboarding_plan_detail">Set a weekly target around what moves your training forward</string>
+    <string name="onboarding_commit_detail">No renegotiating with yourself three days in. Just follow the plan you already set.</string>
+    <string name="onboarding_floor_detail">Meet your minimum whenever it fits your week. Going further is a bonus, never a requirement.</string>
+    <string name="onboarding_quote">The journey of a thousand miles begins with a single step.</string>
+    <string name="onboarding_quote_author" translatable="false">Lao Tzu</string>
+    <string name="lets_go">Let\'s go</string>
     <string name="next">Next</string>
-    <string name="get_started">Get started</string>
 
     <!-- Add more (mid-week stretch) -->
     <string name="add_more">Add more</string>

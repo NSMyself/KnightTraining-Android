@@ -98,6 +98,11 @@ scheme, surface-container ladder included.
   `onboarding`, `celebration`). ViewModels come from `appViewModel { … }`, built from
   `AppContainer` by hand.
 - `ui/Labels.kt`: every code → display text/icon mapping. Strings live in `strings.xml`.
+- **Onboarding** (`feature/onboarding/`) follows iOS's: four pages on the glow with iOS's artwork
+  (WebP in `drawable-nodpi`; the target page uses a Material icon for iOS's SF Symbol), title,
+  subtitle and detail, the first page's text staged in once. "Let's go" grows a white circle into
+  the Lao Tzu quote; Skip crossfades to it. A Next button stays alongside swiping, so the pager
+  never relies on a gesture alone, which is why iOS's "Swipe to continue" hint isn't ported.
 - **Tapping a goal on Home** opens `GoalDetailsSheet` (iOS `ActivityDetailsSheet`): title,
   resource, target and progress, and Start / Train again. Per-goal reminders, iOS's other half of
   that sheet, will go there. Pinned by `GoalDetailsTest`.

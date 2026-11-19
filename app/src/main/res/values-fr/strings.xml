@@ -192,8 +192,13 @@
     <string name="onboarding_commit_body">Le plan de ta semaine est fixé dès que tu t\'y engages</string>
     <string name="onboarding_floor_title">Atteins ton objectif, puis continue</string>
     <string name="onboarding_floor_body">Un objectif par semaine, pas une corvée quotidienne</string>
+    <string name="onboarding_brand_detail">Une séance d\'entraînement à la fois</string>
+    <string name="onboarding_plan_detail">Fixe un objectif hebdomadaire autour de ce qui fait avancer ton entraînement</string>
+    <string name="onboarding_commit_detail">Pas de renégociation avec toi-même au bout de trois jours. Suis simplement le plan que tu as fixé.</string>
+    <string name="onboarding_floor_detail">Atteins ton minimum quand ça t\'arrange dans la semaine. Aller plus loin est un bonus, jamais une obligation.</string>
+    <string name="onboarding_quote">Un voyage de mille lieues commence toujours par un premier pas.</string>
+    <string name="lets_go">C\'est parti</string>
     <string name="next">Suivant</string>
-    <string name="get_started">C\'est parti</string>
     <string name="add_more">Ajouter plus</string>
     <string name="add_more_title">En ajouter plus ?</string>
     <string name="add_more_body">Tout ce que tu ajoutes ici est un bonus. Ça ne compte pas contre toi si tu ne le termines pas, même une fois le plan de la semaine verrouillé.</string>

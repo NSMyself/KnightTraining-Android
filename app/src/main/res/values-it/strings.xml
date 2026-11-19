@@ -192,8 +192,13 @@
     <string name="onboarding_commit_body">Il piano della settimana è fissato nel momento in cui lo confermi</string>
     <string name="onboarding_floor_title">Raggiungi il tuo obiettivo, poi continua</string>
     <string name="onboarding_floor_body">Un obiettivo settimanale, non una fatica quotidiana</string>
+    <string name="onboarding_brand_detail">Una sessione di allenamento alla volta</string>
+    <string name="onboarding_plan_detail">Fissa un obiettivo settimanale su ciò che fa progredire il tuo allenamento</string>
+    <string name="onboarding_commit_detail">Niente ripensamenti dopo tre giorni. Segui il piano che hai già deciso.</string>
+    <string name="onboarding_floor_detail">Raggiungi il tuo minimo quando ti torna comodo durante la settimana. Andare oltre è un extra, mai un obbligo.</string>
+    <string name="onboarding_quote">Un viaggio di mille miglia comincia con un solo passo.</string>
+    <string name="lets_go">Andiamo</string>
     <string name="next">Avanti</string>
-    <string name="get_started">Inizia</string>
     <string name="add_more">Aggiungi altro</string>
     <string name="add_more_title">Vuoi aggiungere altro?</string>
     <string name="add_more_body">Tutto ciò che aggiungi qui è un extra. Se non lo finisci non conta contro di te, anche dopo che il piano di questa settimana è stato bloccato.</string>

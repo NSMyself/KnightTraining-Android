@@ -37,6 +37,8 @@ import kotlinx.coroutines.launch
  */
 enum class FeedbackEvent(val haptic: HapticFeedbackType?, val sound: FeedbackSound? = null) {
     SessionStarted(HapticFeedbackType.Confirm),
+    /** Onboarding's "Let's go" (iOS: a medium impact as the reveal starts). */
+    OnboardingFinished(HapticFeedbackType.Confirm),
     SessionPaused(HapticFeedbackType.ToggleOff),
     SessionResumed(HapticFeedbackType.ToggleOn),
     SessionStopped(HapticFeedbackType.LongPress),

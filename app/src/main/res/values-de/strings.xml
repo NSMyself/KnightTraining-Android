@@ -188,8 +188,13 @@
     <string name="onboarding_commit_body">Dein Wochenplan steht, sobald du ihn festlegst</string>
     <string name="onboarding_floor_title">Erreiche dein Ziel und mach dann weiter</string>
     <string name="onboarding_floor_body">Ein Wochenziel, keine tägliche Pflicht</string>
+    <string name="onboarding_brand_detail">Eine Trainingseinheit nach der anderen</string>
+    <string name="onboarding_plan_detail">Setze dir ein Wochenziel für das, was dein Training voranbringt</string>
+    <string name="onboarding_commit_detail">Kein Feilschen mit dir selbst nach drei Tagen. Folge einfach dem Plan, den du schon festgelegt hast.</string>
+    <string name="onboarding_floor_detail">Erfülle dein Minimum, wann immer es in deine Woche passt. Mehr ist ein Bonus, nie eine Pflicht.</string>
+    <string name="onboarding_quote">Auch eine Reise von tausend Meilen beginnt mit einem ersten Schritt.</string>
+    <string name="lets_go">Los geht\'s</string>
     <string name="next">Weiter</string>
-    <string name="get_started">Los geht\'s</string>
     <string name="add_more">Mehr hinzufügen</string>
     <string name="add_more_title">Mehr hinzufügen?</string>
     <string name="add_more_body">Alles, was du hier hinzufügst, ist ein Bonus. Wenn du es nicht schaffst, zählt das nicht gegen dich, auch nicht, wenn der Plan dieser Woche schon feststeht.</string>

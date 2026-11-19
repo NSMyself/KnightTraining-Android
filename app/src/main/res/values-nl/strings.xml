@@ -188,8 +188,13 @@
     <string name="onboarding_commit_body">Het plan van je week ligt vast zodra je je eraan verbindt</string>
     <string name="onboarding_floor_title">Haal je doel, en ga dan gewoon door</string>
     <string name="onboarding_floor_body">Een weekdoel, geen dagelijkse verplichting</string>
+    <string name="onboarding_brand_detail">Één trainingssessie tegelijk</string>
+    <string name="onboarding_plan_detail">Stel een weekdoel in rond wat je training echt vooruit helpt</string>
+    <string name="onboarding_commit_detail">Niet halverwege de week alsnog gaan onderhandelen met jezelf. Volg gewoon het plan dat je al had vastgesteld.</string>
+    <string name="onboarding_floor_detail">Haal je minimum wanneer het in je week past. Meer doen is een bonus, nooit een verplichting.</string>
+    <string name="onboarding_quote">Een reis van duizend mijl begint met een enkele stap.</string>
+    <string name="lets_go">Laten we gaan</string>
     <string name="next">Volgende</string>
-    <string name="get_started">Aan de slag</string>
     <string name="add_more">Meer toevoegen</string>
     <string name="add_more_title">Meer toevoegen?</string>
     <string name="add_more_body">Alles wat je hier toevoegt, is extra. Het telt niet tegen je als je het niet afmaakt, ook niet nadat het plan van deze week is vergrendeld.</string>

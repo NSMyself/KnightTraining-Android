@@ -192,8 +192,13 @@
     <string name="onboarding_commit_body">O plano da tua semana fica definido no momento em que te comprometes</string>
     <string name="onboarding_floor_title">Atinge o teu objetivo, depois continua</string>
     <string name="onboarding_floor_body">Um objetivo semanal, não uma obrigação diária</string>
+    <string name="onboarding_brand_detail">Uma sessão de treino de cada vez</string>
+    <string name="onboarding_plan_detail">Define um objetivo semanal à volta do que faz o teu treino avançar</string>
+    <string name="onboarding_commit_detail">Confia no plano que fizeste e segue-o até ao fim da semana.</string>
+    <string name="onboarding_floor_detail">Cumpre o teu mínimo quando encaixar na tua semana. Ir além é um bónus, nunca uma obrigação.</string>
+    <string name="onboarding_quote">Uma viagem de mil milhas começa com um único passo.</string>
+    <string name="lets_go">Vamos a isto</string>
     <string name="next">Seguinte</string>
-    <string name="get_started">Começar</string>
     <string name="add_more">Adicionar mais</string>
     <string name="add_more_title">Adicionar mais?</string>
     <string name="add_more_body">Tudo o que acrescentares aqui é um extra. Isso não conta contra ti se não o terminares, mesmo depois de o plano desta semana ficar bloqueado.</string>
