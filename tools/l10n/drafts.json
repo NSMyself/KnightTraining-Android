@@ -2114,5 +2114,14 @@
   "nl": "Instellingen openen",
   "pt-BR": "Abrir os Ajustes",
   "pt-PT": "Abrir as Definições"
+ },
+ "mark_watched": {
+  "de": "Als angesehen markieren",
+  "es": "Marcar como visto",
+  "fr": "Marquer comme vu",
+  "it": "Segna come visto",
+  "nl": "Markeren als bekeken",
+  "pt-BR": "Marcar como visto",
+  "pt-PT": "Marcar como visto"
  }
 }

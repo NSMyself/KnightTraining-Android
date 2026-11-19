@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
+import coil3.request.allowHardware
 import com.knightindustries.knighttraining.core.model.Resource
 import com.knightindustries.knighttraining.core.model.ResourceKind
 import com.knightindustries.knighttraining.ui.kindIcon
@@ -74,3 +75,21 @@ fun saveCoverPhoto(context: Context, picked: Uri): String? = runCatching {
     context.contentResolver.openInputStream(picked)?.use { input -> file.outputStream().use { input.copyTo(it) } } ?: return null
     Uri.fromFile(file).toString()
 }.getOrNull()
+
+/**
+ * A cover's accent (iOS `CoverAccent`): its average color, saturation lifted to at least 0.45 and
+ * brightness held to 0.4–0.75 so a washed-out or near-black cover still tints. `null` without a
+ * cover or when it fails to load.
+ */
+suspend fun coverAccent(context: Context, url: String?): androidx.compose.ui.graphics.Color? {
+    if (url == null) return null
+    val request = coil3.request.ImageRequest.Builder(context).data(url).size(64).allowHardware(false).build()
+    val result = coil3.SingletonImageLoader.get(context).execute(request) as? coil3.request.SuccessResult ?: return null
+    val bitmap = (result.image as? coil3.BitmapImage)?.bitmap ?: return null
+    val average = android.graphics.Bitmap.createScaledBitmap(bitmap, 1, 1, true).getPixel(0, 0)
+    val hsv = FloatArray(3)
+    android.graphics.Color.colorToHSV(average, hsv)
+    hsv[1] = maxOf(hsv[1], 0.45f)
+    hsv[2] = hsv[2].coerceIn(0.4f, 0.75f)
+    return androidx.compose.ui.graphics.Color(android.graphics.Color.HSVToColor(hsv))
+}

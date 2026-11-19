@@ -570,4 +570,9 @@
     <string name="reminder_offer_footer">Você pode mudar isso quando quiser nos Ajustes.</string>
     <string name="notifications_blocked">As notificações do Knight Training estão desativadas nos Ajustes do Android, por isso os lembretes não podem ser entregues.</string>
     <string name="open_settings">Abrir os Ajustes</string>
+    <string name="badge_reading">Lendo</string>
+    <string name="badge_studying">Estudando</string>
+    <string name="mark_watched">Marcar como visto</string>
+    <string name="library_empty_link_hint">Associe um recurso a uma sessão para registrar quanto tempo você dedica a ele.</string>
+    <string name="no_matches_body">Tente outra pesquisa ou filtro</string>
 </resources>

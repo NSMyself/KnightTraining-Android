@@ -617,4 +617,9 @@
     <string name="reminder_offer_footer">You can change this any time in Settings.</string>
     <string name="notifications_blocked">Notifications are turned off for Knight Training in Android settings, so reminders can\'t be delivered.</string>
     <string name="open_settings">Open settings</string>
+    <string name="badge_reading">Reading</string>
+    <string name="badge_studying">Studying</string>
+    <string name="mark_watched">Mark as watched</string>
+    <string name="library_empty_link_hint">Link a resource to a session to track how much time you spend on it.</string>
+    <string name="no_matches_body">Try a different search or filter</string>
 </resources>

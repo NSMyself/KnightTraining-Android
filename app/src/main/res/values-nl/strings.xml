@@ -555,4 +555,9 @@
     <string name="reminder_offer_footer">Je kunt dit op elk moment wijzigen in Instellingen.</string>
     <string name="notifications_blocked">Meldingen staan uit voor Knight Training in de Android-instellingen, dus herinneringen kunnen niet worden afgeleverd.</string>
     <string name="open_settings">Instellingen openen</string>
+    <string name="badge_reading">Aan het lezen</string>
+    <string name="badge_studying">Aan het studeren</string>
+    <string name="mark_watched">Markeren als bekeken</string>
+    <string name="library_empty_link_hint">Koppel een bron aan een sessie om bij te houden hoeveel tijd je eraan besteedt.</string>
+    <string name="no_matches_body">Probeer een andere zoekopdracht of filter</string>
 </resources>

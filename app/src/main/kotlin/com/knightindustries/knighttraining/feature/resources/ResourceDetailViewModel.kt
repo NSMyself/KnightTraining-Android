@@ -30,6 +30,14 @@ class ResourceDetailViewModel(private val container: AppContainer, private val i
         private set
     var timeInvestedSeconds by mutableIntStateOf(0)
         private set
+
+    /**
+     * Time tracked on each finished pass, by completion id (iOS `passDurationSeconds`): pass N is
+     * everything between finish N−1 and finish N. Time after the last finish belongs to the pass
+     * still under way. A pass with nothing tracked is left out.
+     */
+    var passSeconds by mutableStateOf<Map<UUID, Int>>(emptyMap())
+        private set
     var isDeleted by mutableStateOf(false)
         private set
 
@@ -40,6 +48,14 @@ class ResourceDetailViewModel(private val container: AppContainer, private val i
                 if (latest == null) return@collect
                 completions = store.completions(id)
                 timeInvestedSeconds = store.timeInvested(id)
+                var windowStart = Instant.EPOCH
+                passSeconds = buildMap {
+                    completions.sortedBy { it.completedAt }.forEach { completion ->
+                        val seconds = store.timeInvested(id, windowStart, completion.completedAt)
+                        if (seconds > 0) put(completion.id, seconds)
+                        windowStart = completion.completedAt
+                    }
+                }
             }
         }
     }

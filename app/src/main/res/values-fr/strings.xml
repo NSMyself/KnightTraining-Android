@@ -570,4 +570,9 @@
     <string name="reminder_offer_footer">Tu peux changer ça à tout moment dans les Réglages.</string>
     <string name="notifications_blocked">Les notifications de Knight Training sont désactivées dans les Réglages Android, les rappels ne peuvent donc pas être envoyés.</string>
     <string name="open_settings">Ouvrir les Réglages</string>
+    <string name="badge_reading">En lecture</string>
+    <string name="badge_studying">En cours d\'étude</string>
+    <string name="mark_watched">Marquer comme vu</string>
+    <string name="library_empty_link_hint">Lie une ressource à une séance pour suivre le temps que tu y consacres.</string>
+    <string name="no_matches_body">Essaie une autre recherche ou un autre filtre</string>
 </resources>

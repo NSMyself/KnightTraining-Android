@@ -1,5 +1,14 @@
 package com.knightindustries.knighttraining.feature.resources
 
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material.icons.rounded.SearchOff
+import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Box
 import com.knightindustries.knighttraining.designsystem.glowTopAppBarColors
 import androidx.compose.foundation.lazy.rememberLazyListState
 import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
@@ -143,10 +152,14 @@ fun ResourcesScreen(viewModel: ResourcesViewModel, onOpen: (UUID) -> Unit, onAdd
                 item { FilterRow(kindFilter, statusFilter, { kindFilter = it }, { statusFilter = it }) }
             }
             when {
-                resources == null -> Unit
-                all.isEmpty() -> item { EmptyLibrary() }
+                resources == null -> item {
+                    Box(Modifier.fillMaxWidth().padding(vertical = 48.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+                }
+                all.isEmpty() -> item {
+                    EmptyState(Icons.AutoMirrored.Rounded.LibraryBooks, stringResource(R.string.library_empty_title), stringResource(R.string.library_empty_body), stringResource(R.string.library_empty_link_hint))
+                }
                 visible.isEmpty() -> item {
-                    Text(stringResource(R.string.no_matches), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(16.dp))
+                    EmptyState(Icons.Rounded.SearchOff, stringResource(R.string.no_matches), stringResource(R.string.no_matches_body))
                 }
                 else -> kindOrder.forEach { code ->
                     val ofKind = visible.filter { it.kind.code == code }
@@ -198,7 +211,10 @@ fun statusName(status: ResourceStatus): Int = when (status) {
 private fun ResourceCard(resource: Resource, onClick: () -> Unit) {
     val portrait = resource.kind.code == ResourceKind.BOOK || resource.kind.code == ResourceKind.COURSE
     Column(Modifier.width(if (portrait) 120.dp else 200.dp).clickable(onClick = onClick), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        ResourceCover(resource, Modifier.fillMaxWidth())
+        Box(contentAlignment = Alignment.TopStart) {
+            ResourceCover(resource, Modifier.fillMaxWidth())
+            ResourceBadges(resource, Modifier.padding(6.dp))
+        }
         Text(resource.title, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
         resource.author?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis) }
         if (resource.isInProgress) LinearProgressIndicator(progress = { resource.progressPercentage / 100f }, modifier = Modifier.fillMaxWidth())
@@ -216,11 +232,40 @@ private fun StudyRow(resource: Resource, onClick: () -> Unit) {
     )
 }
 
+/** iOS's library states: an icon, a title and what to do next. */
 @Composable
-private fun EmptyLibrary() {
-    Column(Modifier.fillMaxSize().padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Spacer(Modifier.height(32.dp))
-        Text(stringResource(R.string.library_empty_title), style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
-        Text(stringResource(R.string.library_empty_body), color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
+private fun EmptyState(icon: ImageVector, title: String, vararg body: String) {
+    Column(Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 48.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(48.dp))
+        Text(title, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+        body.forEach { Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center) }
+    }
+}
+
+/**
+ * The cover's corner labels (iOS `ResourceBadge`): automatically imported, and Reading (Studying
+ * for courses and studies) while in progress, or Completed.
+ */
+@Composable
+fun ResourceBadges(resource: Resource, modifier: Modifier = Modifier) {
+    val studied = resource.kind.code == ResourceKind.COURSE || resource.kind.code == ResourceKind.LICHESS_STUDY
+    val badges = buildList {
+        if (resource.isAutoImported) add(R.string.auto_imported to Color(0xFF6B6B76))
+        when {
+            resource.isInProgress -> add((if (studied) R.string.badge_studying else R.string.badge_reading) to Color(0xFF5C7CAF))
+            resource.isCompleted -> add(R.string.status_completed to Color(0xFF5C9A6E))
+        }
+    }
+    if (badges.isEmpty()) return
+    FlowRow(modifier, horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        badges.forEach { (label, color) ->
+            Text(
+                stringResource(label),
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White,
+                maxLines = 1,
+                modifier = Modifier.background(color, RoundedCornerShape(6.dp)).padding(horizontal = 6.dp, vertical = 3.dp),
+            )
+        }
     }
 }

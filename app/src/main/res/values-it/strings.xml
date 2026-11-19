@@ -570,4 +570,9 @@
     <string name="reminder_offer_footer">Puoi cambiarlo quando vuoi nelle Impostazioni.</string>
     <string name="notifications_blocked">Le notifiche di Knight Training sono disattivate nelle Impostazioni di Android, quindi i promemoria non possono arrivare.</string>
     <string name="open_settings">Apri le Impostazioni</string>
+    <string name="badge_reading">In lettura</string>
+    <string name="badge_studying">In studio</string>
+    <string name="mark_watched">Segna come visto</string>
+    <string name="library_empty_link_hint">Collega una risorsa a una sessione per tenere traccia del tempo che le dedichi.</string>
+    <string name="no_matches_body">Prova un\'altra ricerca o un altro filtro</string>
 </resources>

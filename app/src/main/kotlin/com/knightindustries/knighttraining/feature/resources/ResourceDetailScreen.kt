@@ -1,5 +1,21 @@
 package com.knightindustries.knighttraining.feature.resources
 
+import com.knightindustries.knighttraining.designsystem.Theme
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
+import coil3.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.animateColorAsState
 import android.content.Intent
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Arrangement
@@ -78,6 +94,13 @@ fun ResourceDetailScreen(viewModel: ResourceDetailViewModel, onBack: () -> Unit)
 
     LaunchedEffect(viewModel.isDeleted) { if (viewModel.isDeleted) onBack() }
 
+    // The cover's color washes the screen (iOS `CoverWashBackdrop`); brand purple without one.
+    var accent by remember { mutableStateOf(Theme.accent) }
+    LaunchedEffect(resource?.imageUrl) { coverAccent(context, resource?.imageUrl)?.let { accent = it } }
+    val wash by animateColorAsState(lerp(accent, Color.Black, 0.62f), tween(500), label = "wash")
+
+    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+    CoverWash(resource?.imageUrl, wash)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -93,10 +116,10 @@ fun ResourceDetailScreen(viewModel: ResourceDetailViewModel, onBack: () -> Unit)
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
             )
         },
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = Color.Transparent,
     ) { padding ->
         val current = resource ?: return@Scaffold
         Column(
@@ -114,8 +137,8 @@ fun ResourceDetailScreen(viewModel: ResourceDetailViewModel, onBack: () -> Unit)
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (current.kind.supportsOwnership && current.isOwned) AssistChip(onClick = {}, label = { Text(stringResource(R.string.owned)) })
-                        if (current.isAutoImported) AssistChip(onClick = {}, label = { Text(stringResource(R.string.auto_imported)) })
                     }
+                    ResourceBadges(current)
                 }
             }
 
@@ -136,7 +159,10 @@ fun ResourceDetailScreen(viewModel: ResourceDetailViewModel, onBack: () -> Unit)
                 if (current.isCompleted) {
                     OutlinedButton(onClick = viewModel::restart, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.start_again)) }
                 } else {
-                    Button(onClick = { finishing = true }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.mark_finished)) }
+                    Button(onClick = { finishing = true }, modifier = Modifier.fillMaxWidth()) {
+                        // Videos are watched; books and courses finished (iOS's wording per kind).
+                        Text(stringResource(if (current.kind.code == ResourceKind.VIDEO) R.string.mark_watched else R.string.mark_finished))
+                    }
                 }
             }
 
@@ -147,17 +173,28 @@ fun ResourceDetailScreen(viewModel: ResourceDetailViewModel, onBack: () -> Unit)
             if (viewModel.completions.isNotEmpty()) {
                 Text(stringResource(R.string.completion_history), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
                 val pattern = remember { DateFormat.getBestDateTimePattern(Locale.getDefault(), "yMMMd") }
-                viewModel.completions.forEach { completion ->
+                // Newest first, each numbered by which pass it was, with the time that pass took.
+                val total = viewModel.completions.size
+                viewModel.completions.forEachIndexed { index, completion ->
                     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
-                        Column(Modifier.padding(12.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(stringResource(R.string.finished_on, completion.completedAt.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(pattern))), style = MaterialTheme.typography.labelLarge)
-                            completion.rating?.let { Stars(it) }
-                            completion.notes?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
+                        Row(Modifier.padding(12.dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Box(Modifier.size(28.dp).background(MaterialTheme.colorScheme.primaryContainer, CircleShape), contentAlignment = Alignment.Center) {
+                                Text("${total - index}", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                            }
+                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                val date = stringResource(R.string.finished_on, completion.completedAt.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(pattern)))
+                                val pass = viewModel.passSeconds[completion.id]?.let { durationText(it) }
+                                Text(listOfNotNull(date, pass).joinToString(" · "), style = MaterialTheme.typography.labelLarge)
+                                completion.rating?.let { Stars(it) }
+                                completion.notes?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
     }
 
     if (finishing) FinishDialog(onDismiss = { finishing = false }) { notes, rating -> viewModel.markFinished(notes, rating); finishing = false }
@@ -170,6 +207,20 @@ fun ResourceDetailScreen(viewModel: ResourceDetailViewModel, onBack: () -> Unit)
             confirmButton = { TextButton(onClick = { confirmingDelete = false; viewModel.delete() }) { Text(stringResource(R.string.delete)) } },
             dismissButton = { TextButton(onClick = { confirmingDelete = false }) { Text(stringResource(R.string.cancel)) } },
         )
+    }
+}
+
+/** A blurred cover fading into the cover's color, behind the top of the screen (blur needs API 31). */
+@Composable
+private fun CoverWash(imageUrl: String?, wash: Color) {
+    Box(Modifier.fillMaxWidth().height(520.dp)) {
+        if (imageUrl != null) {
+            AsyncImage(
+                model = imageUrl, contentDescription = null, contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize().blur(50.dp).graphicsLayer { alpha = 0.6f },
+            )
+        }
+        Box(Modifier.matchParentSize().background(Brush.verticalGradient(listOf(wash.copy(alpha = 0.55f), wash, MaterialTheme.colorScheme.background))))
     }
 }
 
