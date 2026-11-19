@@ -509,4 +509,7 @@
     <string name="review_tip_make_focus">En faire mon axe de travail</string>
     <string name="review_tip_continue">Continuer</string>
     <string name="review_tip_not_now">Pas maintenant</string>
+    <string name="start_training">Commencer l\'entraînement</string>
+    <string name="train_again">S\'entraîner à nouveau</string>
+    <string name="goal_details">Détails de l\'objectif</string>
 </resources>

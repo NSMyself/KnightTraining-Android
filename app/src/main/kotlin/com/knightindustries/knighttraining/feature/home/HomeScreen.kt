@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.home
 
+import androidx.compose.foundation.clickable
 import com.knightindustries.knighttraining.designsystem.glowTopAppBarColors
 import androidx.compose.foundation.lazy.rememberLazyListState
 import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
@@ -139,6 +140,11 @@ fun HomeScreen(
         StartSessionSheet(openGoals, onDismiss = { choosingStart = false }, onStart = ::start)
     }
     var addingMoreTo by remember { mutableStateOf<WeeklyGoal?>(null) }
+    // By id, so the sheet follows the goal's live progress.
+    var openGoalId by rememberSaveable { mutableStateOf<String?>(null) }
+    (state as? HomeState.Loaded)?.surface?.plan?.weeklyGoals?.firstOrNull { it.id.toString() == openGoalId }?.let { goal ->
+        GoalDetailsSheet(goal, onStart = { onStartGoal(goal) }, onDismiss = { openGoalId = null })
+    }
     addingMoreTo?.let { goal ->
         AddMoreSheet(
             goal,
@@ -204,7 +210,7 @@ fun HomeScreen(
                 offers.firstOrNull()?.let { offer ->
                     item(key = offer.id) { Box(Modifier.animateItem()) { LichessOfferBanner(offer, onTrack = { tracking = offer }, onDismiss = { viewModel.declineOffer(offer) }) } }
                 }
-                item(key = "plan") { PlanCard(current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal, Modifier.animateItem()) { addingMoreTo = it } }
+                item(key = "plan") { PlanCard(current.surface, current.weekEnd, onCreatePlan, onPlanThisWeek, onStartGoal, { openGoalId = it.id.toString() }, Modifier.animateItem()) { addingMoreTo = it } }
                 homeTiles(
                     layout,
                     TileData(current.surface, current.stats, current.lastWeek, milestones),
@@ -269,6 +275,7 @@ private fun PlanCard(
     onCreatePlan: () -> Unit,
     onPlanThisWeek: () -> Unit,
     onStartGoal: (WeeklyGoal) -> Unit,
+    onOpenGoal: (WeeklyGoal) -> Unit,
     modifier: Modifier = Modifier,
     onAddMore: (WeeklyGoal) -> Unit,
 ) {
@@ -297,7 +304,7 @@ private fun PlanCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                plan.weeklyGoals.forEach { goal -> GoalRow(goal, onStart = { onStartGoal(goal) }, onAddMore = { onAddMore(goal) }) }
+                plan.weeklyGoals.forEach { goal -> GoalRow(goal, onOpen = { onOpenGoal(goal) }, onStart = { onStartGoal(goal) }, onAddMore = { onAddMore(goal) }) }
             }
         }
     }
@@ -314,13 +321,14 @@ private fun CallToAction(title: String, body: String, action: String, onClick: (
 }
 
 /**
- * A goal and its progress. A completed one can still be trained (the target is a floor) and
- * offers "Add more".
+ * A goal and its progress; tapping it opens its details. A completed one can still be trained
+ * (the target is a floor) and offers "Add more".
  */
 @Composable
-private fun GoalRow(goal: WeeklyGoal, onStart: () -> Unit, onAddMore: () -> Unit) {
+private fun GoalRow(goal: WeeklyGoal, onOpen: () -> Unit, onStart: () -> Unit, onAddMore: () -> Unit) {
     val title = goalTitle(goal)
     ListItem(
+        modifier = Modifier.clickable(onClickLabel = stringResource(R.string.goal_details), onClick = onOpen),
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         leadingContent = {
             // The check pops in when a goal completes, instead of swapping in place.

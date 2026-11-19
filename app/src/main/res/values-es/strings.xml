@@ -509,4 +509,7 @@
     <string name="review_tip_make_focus">Convertirlo en mi enfoque</string>
     <string name="review_tip_continue">Continuar</string>
     <string name="review_tip_not_now">Ahora no</string>
+    <string name="start_training">Empezar a entrenar</string>
+    <string name="train_again">Volver a entrenar</string>
+    <string name="goal_details">Detalles del objetivo</string>
 </resources>

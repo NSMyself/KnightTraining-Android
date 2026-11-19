@@ -509,4 +509,7 @@
     <string name="review_tip_make_focus">Fanne il mio focus</string>
     <string name="review_tip_continue">Continua</string>
     <string name="review_tip_not_now">Non ora</string>
+    <string name="start_training">Inizia ad allenarti</string>
+    <string name="train_again">Allenati di nuovo</string>
+    <string name="goal_details">Dettagli dell\'obiettivo</string>
 </resources>

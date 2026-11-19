@@ -1879,5 +1879,32 @@
   "it": "Partite lente, analisi approfondita",
   "de": "Lange Partien, gründliche Analyse",
   "fr": "Parties lentes, analyse approfondie"
+ },
+ "start_training": {
+  "de": "Training starten",
+  "es": "Empezar a entrenar",
+  "fr": "Commencer l'entraînement",
+  "it": "Inizia ad allenarti",
+  "nl": "Training starten",
+  "pt-BR": "Começar a treinar",
+  "pt-PT": "Começar a treinar"
+ },
+ "train_again": {
+  "de": "Erneut trainieren",
+  "es": "Volver a entrenar",
+  "fr": "S'entraîner à nouveau",
+  "it": "Allenati di nuovo",
+  "nl": "Opnieuw trainen",
+  "pt-BR": "Treinar outra vez",
+  "pt-PT": "Treinar outra vez"
+ },
+ "goal_details": {
+  "de": "Zieldetails",
+  "es": "Detalles del objetivo",
+  "fr": "Détails de l'objectif",
+  "it": "Dettagli dell'obiettivo",
+  "nl": "Doeldetails",
+  "pt-BR": "Detalhes do objetivo",
+  "pt-PT": "Detalhes do objetivo"
  }
 }

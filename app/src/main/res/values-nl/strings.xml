@@ -494,4 +494,7 @@
     <string name="review_tip_make_focus">Maak er mijn focus van</string>
     <string name="review_tip_continue">Doorgaan</string>
     <string name="review_tip_not_now">Niet nu</string>
+    <string name="start_training">Training starten</string>
+    <string name="train_again">Opnieuw trainen</string>
+    <string name="goal_details">Doeldetails</string>
 </resources>

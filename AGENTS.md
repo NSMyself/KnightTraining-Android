@@ -98,6 +98,9 @@ scheme, surface-container ladder included.
   `onboarding`, `celebration`). ViewModels come from `appViewModel { … }`, built from
   `AppContainer` by hand.
 - `ui/Labels.kt`: every code → display text/icon mapping. Strings live in `strings.xml`.
+- **Tapping a goal on Home** opens `GoalDetailsSheet` (iOS `ActivityDetailsSheet`): title,
+  resource, target and progress, and Start / Train again. Per-goal reminders, iOS's other half of
+  that sheet, will go there. Pinned by `GoalDetailsTest`.
 - **The brand glow**: every tab root sits on `GradientBackground` (iOS `NewBackgroundView`), drawn
   by the tab wrapper in `KnightTrainingApp`. Tab scaffolds are transparent and use
   `glowTopAppBarColors()`; their lists sit below the bar (padding, not `contentPadding`), so the
