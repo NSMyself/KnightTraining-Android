@@ -66,30 +66,45 @@ fun ResourcePickerField(selectedId: UUID?, onSelect: (Resource?) -> Unit) {
     }
 
     if (choosing) {
-        ModalBottomSheet(onDismissRequest = { choosing = false }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
-            Column(Modifier.navigationBarsPadding()) {
-                Text(stringResource(R.string.choose_resource), style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(horizontal = 24.dp))
-                LazyColumn(Modifier.fillMaxWidth().height(480.dp)) {
-                    item {
-                        ListItem(
-                            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                            leadingContent = { Icon(Icons.Rounded.Close, contentDescription = null) },
-                            headlineContent = { Text(stringResource(R.string.resource_none)) },
-                            modifier = Modifier.clickable { onSelect(null); choosing = false },
-                        )
-                    }
-                    items(resources.sortedBy { kindOrder.indexOf(it.kind.code) }, key = { it.id }) { resource ->
-                        ListItem(
-                            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                            leadingContent = { ResourceCover(resource, Modifier.width(40.dp)) },
-                            headlineContent = { Text(resource.title, maxLines = 2, overflow = TextOverflow.Ellipsis) },
-                            supportingContent = resource.author?.let { { Text(it) } },
-                            modifier = Modifier.clickable { onSelect(resource); choosing = false },
-                        )
-                    }
+        ResourcePickerSheet(resources, onSelect = { onSelect(it); choosing = false }, onDismiss = { choosing = false })
+    }
+}
+
+/** The library to pick from, or "None". Also opened from the running timer's attach button. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ResourcePickerSheet(onSelect: (Resource?) -> Unit, onDismiss: () -> Unit) {
+    val application = LocalContext.current.applicationContext as Application
+    val resources by produceState<List<Resource>>(emptyList()) { value = AppContainer.from(application).store.allResources() }
+    ResourcePickerSheet(resources, onSelect, onDismiss)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ResourcePickerSheet(resources: List<Resource>, onSelect: (Resource?) -> Unit, onDismiss: () -> Unit) {
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+        Column(Modifier.navigationBarsPadding()) {
+            Text(stringResource(R.string.choose_resource), style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(horizontal = 24.dp))
+            LazyColumn(Modifier.fillMaxWidth().height(480.dp)) {
+                item {
+                    ListItem(
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        leadingContent = { Icon(Icons.Rounded.Close, contentDescription = null) },
+                        headlineContent = { Text(stringResource(R.string.resource_none)) },
+                        modifier = Modifier.clickable { onSelect(null) },
+                    )
                 }
-                Spacer(Modifier.height(16.dp))
+                items(resources.sortedBy { kindOrder.indexOf(it.kind.code) }, key = { it.id }) { resource ->
+                    ListItem(
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        leadingContent = { ResourceCover(resource, Modifier.width(40.dp)) },
+                        headlineContent = { Text(resource.title, maxLines = 2, overflow = TextOverflow.Ellipsis) },
+                        supportingContent = resource.author?.let { { Text(it) } },
+                        modifier = Modifier.clickable { onSelect(resource) },
+                    )
+                }
             }
+            Spacer(Modifier.height(16.dp))
         }
     }
 }

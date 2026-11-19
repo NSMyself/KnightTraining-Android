@@ -98,7 +98,11 @@ scheme, surface-container ladder included.
   Same battery rules: first 10 running minutes only, frozen while paused, off under battery saver,
   and a notice that brings it back. Android adds one: off when system animations are removed.
   Blur needs API 31; below that the blobs are radial gradients. The frame loop uses
-  `withInfiniteAnimationFrameNanos`, or UI tests never go idle. Pinned by `TimerBackgroundTest`.
+  `withInfiniteAnimationFrameNanos`, or UI tests never go idle.
+- **The timer's controls** (`TimerControls.kt`) follow iOS's: a large ringed pause/play between an
+  attach-a-resource button (resources can now be attached mid-session, as on iOS) and Stop, all
+  icon buttons labelled for TalkBack, and a bottom study card whose bar turns green with a check on
+  reaching a duration target. Pinned by `TimerScreenTest`.
 - **No foreground service for the timer.** `PracticeSession` (core) derives elapsed time from
   timestamps and `SessionRepository` writes it to a file on every change, so the process can die
   mid-session and resume intact. The ongoing notification's clock is a system chronometer; Pause

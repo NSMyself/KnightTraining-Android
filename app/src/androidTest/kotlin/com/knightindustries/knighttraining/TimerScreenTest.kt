@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -28,12 +30,13 @@ import java.time.Duration
 import java.time.Instant
 
 /**
- * The timer's mesh background: on for a session's first ten running minutes, then dimmed with a
- * notice that brings it back; no notice while paused. How the motion looks is a device check.
+ * The running timer: its mesh background (on for a session's first ten running minutes, then
+ * dimmed with a notice that brings it back; no notice while paused) and its controls. How the
+ * motion looks and the controls feel is a device check.
  */
 @OptIn(ExperimentalTestApi::class)
 @RunWith(AndroidJUnit4::class)
-class TimerBackgroundTest {
+class TimerScreenTest {
     private val compose = createAndroidComposeRule<MainActivity>()
 
     @get:Rule
@@ -65,7 +68,7 @@ class TimerBackgroundTest {
         container.sessions.start(session)
         compose.waitUntilAtLeastOneExists(hasText(text(R.string.session_in_progress)), 10_000)
         compose.onNode(hasText(text(R.string.session_in_progress)) and hasClickAction()).performClick()
-        compose.waitUntilAtLeastOneExists(hasText(text(R.string.stop)), 5_000)
+        compose.waitUntilAtLeastOneExists(hasContentDescription(text(R.string.stop)), 5_000)
     }
 
     private fun startedAgo(minutes: Long) = PracticeSession.start(Instant.now().minus(Duration.ofMinutes(minutes)), PracticeSession.Attribution.General)
@@ -92,7 +95,27 @@ class TimerBackgroundTest {
     @Test
     fun aPausedSessionHasNoNotice() {
         openSession(startedAgo(11).pause(Instant.now()))
-        compose.waitUntilAtLeastOneExists(hasText(text(R.string.resume)), 5_000)
+        compose.waitUntilAtLeastOneExists(hasContentDescription(text(R.string.resume)), 5_000)
         compose.onNodeWithText(text(R.string.mesh_dimmed)).assertDoesNotExist()
+    }
+
+    /** Pause flips to Resume and back; attach opens the library; Change opens the switch sheet. */
+    @Test
+    fun theControlsPauseAttachAndChange() {
+        openSession(startedAgo(0))
+        screenshot("82_timer_controls")
+        compose.onNodeWithContentDescription(text(R.string.pause)).performClick()
+        compose.waitUntilAtLeastOneExists(hasContentDescription(text(R.string.resume)), 5_000)
+        compose.onNodeWithText(text(R.string.session_paused)).assertExists()
+        compose.onNodeWithContentDescription(text(R.string.resume)).performClick()
+        compose.waitUntilAtLeastOneExists(hasContentDescription(text(R.string.pause)), 5_000)
+
+        compose.onNodeWithContentDescription(text(R.string.link_resource)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.choose_resource)), 5_000)
+        compose.onNodeWithText(text(R.string.resource_none)).performClick()
+        compose.waitUntilDoesNotExist(hasText(text(R.string.choose_resource)), 5_000)
+
+        compose.onNodeWithText(text(R.string.change)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.change_title)), 5_000)
     }
 }

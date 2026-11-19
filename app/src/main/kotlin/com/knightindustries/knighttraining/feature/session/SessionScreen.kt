@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,27 +19,21 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Pause
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Stop
-import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -49,15 +42,15 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -65,7 +58,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.knightindustries.knighttraining.R
@@ -78,6 +70,10 @@ import com.knightindustries.knighttraining.core.session.PracticeSession.Attribut
 import com.knightindustries.knighttraining.core.session.PracticeSession.GoalCredit
 import com.knightindustries.knighttraining.feature.plan.ActivityGrid
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.knightindustries.knighttraining.feature.resources.ResourcePickerSheet
 import com.knightindustries.knighttraining.feedback.FeedbackEvent
 import com.knightindustries.knighttraining.feedback.rememberFeedback
 import com.knightindustries.knighttraining.feature.resources.ResourcePickerField
@@ -133,19 +129,19 @@ fun SessionScreen(viewModel: SessionViewModel, onLeave: () -> Unit, onFinished: 
             },
             containerColor = Color.Transparent,
         ) { padding ->
-            SessionPhases(current, viewModel, now, background, Modifier.padding(padding))
+            val phasePadding = if (running) Modifier.padding(top = padding.calculateTopPadding()) else Modifier.padding(padding)
+            SessionPhases(current, viewModel, now, background, phasePadding)
         }
     }
 }
 
 @Composable
 private fun SessionPhases(current: PracticeSession, viewModel: SessionViewModel, now: Instant, background: TimerBackgroundState, modifier: Modifier) {
-    Column(modifier.fillMaxSize().navigationBarsPadding()) {
-        when (val phase = current.phase) {
-            PracticeSession.Phase.Running -> TimerContent(current, viewModel, now, background)
-            PracticeSession.Phase.Categorizing -> CategorizeContent(viewModel)
-            is PracticeSession.Phase.Reviewing -> ReviewContent(current, phase.activityTypeCode, viewModel)
-        }
+    when (val phase = current.phase) {
+        // The study card runs under the navigation bar and pads itself.
+        PracticeSession.Phase.Running -> Column(modifier.fillMaxSize()) { TimerContent(current, viewModel, now, background) }
+        PracticeSession.Phase.Categorizing -> Column(modifier.fillMaxSize().navigationBarsPadding()) { CategorizeContent(viewModel) }
+        is PracticeSession.Phase.Reviewing -> Column(modifier.fillMaxSize().navigationBarsPadding()) { ReviewContent(current, phase.activityTypeCode, viewModel) }
     }
 }
 
@@ -177,52 +173,60 @@ private fun TimerContent(session: PracticeSession, viewModel: SessionViewModel, 
     val code = session.attribution.activityTypeCode
     val feedback = rememberFeedback()
 
-    Column(
-        Modifier.fillMaxSize().padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
-    ) {
-        Icon(activityIcon(code ?: ActivityType.GENERAL), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(40.dp))
-        Text(attributionTitle(session, viewModel.goals), style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
-        Text(
-            clockText(session.segmentElapsedSeconds(now)),
-            // The shadow keeps the digits legible as the bright blobs drift behind them.
-            style = MaterialTheme.typography.displayLarge.copy(fontFeatureSettings = "tnum", shadow = clockShadow()),
-            color = if (session.isPaused) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
+    var attaching by rememberSaveable { mutableStateOf(false) }
+    val goal = (session.attribution as? Attribution.Goal)?.let { viewModel.goals[it.goalId] }
+    // A duration goal's progress with this segment projected in.
+    val projected = goal?.let { if (it.targetType == TargetType.DURATION) it.copy(currentValue = it.currentValue + session.segmentElapsedSeconds(now)) else it }
+
+    Column(Modifier.fillMaxSize()) {
+        Column(
+            Modifier.weight(1f).fillMaxWidth().padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+        ) {
+            Text(
+                clockText(session.segmentElapsedSeconds(now)),
+                // The shadow keeps the digits legible as the bright blobs drift behind them.
+                style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold, fontFeatureSettings = "tnum", shadow = clockShadow()),
+                color = if (session.isPaused) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                // As large as iOS's 96 pt where it fits, smaller once hours join the minutes.
+                autoSize = TextAutoSize.StepBased(minFontSize = 48.sp, maxFontSize = 96.sp),
+            )
+            if (session.isPaused) Text(stringResource(R.string.session_paused), color = MaterialTheme.colorScheme.onSurfaceVariant)
+            if (session.hasMultipleSegments) {
+                Text(stringResource(R.string.total_this_session, clockText(session.elapsedSeconds(now))), color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            DimmedNotice(background)
+            Spacer(Modifier.height(32.dp))
+            TimerControls(
+                isPaused = session.isPaused,
+                hasResource = session.resourceId != null,
+                onTogglePause = {
+                    if (session.isPaused) {
+                        feedback(FeedbackEvent.SessionResumed)
+                        viewModel.resume()
+                    } else {
+                        feedback(FeedbackEvent.SessionPaused)
+                        viewModel.pause()
+                    }
+                },
+                onStop = { feedback(FeedbackEvent.SessionStopped); viewModel.stop() },
+                onAttach = { attaching = true },
+            )
+        }
+        StudyCard(
+            icon = activityIcon(code ?: ActivityType.GENERAL),
+            title = attributionTitle(session, viewModel.goals),
+            subtitle = projected?.let { progressText(it) },
+            progress = projected?.let { (it.progressPercentage / 100).toFloat() },
+            reachedTarget = goal != null && goal.targetType == TargetType.DURATION && projected!!.currentValue >= goal.targetValue,
+            onChange = { changing = true },
         )
-        DimmedNotice(background)
-        if (session.isPaused) Text(stringResource(R.string.session_paused), color = MaterialTheme.colorScheme.onSurfaceVariant)
-        if (session.hasMultipleSegments) {
-            Text(stringResource(R.string.total_this_session, clockText(session.elapsedSeconds(now))), color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
+    }
 
-        (session.attribution as? Attribution.Goal)?.let { attribution -> viewModel.goals[attribution.goalId] }?.let { goal ->
-            GoalProgress(goal, session.segmentElapsedSeconds(now))
-        }
-
-        Spacer(Modifier.height(16.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            FilledTonalButton(onClick = {
-                if (session.isPaused) {
-                    feedback(FeedbackEvent.SessionResumed)
-                    viewModel.resume()
-                } else {
-                    feedback(FeedbackEvent.SessionPaused)
-                    viewModel.pause()
-                }
-            }) {
-                Icon(if (session.isPaused) Icons.Rounded.PlayArrow else Icons.Rounded.Pause, contentDescription = null)
-                Text(stringResource(if (session.isPaused) R.string.resume else R.string.pause), modifier = Modifier.padding(start = 8.dp))
-            }
-            Button(onClick = { feedback(FeedbackEvent.SessionStopped); viewModel.stop() }) {
-                Icon(Icons.Rounded.Stop, contentDescription = null)
-                Text(stringResource(R.string.stop), modifier = Modifier.padding(start = 8.dp))
-            }
-        }
-        OutlinedButton(onClick = { changing = true }) {
-            Icon(Icons.Rounded.SwapHoriz, contentDescription = null)
-            Text(stringResource(R.string.change), modifier = Modifier.padding(start = 8.dp))
-        }
+    if (attaching) {
+        ResourcePickerSheet(onSelect = { viewModel.setResource(it?.id); attaching = false }, onDismiss = { attaching = false })
     }
 
     if (changing) {
@@ -253,19 +257,6 @@ private fun TimerContent(session: PracticeSession, viewModel: SessionViewModel, 
             onDone = { count, goalId -> feedback(FeedbackEvent.ActivityChanged); viewModel.change(target, count, goalId); pendingChange = null },
             onDismiss = { pendingChange = null },
         )
-    }
-}
-
-/** A plan goal's progress with this segment projected in, for duration goals. */
-@Composable
-private fun GoalProgress(goal: WeeklyGoal, segmentSeconds: Int) {
-    val projected = if (goal.targetType == TargetType.DURATION) goal.copy(currentValue = goal.currentValue + segmentSeconds) else goal
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        LinearProgressIndicator(progress = { (projected.progressPercentage / 100).toFloat() }, modifier = Modifier.fillMaxWidth())
-        Text(progressText(projected), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        if (goal.targetType == TargetType.DURATION && projected.currentValue >= goal.targetValue) {
-            Text(stringResource(R.string.target_reached), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
-        }
     }
 }
 

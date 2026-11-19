@@ -10,6 +10,7 @@ import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onRoot
@@ -87,11 +88,11 @@ class CoreLoopTest {
         screenshot("04_home_committed")
 
         compose.onNode(hasContentDescription(text(R.string.start_goal, text(R.string.preset_item_puzzles_tactical)))).performClick()
-        compose.waitUntilAtLeastOneExists(hasText(text(R.string.stop)), 5_000)
+        compose.waitUntilAtLeastOneExists(hasContentDescription(text(R.string.stop)), 5_000)
         // Past the 10-second accidental-stop window, so Stop reviews instead of discarding.
         Thread.sleep(11_000)
         screenshot("05_timer")
-        compose.onNodeWithText(text(R.string.stop)).performClick()
+        compose.onNodeWithContentDescription(text(R.string.stop)).performClick()
 
         compose.waitUntilAtLeastOneExists(hasText(text(R.string.session_complete)), 5_000)
         compose.onNodeWithText(text(R.string.how_many_completed)).performTextInput("12")
