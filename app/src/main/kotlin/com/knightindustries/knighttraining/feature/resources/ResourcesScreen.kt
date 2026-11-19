@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.resources
 
+import com.knightindustries.knighttraining.designsystem.glowTopAppBarColors
 import androidx.compose.foundation.lazy.rememberLazyListState
 import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
 import androidx.compose.foundation.clickable
@@ -120,13 +121,14 @@ fun ResourcesScreen(viewModel: ResourcesViewModel, onOpen: (UUID) -> Unit, onAdd
                     }
                 },
                 scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+                colors = glowTopAppBarColors(),
             )
         },
         floatingActionButton = { LabeledFab(Icons.Rounded.Add, stringResource(R.string.add_resource), onAdd) },
-        containerColor = MaterialTheme.colorScheme.background,
+        // The tab's glow (`GradientBackground`) is drawn behind it.
+        containerColor = Color.Transparent,
     ) { padding ->
-        LazyColumn(state = listState, contentPadding = PaddingValues(top = padding.calculateTopPadding(), bottom = 96.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyColumn(Modifier.padding(top = padding.calculateTopPadding()), state = listState, contentPadding = PaddingValues(bottom = 96.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             if (searching) {
                 item {
                     OutlinedTextField(

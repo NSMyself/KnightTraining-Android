@@ -45,7 +45,8 @@ object Theme {
 /**
  * Dark-only, like iOS. The Material 3 scheme is filled from the brand tokens, including the
  * surface-container ladder, so stock components (cards, sheets, the navigation bar) read as the
- * app's purple-black rather than Material's neutral greys. Shapes, type and motion stay Material:
+ * app's purple-black rather than Material's neutral greys. The container ladder leans indigo, toward
+ * iOS's cards (#6B6EF8 at 0.28 over the background), so cards read as lifted off the glow. Shapes, type and motion stay Material:
  * the app follows native Android UX (AGENTS.md).
  */
 private val colors = darkColorScheme(
@@ -65,10 +66,10 @@ private val colors = darkColorScheme(
     surfaceVariant = Color(0xFF2A2236),
     onSurfaceVariant = Color(0xFFCBC2DB),
     surfaceContainerLowest = Color(0xFF080110),
-    surfaceContainerLow = Color(0xFF130A1D),
-    surfaceContainer = Color(0xFF1A1126),
-    surfaceContainerHigh = Color(0xFF22182F),
-    surfaceContainerHighest = Color(0xFF2B2039),
+    surfaceContainerLow = Color(0xFF15102A),
+    surfaceContainer = Color(0xFF1E1938),
+    surfaceContainerHigh = Color(0xFF272145),
+    surfaceContainerHighest = Color(0xFF2F2952),
     outline = Color(0xFF5A4E6D),
     outlineVariant = Color(0xFF3A3047),
 )

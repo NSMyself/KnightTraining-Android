@@ -98,6 +98,11 @@ scheme, surface-container ladder included.
   `onboarding`, `celebration`). ViewModels come from `appViewModel { … }`, built from
   `AppContainer` by hand.
 - `ui/Labels.kt`: every code → display text/icon mapping. Strings live in `strings.xml`.
+- **The brand glow**: every tab root sits on `GradientBackground` (iOS `NewBackgroundView`), drawn
+  by the tab wrapper in `KnightTrainingApp`. Tab scaffolds are transparent and use
+  `glowTopAppBarColors()`; their lists sit below the bar (padding, not `contentPadding`), so the
+  clear bar never shows content through it. The surface-container ladder leans indigo, toward iOS's
+  cards, and `AnimatedLinearProgress` is 8dp and rounded like iOS's `ProgressBar`.
 - **The timer's background** (`feature/session/TimerBackground.kt`, `designsystem/Backgrounds.kt`):
   iOS's purple glow with its drifting mesh over it, the blob physics ported constant for constant.
   Same battery rules: first 10 running minutes only, frozen while paused, off under battery saver,

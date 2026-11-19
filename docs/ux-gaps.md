@@ -23,7 +23,7 @@ Items 1–5 are mostly about that.
 | 7 | No Training History screen (chart + activity grid) | High | L |
 | 8 | Tapping a goal on Home does nothing | Medium–High | M |
 | 9 | Onboarding has no artwork, motion or closing quote | Medium | M |
-| 10 | Flat backgrounds and neutral cards: brand glow missing | Medium | S |
+| 10 | ~~Flat backgrounds and neutral cards: brand glow missing~~ Done 2026-11-19 | Medium | S |
 | 11 | One widget, one size | Medium | M–L |
 | 12 | Profile: no activity grid, simpler rating chart | Medium | M |
 | 13 | Home plan header is missing actions and states | Medium | S |

@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.navigation
 
+import androidx.compose.foundation.layout.Box
+import com.knightindustries.knighttraining.designsystem.GradientBackground
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -152,7 +154,7 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
         contentWindowInsets = WindowInsets(0),
         bottomBar = {
             if (top is TabRoute) {
-                NavigationBar {
+                NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainerLow) {
                     tabs.forEach { tab ->
                         NavigationBarItem(
                             selected = top == tab.route,
@@ -173,9 +175,12 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
             entryDecorators = listOf(rememberTabKeepingStateDecorator(), rememberViewModelStoreNavEntryDecorator()),
             modifier = Modifier.consumeWindowInsets(padding),
             entryProvider = entryProvider {
-                // Only the tab showing hears its own reselection.
-                @Composable fun TabRoot(route: TabRoute, content: @Composable () -> Unit) =
+                // Each tab sits on the brand glow (iOS `NewBackgroundView`); only the tab showing
+                // hears its own reselection.
+                @Composable fun TabRoot(route: TabRoute, content: @Composable () -> Unit) = Box {
+                    GradientBackground()
                     CompositionLocalProvider(LocalTabReselections provides if (top == route) reselections else emptyFlow(), content = content)
+                }
 
                 entry<HomeRoute>(metadata = TabRootMetadata) {
                     TabRoot(HomeRoute) {

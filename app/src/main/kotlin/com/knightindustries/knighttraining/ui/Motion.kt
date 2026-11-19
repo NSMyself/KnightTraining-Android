@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.ui
 
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.Animatable
@@ -34,11 +36,22 @@ import androidx.compose.ui.unit.dp
  * All of them are Compose animations, so the system's "Remove animations" setting snaps them.
  */
 
-/** A progress bar that moves to a new value instead of jumping there. */
+/**
+ * A progress bar that moves to a new value instead of jumping there. 8dp and rounded on a faint
+ * white track, like iOS's `ProgressBar`, rather than Material's hairline.
+ */
 @Composable
 fun AnimatedLinearProgress(progress: Float, modifier: Modifier = Modifier, color: Color = ProgressIndicatorDefaults.linearColor) {
     val shown by animateFloatAsState(progress.coerceIn(0f, 1f), ProgressIndicatorDefaults.ProgressAnimationSpec, label = "progress")
-    LinearProgressIndicator(progress = { shown }, modifier = modifier, color = color)
+    LinearProgressIndicator(
+        progress = { shown },
+        modifier = modifier.height(8.dp),
+        color = color,
+        trackColor = Color.White.copy(alpha = 0.1f),
+        strokeCap = StrokeCap.Round,
+        gapSize = 0.dp,
+        drawStopIndicator = {},
+    )
 }
 
 /** A value (a count, a duration, a percentage) that rolls up to its new text when it changes. */

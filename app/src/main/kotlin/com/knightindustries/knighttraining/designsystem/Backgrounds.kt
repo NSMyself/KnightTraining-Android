@@ -1,5 +1,8 @@
 package com.knightindustries.knighttraining.designsystem
 
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import android.os.Build
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseIn
@@ -245,3 +248,11 @@ private class MeshBlob(
         }
     }
 }
+
+/**
+ * A top app bar over [GradientBackground]: clear at rest so the glow runs to the top edge, the
+ * glow's own base once content scrolls under it.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun glowTopAppBarColors(): TopAppBarColors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent, scrolledContainerColor = Theme.gradientBase)

@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.training
 
+import com.knightindustries.knighttraining.designsystem.glowTopAppBarColors
 import androidx.compose.foundation.lazy.rememberLazyListState
 import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
 import androidx.compose.foundation.clickable
@@ -86,17 +87,18 @@ fun TrainingScreen(
                     IconButton(onClick = onCreatePlan) { Icon(Icons.Rounded.Add, contentDescription = stringResource(R.string.create_new_plan)) }
                 },
                 scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+                colors = glowTopAppBarColors(),
             )
         },
-        containerColor = MaterialTheme.colorScheme.background,
+        // The tab's glow (`GradientBackground`) is drawn behind it.
+        containerColor = Color.Transparent,
     ) { padding ->
         val current = state
         if (current == null) {
             CircularProgressIndicator(Modifier.padding(padding).padding(32.dp))
             return@Scaffold
         }
-        LazyColumn(state = listState, contentPadding = PaddingValues(top = padding.calculateTopPadding(), bottom = 24.dp)) {
+        LazyColumn(Modifier.padding(top = padding.calculateTopPadding()), state = listState, contentPadding = PaddingValues(bottom = 24.dp)) {
             item { SectionHeader(stringResource(R.string.your_weeks)) }
             if (current.weeks.isEmpty()) item { Empty(stringResource(R.string.no_weeks_yet)) }
             items(current.weeks, key = { it.id }) { week ->

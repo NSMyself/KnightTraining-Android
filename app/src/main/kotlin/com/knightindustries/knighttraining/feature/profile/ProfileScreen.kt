@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.profile
 
+import com.knightindustries.knighttraining.designsystem.glowTopAppBarColors
 import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.selection.toggleable
@@ -230,10 +231,11 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
             LargeTopAppBar(
                 title = { Text(stringResource(R.string.profile_title)) },
                 scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+                colors = glowTopAppBarColors(),
             )
         },
-        containerColor = MaterialTheme.colorScheme.background,
+        // The tab's glow (`GradientBackground`) is drawn behind it.
+        containerColor = Color.Transparent,
     ) { padding ->
         Column(Modifier.padding(padding).verticalScroll(scrollState).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             viewModel.stats?.let { stats ->

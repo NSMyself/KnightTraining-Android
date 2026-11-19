@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.home
 
+import com.knightindustries.knighttraining.designsystem.glowTopAppBarColors
 import androidx.compose.foundation.lazy.rememberLazyListState
 import com.knightindustries.knighttraining.ui.ScrollToTopOnReselect
 import androidx.compose.foundation.layout.Box
@@ -44,6 +45,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -107,6 +109,10 @@ fun HomeScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val listState = rememberLazyListState()
     ScrollToTopOnReselect(list = listState, topBar = scrollBehavior)
+    // The session banner comes and goes above the plan. Someone at the top stays at the top, rather
+    // than a restored scroll index landing one item further down once the banner is gone.
+    val hasSession = session != null
+    LaunchedEffect(hasSession) { if (listState.firstVisibleItemIndex <= 1) listState.scrollToItem(0) }
     var choosingStart by rememberSaveable { mutableStateOf(false) }
     var pendingStart by remember { mutableStateOf<SessionStart?>(null) }
     val feedback = rememberFeedback()
@@ -171,7 +177,7 @@ fun HomeScreen(
                     }
                 },
                 scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+                colors = glowTopAppBarColors(),
             )
         },
         floatingActionButton = {
@@ -179,7 +185,8 @@ fun HomeScreen(
                 LabeledFab(Icons.Rounded.PlayArrow, stringResource(if (session != null) R.string.session_in_progress else R.string.start_session), onStartSession)
             }
         },
-        containerColor = MaterialTheme.colorScheme.background,
+        // The tab's glow (`GradientBackground`) is drawn behind it.
+        containerColor = Color.Transparent,
     ) { padding ->
         when (val current = state) {
             HomeState.Loading -> Column(Modifier.fillMaxSize().padding(padding), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -188,7 +195,9 @@ fun HomeScreen(
             }
             is HomeState.Loaded -> LazyColumn(
                 state = listState,
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = padding.calculateTopPadding(), bottom = 96.dp),
+                // Below the bar, not under it: the bar is clear over the glow until it collapses.
+                modifier = Modifier.padding(top = padding.calculateTopPadding()),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 96.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 session?.let { item(key = "session") { SessionBanner(it, onOpenSession, Modifier.animateItem()) } }
