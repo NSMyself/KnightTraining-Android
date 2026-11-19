@@ -98,6 +98,13 @@ scheme, surface-container ladder included.
   `onboarding`, `celebration`). ViewModels come from `appViewModel { … }`, built from
   `AppContainer` by hand.
 - `ui/Labels.kt`: every code → display text/icon mapping. Strings live in `strings.xml`.
+- **Training History** (`feature/history/`, iOS `TrainingHistoryScreen`), opened from Home's weekly
+  activity and last week tiles: the commitment streak (from 2), five weeks of planned against
+  actual minutes on a `Canvas` chart (press and drag to read a week), the last 36 days as iOS's
+  4×9 grid (tap or hold a day), and three stats. Its queries are in
+  `core/store/TrainingStoreHistory.kt`, ported with iOS's tests (`TrainingHistoryTest`). Time of
+  day is bucketed in the store's calendar zone, where iOS's SQL uses SQLite's `localtime`. Not yet
+  reachable from Plan This Week or the weekly review, which have no Last Week card on Android.
 - **Onboarding** (`feature/onboarding/`) follows iOS's: four pages on the glow with iOS's artwork
   (WebP in `drawable-nodpi`; the target page uses a Material icon for iOS's SF Symbol), title,
   subtitle and detail, the first page's text staged in once. "Let's go" grows a white circle into

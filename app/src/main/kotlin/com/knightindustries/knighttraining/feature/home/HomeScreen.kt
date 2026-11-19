@@ -91,6 +91,7 @@ fun HomeScreen(
     onCreatePlan: () -> Unit,
     onPlanThisWeek: () -> Unit,
     onOpenSession: () -> Unit,
+    onOpenHistory: () -> Unit = {},
     contentPadding: PaddingValues,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -223,6 +224,7 @@ fun HomeScreen(
                         onEdit = { editingMilestone = it },
                         onDelete = { deletingMilestone = it },
                     ),
+                    onOpenHistory,
                 )
             }
         }

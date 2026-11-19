@@ -70,10 +70,10 @@ data class MilestoneActions(
 )
 
 /** The chosen tiles below the plan card: a wide tile per row, small ones two to a row. */
-fun LazyListScope.homeTiles(layout: HomeLayout, data: TileData, milestoneActions: MilestoneActions) {
+fun LazyListScope.homeTiles(layout: HomeLayout, data: TileData, milestoneActions: MilestoneActions, onOpenHistory: () -> Unit) {
     for (section in layout.sections) {
         when (section) {
-            is HomeLayout.Section.Wide -> item(key = section.tile.id) { Box(Modifier.animateItem()) { WideTile(section.tile, data, milestoneActions) } }
+            is HomeLayout.Section.Wide -> item(key = section.tile.id) { Box(Modifier.animateItem()) { WideTile(section.tile, data, milestoneActions, onOpenHistory) } }
             is HomeLayout.Section.Small -> section.tiles.chunked(2).forEach { pair ->
                 item(key = pair.joinToString(",") { it.id }) {
                     Row(Modifier.animateItem(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -87,13 +87,13 @@ fun LazyListScope.homeTiles(layout: HomeLayout, data: TileData, milestoneActions
 }
 
 @Composable
-private fun WideTile(tile: HomeTile, data: TileData, milestoneActions: MilestoneActions) {
+private fun WideTile(tile: HomeTile, data: TileData, milestoneActions: MilestoneActions, onOpenHistory: () -> Unit) {
     when (tile) {
-        HomeTile.WEEKLY_ACTIVITY -> WeeklyActivityTile(data.surface)
+        HomeTile.WEEKLY_ACTIVITY -> WeeklyActivityTile(data.surface, onOpenHistory)
         HomeTile.MILESTONES -> data.milestones?.let {
             MilestonesCard(it, milestoneActions.onToggle, milestoneActions.onAdd, milestoneActions.onEdit, milestoneActions.onDelete)
         }
-        HomeTile.LAST_WEEK -> LastWeekTile(data.lastWeek)
+        HomeTile.LAST_WEEK -> LastWeekTile(data.lastWeek, onOpenHistory)
         else -> Unit
     }
 }
@@ -170,14 +170,17 @@ private fun SmallTile(tile: HomeTile, data: TileData, modifier: Modifier) {
     }
 }
 
-/** This week's total and a bar per day; the streak as a caption, never below 2 (iOS AGENTS.md §7). */
+/**
+ * This week's total and a bar per day; the streak as a caption, never below 2 (iOS AGENTS.md §7).
+ * Opens Training History.
+ */
 @Composable
-private fun WeeklyActivityTile(surface: WeeklySurface) {
+private fun WeeklyActivityTile(surface: WeeklySurface, onOpen: () -> Unit) {
     val days = (0L until 7L).map { surface.weekStart.plusDays(it) }
     val seconds = days.map { surface.recentDailyDurationSeconds[it] ?: 0 }
     val max = seconds.maxOrNull()?.takeIf { it > 0 } ?: 1
     val locale = currentLocale()
-    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+    Card(onClick = onOpen, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
         Column(Modifier.padding(20.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(stringResource(R.string.this_week_activity), style = MaterialTheme.typography.titleMedium)
             AnimatedValueText(durationText(surface.weeklyTrackedSeconds), style = MaterialTheme.typography.headlineSmall)
@@ -210,10 +213,10 @@ private fun WeeklyActivityTile(surface: WeeklySurface) {
     }
 }
 
-/** Last week's goals and what its review said: the context for this week's plan. */
+/** Last week's goals and what its review said: the context for this week's plan. Opens Training History. */
 @Composable
-private fun LastWeekTile(lastWeek: LastWeek?) {
-    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+private fun LastWeekTile(lastWeek: LastWeek?, onOpen: () -> Unit) {
+    Card(onClick = onOpen, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
         Column(Modifier.padding(20.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(stringResource(R.string.tile_last_week), style = MaterialTheme.typography.titleMedium)
             if (lastWeek == null) {

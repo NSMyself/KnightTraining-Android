@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.navigation
 
+import com.knightindustries.knighttraining.feature.history.TrainingHistoryScreen
+import com.knightindustries.knighttraining.feature.history.TrainingHistoryViewModel
 import androidx.compose.foundation.layout.Box
 import com.knightindustries.knighttraining.designsystem.GradientBackground
 import androidx.compose.foundation.layout.Arrangement
@@ -189,9 +191,13 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                             onCreatePlan = { backStack.add(CreatePlanRoute(commit = true)) },
                             onPlanThisWeek = { backStack.add(PlanThisWeekRoute) },
                             onOpenSession = { backStack.openSession() },
+                            onOpenHistory = { backStack.add(TrainingHistoryRoute) },
                             contentPadding = padding,
                         )
                     }
+                }
+                entry<TrainingHistoryRoute> {
+                    TrainingHistoryScreen(viewModel = appViewModel { TrainingHistoryViewModel(it) }, onBack = { backStack.removeLastOrNull() })
                 }
                 entry<SessionRoute> {
                     SessionScreen(

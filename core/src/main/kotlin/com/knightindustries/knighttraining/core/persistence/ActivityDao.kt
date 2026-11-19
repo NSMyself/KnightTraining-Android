@@ -38,6 +38,16 @@ interface ActivityDao {
     @Query("SELECT COALESCE(SUM(duration), 0) FROM activity WHERE startedAt >= :start AND startedAt < :end")
     suspend fun totalDurationBetween(start: Instant, end: Instant): Long
 
+    /** Completed sessions' seconds by start time, `[start, end)`: Training History's "actual". */
+    @Query("SELECT COALESCE(SUM(duration), 0) FROM activity WHERE startedAt >= :start AND startedAt < :end AND endedAt IS NOT NULL")
+    suspend fun completedDurationBetween(start: Instant, end: Instant): Long
+
+    @Query("SELECT startedAt FROM activity WHERE endedAt IS NOT NULL")
+    suspend fun completedStartTimes(): List<Instant>
+
+    @Query("SELECT activityTypeId AS typeId, SUM(duration) AS seconds FROM activity WHERE endedAt IS NOT NULL GROUP BY activityTypeId")
+    suspend fun completedDurationByType(): List<TypeDuration>
+
     /**
      * The ongoing activity, if any. iOS picks an arbitrary one when several are ongoing (no
      * `ORDER BY`); this takes the most recently started.
@@ -65,3 +75,5 @@ interface ActivityDao {
     )
     suspend fun hasActivityOfType(code: String): Boolean
 }
+
+data class TypeDuration(val typeId: UUID, val seconds: Long)

@@ -1906,5 +1906,86 @@
   "nl": "Doeldetails",
   "pt-BR": "Detalhes do objetivo",
   "pt-PT": "Detalhes do objetivo"
+ },
+ "training_history": {
+  "de": "Trainingsverlauf",
+  "es": "Historial de entrenamiento",
+  "fr": "Historique d'entraînement",
+  "it": "Storico degli allenamenti",
+  "nl": "Trainingsgeschiedenis",
+  "pt-BR": "Histórico de treino",
+  "pt-PT": "Histórico de treino"
+ },
+ "weekly_report": {
+  "de": "Wochenbericht",
+  "es": "Informe semanal",
+  "fr": "Bilan hebdomadaire",
+  "it": "Resoconto settimanale",
+  "nl": "Weekrapport",
+  "pt-BR": "Relatório semanal",
+  "pt-PT": "Relatório semanal"
+ },
+ "daily_activity": {
+  "de": "Tägliche Aktivität",
+  "es": "Actividad diaria",
+  "fr": "Activité quotidienne",
+  "it": "Attività giornaliera",
+  "nl": "Dagelijkse activiteit",
+  "pt-BR": "Atividade diária",
+  "pt-PT": "Atividade diária"
+ },
+ "planned_value": {
+  "de": "Geplant: %1$s",
+  "es": "Planificado %1$s",
+  "fr": "Prévu : %1$s",
+  "it": "Pianificato: %1$s",
+  "nl": "Gepland %1$s",
+  "pt-BR": "Planejado %1$s",
+  "pt-PT": "Planeado %1$s"
+ },
+ "actual_value": {
+  "de": "Tatsächlich: %1$s",
+  "es": "Real %1$s",
+  "fr": "Réel : %1$s",
+  "it": "Effettivo: %1$s",
+  "nl": "Werkelijk %1$s",
+  "pt-BR": "Real %1$s",
+  "pt-PT": "Real %1$s"
+ },
+ "compliance": {
+  "de": "In %1$s der erfassten Wochen hast du deine geplante Zeit erreicht oder übertroffen.",
+  "es": "Igualaste o superaste tu tiempo planificado en el %1$s de las semanas registradas.",
+  "fr": "Tu as atteint ou dépassé ton temps prévu sur %1$s des semaines suivies.",
+  "it": "Hai raggiunto o superato il tempo pianificato nel %1$s delle settimane registrate.",
+  "nl": "Je haalde of versloeg je geplande tijd in %1$s van de bijgehouden weken.",
+  "pt-BR": "Você igualou ou superou o tempo planejado em %1$s das semanas registradas.",
+  "pt-PT": "Igualaste ou superaste o tempo planeado em %1$s das semanas registadas."
+ },
+ "compliance_nice": {
+  "de": "In %1$s der erfassten Wochen hast du deine geplante Zeit erreicht oder übertroffen. Schön beständig.",
+  "es": "Igualaste o superaste tu tiempo planificado en el %1$s de las semanas registradas. Buena constancia.",
+  "fr": "Tu as atteint ou dépassé ton temps prévu sur %1$s des semaines suivies. Belle régularité.",
+  "it": "Hai raggiunto o superato il tempo pianificato nel %1$s delle settimane registrate. Bella costanza.",
+  "nl": "Je haalde of versloeg je geplande tijd in %1$s van de bijgehouden weken. Mooi consequent.",
+  "pt-BR": "Você igualou ou superou o tempo planejado em %1$s das semanas registradas. Boa consistência.",
+  "pt-PT": "Igualaste ou superaste o tempo planeado em %1$s das semanas registadas. Boa consistência."
+ },
+ "compliance_exceptional": {
+  "de": "In %1$s der erfassten Wochen hast du deine geplante Zeit erreicht oder übertroffen. Außergewöhnlich beständig.",
+  "es": "Igualaste o superaste tu tiempo planificado en el %1$s de las semanas registradas. Constancia excepcional.",
+  "fr": "Tu as atteint ou dépassé ton temps prévu sur %1$s des semaines suivies. Une régularité exceptionnelle.",
+  "it": "Hai raggiunto o superato il tempo pianificato nel %1$s delle settimane registrate. Costanza eccezionale.",
+  "nl": "Je haalde of versloeg je geplande tijd in %1$s van de bijgehouden weken. Uitzonderlijk consequent.",
+  "pt-BR": "Você igualou ou superou o tempo planejado em %1$s das semanas registradas. Consistência excecional.",
+  "pt-PT": "Igualaste ou superaste o tempo planeado em %1$s das semanas registadas. Consistência excecional."
+ },
+ "back": {
+  "pt-PT": "Voltar",
+  "es": "Atrás",
+  "pt-BR": "Voltar",
+  "nl": "Terug",
+  "it": "Indietro",
+  "de": "Zurück",
+  "fr": "Retour"
  }
 }

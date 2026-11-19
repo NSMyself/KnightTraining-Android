@@ -49,3 +49,7 @@ data class ResourceDetailRoute(val resourceId: String) : Route
 /** Edit a saved plan. [templateId] is a UUID string. */
 @Serializable
 data class EditPlanRoute(val templateId: String) : Route
+
+/** Planned against actual, week by week, and the daily grid (iOS `TrainingHistoryScreen`). */
+@Serializable
+data object TrainingHistoryRoute : Route

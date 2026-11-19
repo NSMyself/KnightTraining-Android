@@ -20,7 +20,7 @@ Items 1–5 are mostly about that.
 | 4 | ~~Nothing animates: numbers, progress, state changes~~ Done 2026-11-19 | High | M |
 | 5 | ~~Timer controls and study card lack hierarchy~~ Done 2026-11-19 | High | S |
 | 6 | ~~Switching tabs throws away each tab's state~~ Done 2026-11-19 | High | S–M |
-| 7 | No Training History screen (chart + activity grid) | High | L |
+| 7 | ~~No Training History screen (chart + activity grid)~~ Done 2026-11-19 (from Home's tiles) | High | L |
 | 8 | ~~Tapping a goal on Home does nothing~~ Done 2026-11-19 (reminders still to come) | Medium–High | M |
 | 9 | ~~Onboarding has no artwork, motion or closing quote~~ Done 2026-11-19 | Medium | M |
 | 10 | ~~Flat backgrounds and neutral cards: brand glow missing~~ Done 2026-11-19 | Medium | S |
