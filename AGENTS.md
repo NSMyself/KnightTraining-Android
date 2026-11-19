@@ -104,6 +104,13 @@ scheme, surface-container ladder included.
 - Build extended FABs with `LabeledFab`: the `icon`/`text` overload left the label out of the
   semantics tree, so TalkBack read an unlabelled button.
 - Text outside a `Scaffold`/`Surface` defaults to black: wrap full-screen content in a `Surface`.
+- **Haptics and sounds go through `feedback/Feedback.kt`** (iOS `FeedbackService`, same event
+  names and rules: only deliberate taps, sound for accomplishments only, never from a timer tick).
+  Call sites use `rememberFeedback()` and name the moment, never a `HapticFeedbackType`. Sounds are
+  iOS's CAFs converted to WAV (`res/raw`), played on the sonification stream so silent mode mutes
+  them. "Goal completed" is heard from the app-wide weekly-surface observer
+  (`GoalCompletionSnapshot`); its "whole week" rule is the celebration's own (bonus goals don't
+  count), where iOS counts every goal.
 
 ## Build & test
 

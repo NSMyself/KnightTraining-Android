@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.home
 
+import com.knightindustries.knighttraining.feedback.FeedbackEvent
+import com.knightindustries.knighttraining.feedback.rememberFeedback
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -96,8 +98,12 @@ fun HomeScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var choosingStart by rememberSaveable { mutableStateOf(false) }
     var pendingStart by remember { mutableStateOf<SessionStart?>(null) }
+    val feedback = rememberFeedback()
     val startWithNotifications = rememberStartWithNotifications {
-        pendingStart?.let(viewModel::start)
+        pendingStart?.let {
+            viewModel.start(it)
+            feedback(FeedbackEvent.SessionStarted)
+        }
         pendingStart = null
         onOpenSession()
     }
@@ -129,7 +135,7 @@ fun HomeScreen(
         TrackLichessSheet(
             batch,
             onDismiss = { tracking = null },
-            onAdd = { duration, puzzles -> viewModel.acceptOffer(batch, duration, puzzles); tracking = null },
+            onAdd = { duration, puzzles -> viewModel.acceptOffer(batch, duration, puzzles); feedback(FeedbackEvent.LichessActivityTracked); tracking = null },
         )
     }
     if (addingMilestone || editingMilestone != null) {
@@ -182,7 +188,10 @@ fun HomeScreen(
                     layout,
                     TileData(current.surface, current.stats, current.lastWeek, milestones),
                     MilestoneActions(
-                        onToggle = viewModel::toggleMilestone,
+                        onToggle = { milestone ->
+                            if (milestone.completedAt == null) feedback(FeedbackEvent.MilestoneCompleted)
+                            viewModel.toggleMilestone(milestone)
+                        },
                         onAdd = { addingMilestone = true },
                         onEdit = { editingMilestone = it },
                         onDelete = { deletingMilestone = it },

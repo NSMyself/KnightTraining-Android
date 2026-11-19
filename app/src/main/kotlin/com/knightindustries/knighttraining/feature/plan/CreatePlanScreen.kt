@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.plan
 
+import com.knightindustries.knighttraining.feedback.FeedbackEvent
+import com.knightindustries.knighttraining.feedback.rememberFeedback
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -61,6 +63,7 @@ import com.knightindustries.knighttraining.ui.targetText
 fun CreatePlanScreen(viewModel: CreatePlanViewModel, onClose: () -> Unit, onSaved: () -> Unit) {
     val context = LocalContext.current
     val resources = LocalResources.current
+    val feedback = rememberFeedback()
     var editing by remember { mutableStateOf<DraftBlock?>(null) }
     var addingBlock by rememberSaveable { mutableStateOf(false) }
     var choosingPreset by rememberSaveable { mutableStateOf(false) }
@@ -84,7 +87,7 @@ fun CreatePlanScreen(viewModel: CreatePlanViewModel, onClose: () -> Unit, onSave
                             viewModel.save(
                                 untitledBase = resources.getString(R.string.untitled_plan),
                                 untitledNumbered = { resources.getString(R.string.untitled_plan_numbered, it) },
-                                onSaved = onSaved,
+                                onSaved = { feedback(FeedbackEvent.PlanSaved); onSaved() },
                             )
                         },
                     ) { Text(stringResource(R.string.save)) }

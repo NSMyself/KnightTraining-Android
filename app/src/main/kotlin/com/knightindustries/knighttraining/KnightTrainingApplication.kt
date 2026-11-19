@@ -11,7 +11,10 @@ import com.knightindustries.knighttraining.data.AppPreferences
 import com.knightindustries.knighttraining.session.SessionNotifier
 import com.knightindustries.knighttraining.session.SessionRepository
 import androidx.glance.appwidget.updateAll
+import com.knightindustries.knighttraining.core.store.GoalCompletionSnapshot
 import com.knightindustries.knighttraining.core.store.observeWeeklySurface
+import com.knightindustries.knighttraining.feedback.Feedback
+import com.knightindustries.knighttraining.feedback.FeedbackEvent
 import com.knightindustries.knighttraining.widget.WeekWidget
 import android.util.Log
 import com.knightindustries.knighttraining.core.lichess.LichessClient
@@ -43,10 +46,16 @@ class KnightTrainingApplication : Application() {
             container.preferences.firstLaunch()
             container.catalogSync.syncIfNeeded()
         }
-        // The widget redraws whenever the week changes, like iOS's widget writer off the same surface.
+        // The widget redraws whenever the week changes, like iOS's widget writer off the same
+        // surface. Every way a goal moves lands here too, so this is where a goal is heard
+        // crossing its target.
         container.appScope.launch {
             val firstLaunch = container.preferences.firstLaunch()
-            container.store.observeWeeklySurface(firstLaunch = firstLaunch).collect {
+            var lastCompletion: GoalCompletionSnapshot? = null
+            container.store.observeWeeklySurface(firstLaunch = firstLaunch).collect { surface ->
+                val completion = GoalCompletionSnapshot.of(surface)
+                if (GoalCompletionSnapshot.isMoment(lastCompletion, completion)) container.feedback.playSound(FeedbackEvent.GoalCompleted)
+                lastCompletion = completion
                 WeekWidget().updateAll(this@KnightTrainingApplication)
             }
         }
@@ -64,6 +73,9 @@ class AppContainer(application: Application) {
     val store = TrainingStore(database)
 
     val preferences = AppPreferences(application)
+
+    /** Haptics and sounds, and their two switches. */
+    val feedback = Feedback(application, preferences, appScope)
 
     /** The practice session in progress, if any, and its notification. */
     val sessions = SessionRepository(application, SessionNotifier(application))

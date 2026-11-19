@@ -1,6 +1,8 @@
 package com.knightindustries.knighttraining.feature.profile
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.ui.semantics.Role
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -90,6 +92,7 @@ data class ProfileStats(val tally: WeekCompletionTally, val currentStreak: Int, 
 class ProfileViewModel(private val container: AppContainer) : ViewModel() {
     var stats by mutableStateOf<ProfileStats?>(null)
         private set
+    val feedback = container.feedback
     val reminders: StateFlow<ReminderSchedule> = container.preferences.reminderSchedule
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ReminderSchedule.DEFAULT)
 
@@ -300,6 +303,32 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
                     }
                 }
             }
+
+            // Writes straight through, no save button, like reminders.
+            Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+                val sounds by viewModel.feedback.soundsEnabled.collectAsStateWithLifecycle()
+                val haptics by viewModel.feedback.hapticsEnabled.collectAsStateWithLifecycle()
+                ListItem(
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                    headlineContent = { Text(stringResource(R.string.sounds)) },
+                    supportingContent = { Text(stringResource(R.string.sounds_body)) },
+                    trailingContent = { Switch(checked = sounds, onCheckedChange = null) },
+                    modifier = Modifier.toggleable(value = sounds, role = Role.Switch, onValueChange = viewModel.feedback::setSoundsEnabled),
+                )
+                HorizontalDivider()
+                ListItem(
+                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                    headlineContent = { Text(stringResource(R.string.haptics)) },
+                    supportingContent = { Text(stringResource(R.string.haptics_body)) },
+                    trailingContent = { Switch(checked = haptics, onCheckedChange = null) },
+                    modifier = Modifier.toggleable(value = haptics, role = Role.Switch, onValueChange = viewModel.feedback::setHapticsEnabled),
+                )
+            }
+            Text(
+                stringResource(R.string.sounds_footer),
+                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
 
             Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
                 ListItem(

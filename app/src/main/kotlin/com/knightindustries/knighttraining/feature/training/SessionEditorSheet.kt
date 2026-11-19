@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.training
 
+import com.knightindustries.knighttraining.feedback.FeedbackEvent
+import com.knightindustries.knighttraining.feedback.rememberFeedback
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -101,6 +103,7 @@ fun SessionEditorSheet(
     var goalId by rememberSaveable { mutableStateOf(existing?.weeklyGoalId?.toString()) }
     var goalTouched by rememberSaveable { mutableStateOf(existing != null) }
     var confirmingDelete by rememberSaveable { mutableStateOf(false) }
+    val feedback = rememberFeedback()
 
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         Column(
@@ -174,6 +177,7 @@ fun SessionEditorSheet(
                 enabled = seconds != null,
                 onClick = {
                     val start = ZonedDateTime.of(day, LocalTime.of(time.hour, time.minute), calendar.zone).toInstant()
+                    feedback(FeedbackEvent.SessionSaved)
                     onSave(
                         SessionDraft(
                             activityTypeCode = current, startedAt = start, durationSeconds = seconds!!,

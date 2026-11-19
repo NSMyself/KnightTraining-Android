@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.session
 
+import com.knightindustries.knighttraining.feedback.FeedbackEvent
+import com.knightindustries.knighttraining.feedback.rememberFeedback
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
@@ -66,6 +68,7 @@ data class SessionStart(val attribution: Attribution, val availableGoalIds: List
 @Composable
 fun StartSessionSheet(openGoals: List<WeeklyGoal>, onDismiss: () -> Unit, onStart: (SessionStart) -> Unit) {
     val selected = remember { mutableStateListOf<UUID>() }
+    val feedback = rememberFeedback()
     var choosingOther by rememberSaveable { mutableStateOf(false) }
 
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
@@ -87,7 +90,10 @@ fun StartSessionSheet(openGoals: List<WeeklyGoal>, onDismiss: () -> Unit, onStar
                         headlineContent = { Text(goalTitle(goal)) },
                         supportingContent = { Text(progressText(goal)) },
                         trailingContent = { Checkbox(checked = checked, onCheckedChange = null) },
-                        modifier = Modifier.toggleable(checked, role = Role.Checkbox) { if (it) selected.add(goal.id) else selected.remove(goal.id) },
+                        modifier = Modifier.toggleable(checked, role = Role.Checkbox) {
+                            feedback(FeedbackEvent.SelectionChanged)
+                            if (it) selected.add(goal.id) else selected.remove(goal.id)
+                        },
                     )
                 }
                 Button(

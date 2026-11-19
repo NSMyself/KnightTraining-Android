@@ -324,6 +324,11 @@
     <string name="reminder_days">Giorni</string>
     <string name="reminder_time">Tempo</string>
     <string name="reminder_no_days">Nessun giorno scelto: non riceverai promemoria.</string>
+    <string name="sounds">Suoni</string>
+    <string name="sounds_body">Quando raggiungi un obiettivo o completi la settimana</string>
+    <string name="haptics">Feedback aptico</string>
+    <string name="haptics_body">Un tocco leggero quando inizi, metti in pausa o salvi</string>
+    <string name="sounds_footer">I suoni si sentono insieme alla tua musica o ai tuoi video e restano muti quando il telefono è in modalità silenziosa.</string>
     <string name="replay_intro">Rivedi l\'introduzione</string>
     <string name="delete_all_data">Elimina tutti i dati</string>
     <string name="delete_all_title">Eliminare tutti i tuoi dati?</string>

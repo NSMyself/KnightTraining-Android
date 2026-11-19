@@ -324,6 +324,11 @@
     <string name="reminder_days">Dias</string>
     <string name="reminder_time">Tempo</string>
     <string name="reminder_no_days">Nenhum dia escolhido: não vais receber lembretes.</string>
+    <string name="sounds">Sons</string>
+    <string name="sounds_body">Quando atinges um objetivo ou acabas a semana</string>
+    <string name="haptics">Feedback tátil</string>
+    <string name="haptics_body">Um toque leve ao começar, pausar ou guardar</string>
+    <string name="sounds_footer">Os sons tocam juntamente com a tua música ou os teus vídeos e não se ouvem quando o telemóvel está em silêncio.</string>
     <string name="replay_intro">Ver a introdução outra vez</string>
     <string name="delete_all_data">Apagar todos os dados</string>
     <string name="delete_all_title">Apagar todos os teus dados?</string>

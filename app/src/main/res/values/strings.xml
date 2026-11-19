@@ -360,6 +360,11 @@
     <string name="reminder_days">Days</string>
     <string name="reminder_time">Time</string>
     <string name="reminder_no_days">No days selected: no reminders will arrive.</string>
+    <string name="sounds">Sounds</string>
+    <string name="sounds_body">When you reach a goal or finish the week</string>
+    <string name="haptics">Haptics</string>
+    <string name="haptics_body">A light tap when you start, pause or save</string>
+    <string name="sounds_footer">Sounds play alongside your music or videos and stay quiet when your phone is on silent.</string>
     <string name="replay_intro">Replay the intro</string>
     <string name="delete_all_data">Delete all data</string>
     <string name="delete_all_title">Delete all your data?</string>

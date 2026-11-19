@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.home
 
+import com.knightindustries.knighttraining.feedback.FeedbackEvent
+import com.knightindustries.knighttraining.feedback.rememberFeedback
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,8 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -53,14 +53,14 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun EditHomeSheet(layout: HomeLayout, onChange: (HomeLayout) -> Unit, onReset: () -> Unit, onDismiss: () -> Unit) {
     // A local copy while dragging, so the list doesn't wait on DataStore between frames.
     var tiles by remember(layout) { mutableStateOf(layout.tiles) }
-    val haptics = LocalHapticFeedback.current
+    val feedback = rememberFeedback()
     val listState = rememberLazyListState()
     val reorderState = rememberReorderableLazyListState(listState) { from, to ->
         val fromIndex = tiles.indexOfFirst { it.id == from.key }
         val toIndex = tiles.indexOfFirst { it.id == to.key }
         if (fromIndex >= 0 && toIndex >= 0) {
             tiles = tiles.toMutableList().apply { add(toIndex, removeAt(fromIndex)) }
-            haptics.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
+            feedback(FeedbackEvent.HomeTileSlotChanged)
         }
     }
 
@@ -108,7 +108,7 @@ fun EditHomeSheet(layout: HomeLayout, onChange: (HomeLayout) -> Unit, onReset: (
                                 IconButton(
                                     onClick = {},
                                     modifier = Modifier.draggableHandle(
-                                        onDragStarted = { haptics.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate) },
+                                        onDragStarted = { feedback(FeedbackEvent.HomeTileLifted) },
                                         onDragStopped = { onChange(HomeLayout(tiles)) },
                                     ),
                                 ) { Icon(Icons.Rounded.DragHandle, contentDescription = stringResource(R.string.home_reorder_tile, title)) }

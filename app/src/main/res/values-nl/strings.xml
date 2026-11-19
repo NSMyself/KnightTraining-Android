@@ -317,6 +317,11 @@
     <string name="reminder_days">Dagen</string>
     <string name="reminder_time">Tijd</string>
     <string name="reminder_no_days">Geen dagen gekozen: je krijgt geen herinneringen.</string>
+    <string name="sounds">Geluiden</string>
+    <string name="sounds_body">Als je een doel haalt of de week afrondt</string>
+    <string name="haptics">Haptische feedback</string>
+    <string name="haptics_body">Een lichte tik als je start, pauzeert of opslaat</string>
+    <string name="sounds_footer">Geluiden spelen mee met je muziek of video\'s en blijven stil als je telefoon op stil staat.</string>
     <string name="replay_intro">Intro opnieuw bekijken</string>
     <string name="delete_all_data">Alle gegevens verwijderen</string>
     <string name="delete_all_title">Al je gegevens verwijderen?</string>

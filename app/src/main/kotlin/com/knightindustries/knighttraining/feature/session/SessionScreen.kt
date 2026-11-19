@@ -77,6 +77,8 @@ import com.knightindustries.knighttraining.core.session.PracticeSession
 import com.knightindustries.knighttraining.core.session.PracticeSession.Attribution
 import com.knightindustries.knighttraining.core.session.PracticeSession.GoalCredit
 import com.knightindustries.knighttraining.feature.plan.ActivityGrid
+import com.knightindustries.knighttraining.feedback.FeedbackEvent
+import com.knightindustries.knighttraining.feedback.rememberFeedback
 import com.knightindustries.knighttraining.feature.resources.ResourcePickerField
 import com.knightindustries.knighttraining.feature.plan.TimeControlPicker
 import com.knightindustries.knighttraining.ui.activityIcon
@@ -161,6 +163,7 @@ private fun TimerContent(session: PracticeSession, viewModel: SessionViewModel) 
     var changing by rememberSaveable { mutableStateOf(false) }
     var pendingChange by remember { mutableStateOf<Attribution?>(null) }
     val code = session.attribution.activityTypeCode
+    val feedback = rememberFeedback()
 
     Column(
         Modifier.fillMaxSize().padding(24.dp),
@@ -185,11 +188,19 @@ private fun TimerContent(session: PracticeSession, viewModel: SessionViewModel) 
 
         Spacer(Modifier.height(16.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            FilledTonalButton(onClick = { if (session.isPaused) viewModel.resume() else viewModel.pause() }) {
+            FilledTonalButton(onClick = {
+                if (session.isPaused) {
+                    feedback(FeedbackEvent.SessionResumed)
+                    viewModel.resume()
+                } else {
+                    feedback(FeedbackEvent.SessionPaused)
+                    viewModel.pause()
+                }
+            }) {
                 Icon(if (session.isPaused) Icons.Rounded.PlayArrow else Icons.Rounded.Pause, contentDescription = null)
                 Text(stringResource(if (session.isPaused) R.string.resume else R.string.pause), modifier = Modifier.padding(start = 8.dp))
             }
-            Button(onClick = viewModel::stop) {
+            Button(onClick = { feedback(FeedbackEvent.SessionStopped); viewModel.stop() }) {
                 Icon(Icons.Rounded.Stop, contentDescription = null)
                 Text(stringResource(R.string.stop), modifier = Modifier.padding(start = 8.dp))
             }
@@ -211,8 +222,12 @@ private fun TimerContent(session: PracticeSession, viewModel: SessionViewModel) 
                 // now: how many, for a countable activity, and which goal, when several fit.
                 val needsCount = code != null && ActivityType.hasQuantityUnit(code)
                 val candidates = viewModel.outgoingCandidates()
-                if (needsCount || candidates.size > 1) pendingChange = target
-                else viewModel.change(target, null, candidates.singleOrNull()?.id)
+                if (needsCount || candidates.size > 1) {
+                    pendingChange = target
+                } else {
+                    feedback(FeedbackEvent.ActivityChanged)
+                    viewModel.change(target, null, candidates.singleOrNull()?.id)
+                }
             },
         )
     }
@@ -221,7 +236,7 @@ private fun TimerContent(session: PracticeSession, viewModel: SessionViewModel) 
             activityName = activityName(code ?: ActivityType.GENERAL),
             asksCount = code != null && ActivityType.hasQuantityUnit(code),
             candidates = viewModel.outgoingCandidates(),
-            onDone = { count, goalId -> viewModel.change(target, count, goalId); pendingChange = null },
+            onDone = { count, goalId -> feedback(FeedbackEvent.ActivityChanged); viewModel.change(target, count, goalId); pendingChange = null },
             onDismiss = { pendingChange = null },
         )
     }
@@ -334,10 +349,11 @@ private fun CountField(value: String, onChange: (String) -> Unit) {
 /** A quick-start session: say what it was, or log it as general practice. */
 @Composable
 private fun CategorizeContent(viewModel: SessionViewModel) {
+    val feedback = rememberFeedback()
     Column(Modifier.verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(stringResource(R.string.what_did_you_train), style = MaterialTheme.typography.headlineSmall)
         ActivityGrid(onPick = viewModel::categorize)
-        TextButton(onClick = { viewModel.save(null, null, null, emptyList()) }, modifier = Modifier.fillMaxWidth()) {
+        TextButton(onClick = { feedback(FeedbackEvent.SessionSaved); viewModel.save(null, null, null, emptyList()) }, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.skip_categorize))
         }
     }
@@ -356,6 +372,7 @@ private fun ReviewContent(session: PracticeSession, code: String, viewModel: Ses
     val topics = remember { mutableStateListOf<CoachingTopic>() }
     var editingDuration by rememberSaveable { mutableStateOf(false) }
     var confirmingDiscard by rememberSaveable { mutableStateOf(false) }
+    val feedback = rememberFeedback()
 
     Column(Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(stringResource(R.string.session_complete), style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(horizontal = 8.dp))
@@ -399,7 +416,10 @@ private fun ReviewContent(session: PracticeSession, code: String, viewModel: Ses
         }
 
         Button(
-            onClick = { viewModel.save(code, count.toIntOrNull(), timeControl, topics.toList()) },
+            onClick = {
+                feedback(FeedbackEvent.SessionSaved)
+                viewModel.save(code, count.toIntOrNull(), timeControl, topics.toList())
+            },
             modifier = Modifier.fillMaxWidth(),
         ) { Text(stringResource(R.string.save)) }
         TextButton(

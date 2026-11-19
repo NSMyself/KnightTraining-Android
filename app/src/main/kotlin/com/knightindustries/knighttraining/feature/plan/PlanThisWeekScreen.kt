@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.plan
 
+import com.knightindustries.knighttraining.feedback.FeedbackEvent
+import com.knightindustries.knighttraining.feedback.rememberFeedback
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -86,6 +88,7 @@ class PlanThisWeekViewModel(private val container: AppContainer) : ViewModel() {
 @Composable
 fun PlanThisWeekScreen(viewModel: PlanThisWeekViewModel, onBack: () -> Unit, onCreatePlan: () -> Unit, onCommitted: () -> Unit) {
     val templates by viewModel.templates.collectAsStateWithLifecycle()
+    val feedback = rememberFeedback()
 
     Scaffold(
         topBar = {
@@ -100,7 +103,7 @@ fun PlanThisWeekScreen(viewModel: PlanThisWeekViewModel, onBack: () -> Unit, onC
         bottomBar = {
             Button(
                 enabled = viewModel.selectedId != null && !viewModel.isCommitting,
-                onClick = { viewModel.commit(onCommitted) },
+                onClick = { viewModel.commit { feedback(FeedbackEvent.PlanSaved); onCommitted() } },
                 modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(16.dp),
             ) { Text(stringResource(R.string.commit_plan)) }
         },

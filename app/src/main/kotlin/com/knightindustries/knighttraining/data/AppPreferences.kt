@@ -119,6 +119,23 @@ class AppPreferences(private val context: Context) {
         }
     }
 
+    private val soundsEnabledKey = booleanPreferencesKey("feedback_sounds_enabled")
+    private val hapticsEnabledKey = booleanPreferencesKey("feedback_haptics_enabled")
+
+    /** On by default. The ringer's silent mode still mutes them on top of this. */
+    val soundsEnabled: Flow<Boolean> = context.dataStore.data.map { it[soundsEnabledKey] ?: true }
+
+    suspend fun setSoundsEnabled(on: Boolean) {
+        context.dataStore.edit { it[soundsEnabledKey] = on }
+    }
+
+    /** On by default. The system's touch-feedback switch still applies on top of this one. */
+    val hapticsEnabled: Flow<Boolean> = context.dataStore.data.map { it[hapticsEnabledKey] ?: true }
+
+    suspend fun setHapticsEnabled(on: Boolean) {
+        context.dataStore.edit { it[hapticsEnabledKey] = on }
+    }
+
     /** Set at the end of onboarding, not the start, so quitting halfway shows it again. */
     val hasCompletedOnboarding: Flow<Boolean> = context.dataStore.data.map { it[onboardingDoneKey] ?: false }
 
