@@ -550,7 +550,6 @@
     <string name="share_include_up_next">Include resources not started yet</string>
     <string name="share_studies_note">Lichess studies appear once you\'ve started them.</string>
     <string name="share_failed">Couldn\'t load this.</string>
-    <string name="rating_chart_caption">Bars: time studied each week. Line: your rating at the end of it.</string>
 
     <!-- Weekly coach -->
     <string name="review_preparing_tip">Preparing a tip for next week…</string>
@@ -608,4 +607,7 @@
     <string name="stat_training_streak">Training streak</string>
     <string name="stat_choose_title">Choose a stat</string>
     <string name="stat_choose_hint_tap">Tap to choose a stat</string>
+    <string name="chart_hours">Hours</string>
+    <string name="chart_no_training">No training logged yet</string>
+    <string name="chart_no_training_body">Log a session to see your hours and rating here.</string>
 </resources>

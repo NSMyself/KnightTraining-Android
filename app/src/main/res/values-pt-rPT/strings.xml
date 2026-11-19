@@ -505,7 +505,6 @@
     <string name="share_include_up_next">Incluir recursos por começar</string>
     <string name="share_studies_note">Os estudos do Lichess aparecem assim que os começares.</string>
     <string name="share_failed">Não foi possível carregar.</string>
-    <string name="rating_chart_caption">Barras: tempo de estudo em cada semana. Linha: a tua classificação no fim dela.</string>
     <string name="review_preparing_tip">A preparar uma dica para a próxima semana…</string>
     <string name="review_tip_title">Dica do treinador para a próxima semana</string>
     <string name="review_tip_focus">Foco para a próxima semana</string>
@@ -561,4 +560,7 @@
     <string name="stat_training_streak">Sequência de treino</string>
     <string name="stat_choose_title">Escolhe uma estatística</string>
     <string name="stat_choose_hint_tap">Toca para escolher uma estatística</string>
+    <string name="chart_hours">Horas</string>
+    <string name="chart_no_training">Ainda sem treinos registados</string>
+    <string name="chart_no_training_body">Regista uma sessão para veres as tuas horas e classificação aqui.</string>
 </resources>

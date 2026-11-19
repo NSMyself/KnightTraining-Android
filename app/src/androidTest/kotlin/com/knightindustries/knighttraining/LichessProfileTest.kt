@@ -1,5 +1,8 @@
 package com.knightindustries.knighttraining
 
+import com.knightindustries.knighttraining.core.store.saveActivity
+import com.knightindustries.knighttraining.core.model.Activity
+import androidx.compose.ui.test.hasContentDescription
 import android.Manifest
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
@@ -95,10 +98,21 @@ class LichessProfileTest {
 
         compose.waitUntilAtLeastOneExists(hasText("FM Tester"), 5_000)
         compose.waitUntilAtLeastOneExists(hasText("${text(R.string.rating_rapid)} 1810"), 5_000)
-        // The chart follows rapid first; picking puzzles switches it.
-        compose.waitUntilAtLeastOneExists(hasText(text(R.string.rating_chart_caption)), 5_000)
+        // The chart follows rapid first; picking puzzles switches it. With nothing logged, it's
+        // the rating alone (iOS `RatingOnlyChart`), no hours legend.
+        compose.waitUntilAtLeastOneExists(hasContentDescription("1810", substring = true), 5_000)
+        compose.onNodeWithText(text(R.string.chart_hours)).assertDoesNotExist()
         compose.onNodeWithText("${text(R.string.rating_puzzle)} 2050").performScrollTo().performClick()
-        compose.waitUntilAtLeastOneExists(hasText(text(R.string.rating_chart_caption)), 5_000)
+        compose.waitUntilAtLeastOneExists(hasContentDescription("2050", substring = true), 5_000)
+
+        // Time logged this week brings the hours bars and their legend.
+        runBlocking {
+            val start = Instant.now().minusSeconds(3600)
+            container.store.saveActivity(Activity(activityType = container.store.activityType("puzzles")!!, startedAt = start, endedAt = start.plusSeconds(1800), duration = 1800))
+        }
+        compose.onNodeWithText("${text(R.string.rating_rapid)} 1810").performScrollTo().performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.chart_hours)), 5_000)
+        compose.mainClock.advanceTimeBy(2_000)
         screenshot("41_lichess_connected")
 
         compose.onNode(hasText(text(R.string.lichess_disconnect)) and hasClickAction()).performScrollTo().performClick()

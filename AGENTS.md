@@ -213,6 +213,12 @@ maintainer confirms how interactions *feel* on a device themselves.
      `LichessStreakDetectionTest` (core), plus `LichessProfileTest` and `LichessHomeTest`
      (instrumented).
 
+   Profile's chart is iOS's `EloHistoryChart` (`feature/profile/RatingChart.kt`): hours as bars,
+   planned hours dashed, the rating in gold in its own band with its latest value on the axis,
+   leading empty weeks trimmed, a staged reveal; a rating-only line when nothing was ever logged
+   or planned, and a note when there's nothing at all. Profile also shows the daily grid when its
+   window has any training.
+
    Studies sync and Profile's rating chart followed: new studies join the library, matched by
    study id (`LichessSyncTest`), and each Profile rating chip picks the rating the 4-week chart
    draws over time studied (`LichessProfileTest`). "Delete all data" also signs out of Lichess.

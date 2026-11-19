@@ -490,7 +490,6 @@
     <string name="share_include_up_next">Noch nicht begonnene Ressourcen mitschicken</string>
     <string name="share_studies_note">Lichess-Studien erscheinen, sobald du sie begonnen hast.</string>
     <string name="share_failed">Konnte nicht geladen werden.</string>
-    <string name="rating_chart_caption">Balken: Lernzeit pro Woche. Linie: deine Wertungszahl am Ende der Woche.</string>
     <string name="review_preparing_tip">Tipp für nächste Woche wird vorbereitet …</string>
     <string name="review_tip_title">Trainertipp für nächste Woche</string>
     <string name="review_tip_focus">Schwerpunkt für nächste Woche</string>
@@ -546,4 +545,7 @@
     <string name="stat_training_streak">Trainingsserie</string>
     <string name="stat_choose_title">Wähle eine Statistik</string>
     <string name="stat_choose_hint_tap">Tippe, um eine Statistik zu wählen</string>
+    <string name="chart_hours">Stunden</string>
+    <string name="chart_no_training">Noch kein Training erfasst</string>
+    <string name="chart_no_training_body">Erfasse eine Einheit, um hier deine Stunden und Wertungszahl zu sehen.</string>
 </resources>

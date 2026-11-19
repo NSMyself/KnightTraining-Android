@@ -490,7 +490,6 @@
     <string name="share_include_up_next">Nog niet begonnen bronnen meesturen</string>
     <string name="share_studies_note">Lichess-studies verschijnen zodra je eraan begonnen bent.</string>
     <string name="share_failed">Kon niet worden geladen.</string>
-    <string name="rating_chart_caption">Balken: studietijd per week. Lijn: je rating aan het eind ervan.</string>
     <string name="review_preparing_tip">Tip voor volgende week wordt voorbereid…</string>
     <string name="review_tip_title">Tip van de trainer voor volgende week</string>
     <string name="review_tip_focus">Focus voor volgende week</string>
@@ -546,4 +545,7 @@
     <string name="stat_training_streak">Trainingsreeks</string>
     <string name="stat_choose_title">Kies een statistiek</string>
     <string name="stat_choose_hint_tap">Tik om een statistiek te kiezen</string>
+    <string name="chart_hours">Uren</string>
+    <string name="chart_no_training">Nog geen training geregistreerd</string>
+    <string name="chart_no_training_body">Registreer een sessie om hier je uren en rating te zien.</string>
 </resources>

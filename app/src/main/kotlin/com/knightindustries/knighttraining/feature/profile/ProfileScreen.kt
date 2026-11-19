@@ -73,6 +73,11 @@ import com.knightindustries.knighttraining.core.store.observeLichessProfile
 import com.knightindustries.knighttraining.core.store.totalDuration
 import com.knightindustries.knighttraining.core.store.weekCompletionTally
 import com.knightindustries.knighttraining.core.store.weeklyEloHistory
+import java.time.LocalDate
+import com.knightindustries.knighttraining.core.store.weeklyEffortHistory
+import com.knightindustries.knighttraining.core.store.dailyDurationTotals
+import com.knightindustries.knighttraining.feature.history.ActivityGrid
+import com.knightindustries.knighttraining.feature.history.TrainingHistory
 import com.knightindustries.knighttraining.feature.home.EditHomeSheet
 import com.knightindustries.knighttraining.feature.home.HomeLayout
 import com.knightindustries.knighttraining.lichess.LichessAuth
@@ -94,6 +99,12 @@ data class ProfileStats(val tally: WeekCompletionTally, val currentStreak: Int, 
 class ProfileViewModel(private val container: AppContainer) : ViewModel() {
     var stats by mutableStateOf<ProfileStats?>(null)
         private set
+
+    /** The daily grid's 36 days (iOS's Profile grid); empty until loaded. */
+    var dailySeconds by mutableStateOf<Map<LocalDate, Int>>(emptyMap())
+        private set
+    var today: LocalDate = LocalDate.now()
+        private set
     val feedback = container.feedback
     val reminders: StateFlow<ReminderSchedule> = container.preferences.reminderSchedule
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ReminderSchedule.DEFAULT)
@@ -109,6 +120,8 @@ class ProfileViewModel(private val container: AppContainer) : ViewModel() {
                 totalSeconds = store.totalDuration(),
                 resourcesFinished = store.finishedResourceCount(),
             )
+            today = WeekCalendar.system().localDate(java.time.Instant.now())
+            dailySeconds = store.dailyDurationTotals(days = TrainingHistory.GRID_DAYS)
         }
     }
 
@@ -148,10 +161,9 @@ class ProfileViewModel(private val container: AppContainer) : ViewModel() {
             val store = container.store
             val account = store.lichessAccount() ?: run { chart = emptyList(); return@launch }
             val calendar = WeekCalendar.system()
-            val ratings = store.weeklyEloHistory(account.id, chartRatingType, weeks = CHART_WEEKS)
-            chart = ratings.map { week ->
-                val seconds = store.totalDuration(calendar.startOf(week.weekStart), calendar.startOf(week.weekStart.plusDays(7)))
-                RatingChartPoint(week.weekStart, seconds, week.rating)
+            val ratings = store.weeklyEloHistory(account.id, chartRatingType, weeks = CHART_WEEKS).associate { it.weekStart to it.rating }
+            chart = store.weeklyEffortHistory(weeks = CHART_WEEKS, calendar = calendar).map { week ->
+                RatingChartPoint(week.weekStart, week.actualSeconds, week.plannedSeconds, ratings[week.weekStart])
             }
         }
     }
@@ -249,6 +261,12 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
                     Stat(stringResource(R.string.longest_streak), pluralStringResource(R.plurals.weeks_count, stats.longestStreak, stats.longestStreak), Modifier.weight(1f))
                     Stat(stringResource(R.string.resources_finished), stats.resourcesFinished.toString(), Modifier.weight(1f))
                 }
+            }
+
+            // Hidden with nothing in its window: an empty grid says nothing the stats don't (iOS).
+            if (viewModel.dailySeconds.values.any { it > 0 }) {
+                Text(stringResource(R.string.daily_activity), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+                ActivityGrid(viewModel.dailySeconds, viewModel.today)
             }
 
             LichessCard(
@@ -452,11 +470,7 @@ private fun LichessCard(
                             )
                         }
                     }
-                    if (chart.any { it.rating != null || it.seconds > 0 }) {
-                        RatingChart(chart, Modifier.padding(16.dp))
-                    } else {
-                        Spacer(Modifier.height(16.dp))
-                    }
+                    RatingChart(chart, Modifier.padding(16.dp))
                 }
             }
             else -> ListItem(
