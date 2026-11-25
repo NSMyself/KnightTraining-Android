@@ -217,7 +217,7 @@ fun HomeScreen(
                 LabeledFab(Icons.Rounded.PlayArrow, stringResource(if (session != null) R.string.session_in_progress else R.string.start_session), onStartSession)
             }
         },
-        // The tab's glow (`GradientBackground`) is drawn behind it.
+        // The tab's background is drawn behind it.
         containerColor = Color.Transparent,
     ) { padding ->
         when (val current = state) {

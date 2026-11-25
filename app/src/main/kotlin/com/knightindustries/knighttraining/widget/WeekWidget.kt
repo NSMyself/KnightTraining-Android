@@ -174,7 +174,7 @@ private fun GoalLine(context: Context, goal: WeeklyGoal) {
 @Composable
 private fun Ring(context: Context, sizeDp: Int, done: Int, total: Int) {
     val density = context.resources.displayMetrics.density
-    val bitmap = WidgetStyle.ring((sizeDp * density).toInt(), 8 * density * sizeDp / 66f, if (total > 0) done.toFloat() / total else 0f)
+    val bitmap = WidgetStyle.ring((sizeDp * density).toInt(), 8 * density * sizeDp / 66f, if (total > 0) done.toFloat() / total else 0f, WidgetStyle.palette(context))
     Image(ImageProvider(bitmap), contentDescription = context.getString(R.string.goals_fraction, done, total), modifier = GlanceModifier.size(sizeDp.dp))
 }
 

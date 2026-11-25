@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.resources
 
+import com.knightindustries.knighttraining.designsystem.LightPalette
+import com.knightindustries.knighttraining.designsystem.Palette
 import com.knightindustries.knighttraining.designsystem.Theme
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.background
@@ -95,9 +97,12 @@ fun ResourceDetailScreen(viewModel: ResourceDetailViewModel, onBack: () -> Unit)
     LaunchedEffect(viewModel.isDeleted) { if (viewModel.isDeleted) onBack() }
 
     // The cover's color washes the screen (iOS `CoverWashBackdrop`); brand purple without one.
-    var accent by remember { mutableStateOf(Theme.accent) }
+    val palette = Palette.current
+    var accent by remember { mutableStateOf(palette.accent) }
     LaunchedEffect(resource?.imageUrl) { coverAccent(context, resource?.imageUrl)?.let { accent = it } }
-    val wash by animateColorAsState(lerp(accent, Color.Black, 0.62f), tween(500), label = "wash")
+    // iOS `CoverWash`: toward black in dark mode, toward the cream background in light.
+    val washTarget = if (palette.isDark) lerp(accent, Color.Black, 0.62f) else lerp(accent, LightPalette.background, 0.86f)
+    val wash by animateColorAsState(washTarget, tween(500), label = "wash")
 
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
     CoverWash(resource?.imageUrl, wash)

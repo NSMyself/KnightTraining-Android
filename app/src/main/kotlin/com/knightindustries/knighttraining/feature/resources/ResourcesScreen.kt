@@ -134,7 +134,7 @@ fun ResourcesScreen(viewModel: ResourcesViewModel, onOpen: (UUID) -> Unit, onAdd
             )
         },
         floatingActionButton = { LabeledFab(Icons.Rounded.Add, stringResource(R.string.add_resource), onAdd) },
-        // The tab's glow (`GradientBackground`) is drawn behind it.
+        // The tab's background is drawn behind it.
         containerColor = Color.Transparent,
     ) { padding ->
         LazyColumn(Modifier.padding(top = padding.calculateTopPadding()), state = listState, contentPadding = PaddingValues(bottom = 96.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {

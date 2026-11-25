@@ -254,7 +254,7 @@ fun ProfileScreen(viewModel: ProfileViewModel, onRequestNotifications: (() -> Un
                 colors = glowTopAppBarColors(),
             )
         },
-        // The tab's glow (`GradientBackground`) is drawn behind it.
+        // The tab's background is drawn behind it.
         containerColor = Color.Transparent,
     ) { padding ->
         Column(Modifier.padding(padding).verticalScroll(scrollState).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {

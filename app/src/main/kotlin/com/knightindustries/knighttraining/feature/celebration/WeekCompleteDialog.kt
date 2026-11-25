@@ -39,7 +39,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.R
 import com.knightindustries.knighttraining.core.store.WeeklyPlanCompleted
-import com.knightindustries.knighttraining.designsystem.Theme
+import com.knightindustries.knighttraining.designsystem.Palette
 import com.knightindustries.knighttraining.feedback.WeekCompleteSequence
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -55,7 +55,7 @@ fun WeekCompleteDialog(event: WeeklyPlanCompleted, onDismiss: () -> Unit) {
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
         // A brand color isn't in the scheme, so the content color is named, or a dialog's window
         // falls back to black text.
-        Surface(Modifier.fillMaxSize(), color = Theme.gradientBase, contentColor = MaterialTheme.colorScheme.onSurface) {
+        Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.onSurface) {
             val context = LocalContext.current
             var showsConfetti by remember { mutableStateOf(false) }
             val trophy = remember { Animatable(0f) }
@@ -81,7 +81,7 @@ fun WeekCompleteDialog(event: WeeklyPlanCompleted, onDismiss: () -> Unit) {
                     Icon(
                         Icons.Rounded.EmojiEvents,
                         contentDescription = null,
-                        tint = Theme.ratingGold,
+                        tint = Palette.rating,
                         modifier = Modifier.size(80.dp).graphicsLayer {
                             scaleX = trophy.value
                             scaleY = trophy.value

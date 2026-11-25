@@ -137,7 +137,7 @@ private fun Empty(text: String) {
 private fun Hero(value: String, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(value, style = TextStyle(color = GlanceTheme.colors.onBackground, fontSize = 40.sp, fontWeight = FontWeight.Bold), maxLines = 1)
-        Text(label, style = TextStyle(color = ColorProvider(WidgetStyle.statLabel), fontSize = 13.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), maxLines = 2)
+        Text(label, style = TextStyle(color = GlanceTheme.colors.onSurfaceVariant, fontSize = 13.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center), maxLines = 2)
     }
 }
 

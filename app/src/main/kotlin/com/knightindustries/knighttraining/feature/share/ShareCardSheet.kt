@@ -1,5 +1,8 @@
 package com.knightindustries.knighttraining.feature.share
 
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.runtime.CompositionLocalProvider
+import com.knightindustries.knighttraining.designsystem.KnightTrainingTheme
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -90,7 +93,13 @@ fun ShareCardSheet(
                                 layer.record { this@drawWithContent.drawContent() }
                                 drawLayer(layer)
                             },
-                        ) { card() }
+                        ) {
+                            // The image is pinned dark (navy and cream, like iOS's) so a shared
+                            // card never depends on the sender's setting; the sheet follows it.
+                            KnightTrainingTheme(darkTheme = true) {
+                                CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) { card() }
+                            }
+                        }
                     }
                     Button(
                         onClick = { scope.launch { share(context, layer.toImageBitmap().asAndroidBitmap()) } },

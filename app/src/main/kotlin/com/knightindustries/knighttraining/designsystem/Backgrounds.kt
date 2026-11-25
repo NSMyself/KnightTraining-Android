@@ -41,31 +41,30 @@ import kotlin.math.tan
 import kotlin.random.Random
 
 /**
- * The app's purple-glow background (iOS `NewBackgroundView`, dark): a near-black radial base with
- * a lighter glow upper-left and a deeper one lower-right.
+ * The brand glow (iOS `NewBackgroundView`, recolored to the app icon on 2026-11-24): the background
+ * with a soft blue glow upper-left and a violet one lower-right. Light mode uses the same layout on
+ * cream, much fainter: there a strong glow turns into a muddy patch.
  */
 @Composable
 fun GradientBackground(modifier: Modifier = Modifier) {
+    val palette = Palette.current
+    val glows = listOf(GlowColors.blue() to Offset(0.12f, 0.33f), GlowColors.violet() to Offset(0.90f, 0.65f))
+    val peak = if (palette.isDark) 0.55f else 0.16f
     Canvas(modifier.fillMaxSize()) {
-        drawRect(
-            Brush.radialGradient(
-                listOf(Theme.gradientBase, Color(0xFF141319)),
-                center = center,
-                radius = max(size.width, size.height) * 0.75f,
-            ),
-        )
-        // Peak 0.7, not the full color: on the near-black base it keeps the blooms soft.
+        drawRect(palette.background)
         val radius = size.width * 0.6f
-        for ((color, at) in listOf(Theme.MeshBlob.purple to Offset(0.12f, 0.33f), Color(0xFF5516BE) to Offset(0.90f, 0.65f))) {
+        for ((color, at) in glows) {
             val glowCenter = Offset(size.width * at.x, size.height * at.y)
-            drawCircle(Brush.radialGradient(listOf(color.copy(alpha = 0.7f), color.copy(alpha = 0f)), glowCenter, radius), radius, glowCenter)
+            drawCircle(Brush.radialGradient(listOf(color.copy(alpha = peak), color.copy(alpha = 0f)), glowCenter, radius), radius, glowCenter)
         }
     }
 }
 
 /**
- * The practice timer's drifting blobs (iOS `AnimatedMeshGradient`): four soft color fields that
- * wander, pulse and change shape, blurred and added onto what's behind them.
+ * The practice timer's drifting blobs (iOS `AnimatedMeshGradient`): four soft fields in the app
+ * icon's colors (blue, violet, sky blue and a smaller, dimmer cyan) that wander, pulse and change
+ * shape, blurred. In dark mode they add light onto the navy, the way the icon's tiles glow; on
+ * cream adding light only pushes toward white, so light mode paints them as soft tints.
  *
  * [alpha] is read in the draw phase, so a long fade costs no recomposition.
  * [isAnimating] `false` freezes the blobs where they are without dropping them, so a caller can
@@ -84,8 +83,18 @@ fun AnimatedMeshBackground(isAnimating: Boolean, modifier: Modifier = Modifier, 
     val fadeIn = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) { fadeIn.animateTo(1f, tween(durationMillis = 3_000, easing = EaseIn)) }
+    val styles = listOf(
+        BlobStyle(GlowColors.blue()),
+        BlobStyle(GlowColors.violet()),
+        BlobStyle(GlowColors.sky),
+        BlobStyle(GlowColors.cyan(), sizeScale = 0.6f, opacity = 0.8f),
+    )
+    val isDark = Palette.current.isDark
+    // Held back in dark too: at full strength overlapping blues blew out to a flat electric blue.
+    val opacityScale = if (isDark) 0.7f else 0.35f
+    val blend = if (isDark) BlendMode.Plus else BlendMode.SrcOver
     LaunchedEffect(size) {
-        if (blobs == null && size.width > 0 && size.height > 0) blobs = MeshBlob.make(size.width / density, size.height / density)
+        if (blobs == null && size.width > 0 && size.height > 0) blobs = MeshBlob.make(size.width / density, size.height / density, styles.map { it.sizeScale })
     }
     LaunchedEffect(isAnimating, blobs, size) {
         val current = blobs ?: return@LaunchedEffect
@@ -123,19 +132,21 @@ fun AnimatedMeshBackground(isAnimating: Boolean, modifier: Modifier = Modifier, 
                 // normally instead of adding them onto the background.
                 this.alpha = fadeIn.value * alpha()
                 compositingStrategy = CompositingStrategy.Offscreen
-                // iOS's `.plusLighter`: the blobs add light to the background under them.
-                blendMode = BlendMode.Plus
+                // iOS's `.plusLighter` in dark: the blobs add light to the background under them.
+                blendMode = blend
                 if (blurs) renderEffect = BlurEffect(blurPx, blurPx, TileMode.Decal)
             },
     ) {
         @Suppress("UNUSED_EXPRESSION") frame // Read in the draw phase, so a step redraws without recomposing.
-        blobs?.forEach { blob ->
+        blobs?.forEachIndexed { index, blob ->
+            val style = styles[index % styles.size]
+            val color = style.color.copy(alpha = style.opacity * opacityScale)
             val center = Offset(blob.x * density, blob.y * density)
             if (blurs) {
-                drawPath(blob.path(density), blob.color, blendMode = BlendMode.Plus)
+                drawPath(blob.path(density), color, blendMode = blend)
             } else {
                 val reach = blob.radius * density + blurPx
-                drawCircle(Brush.radialGradient(listOf(blob.color, blob.color.copy(alpha = 0f)), center, reach), reach, center, blendMode = BlendMode.Plus)
+                drawCircle(Brush.radialGradient(listOf(color, color.copy(alpha = 0f)), center, reach), reach, center, blendMode = blend)
             }
         }
     }
@@ -145,6 +156,9 @@ private const val TICK_NANOS = 1_000_000_000L / 30
 /** After the app was away, carry on from where the blobs were, not a burst of missed steps. */
 private const val MAX_CATCH_UP_NANOS = TICK_NANOS * 4
 
+/** One blob's look (iOS `AnimatedMeshGradient.BlobStyle`): [sizeScale] lets an accent glint without washing over the screen. */
+private class BlobStyle(val color: Color, val sizeScale: Float = 1f, val opacity: Float = 1f)
+
 /** One blob, in dp. A straight port of iOS `MeshBlob` and `updateBlobs`, constants included. */
 private class MeshBlob(
     var x: Float,
@@ -152,7 +166,6 @@ private class MeshBlob(
     var vx: Float,
     var vy: Float,
     val baseRadius: Float,
-    val color: Color,
     var phase: Float,
     val morphing: FloatArray,
     val targetMorphing: FloatArray,
@@ -227,10 +240,9 @@ private class MeshBlob(
     companion object {
         private const val POINTS = 12
         private const val MAX_SPEED = 0.6f
-        private val colors = listOf(Theme.MeshBlob.purple, Theme.MeshBlob.pink, Theme.MeshBlob.indigo, Color(0xFFC026D3))
-
-        fun make(width: Float, height: Float): List<MeshBlob> = colors.map { color ->
-            val radius = 80f + Random.nextFloat() * 60f
+        /** One blob per entry of [sizeScales], each 80–140 dp across before its scale. */
+        fun make(width: Float, height: Float, sizeScales: List<Float>): List<MeshBlob> = sizeScales.map { scale ->
+            val radius = (80f + Random.nextFloat() * 60f) * scale
             val range = radius * 0.6f
             fun morph() = FloatArray(POINTS) { Random.nextFloat() * 2 * range - range }
             MeshBlob(
@@ -239,7 +251,6 @@ private class MeshBlob(
                 vx = Random.nextFloat() * 0.6f - 0.3f,
                 vy = Random.nextFloat() * 0.6f - 0.3f,
                 baseRadius = radius,
-                color = color,
                 phase = Random.nextFloat() * 2 * Math.PI.toFloat(),
                 morphing = morph(),
                 targetMorphing = morph(),
@@ -250,9 +261,9 @@ private class MeshBlob(
 }
 
 /**
- * A top app bar over [GradientBackground]: clear at rest so the glow runs to the top edge, the
- * glow's own base once content scrolls under it.
+ * A top app bar over a tab's background: clear at rest, the background once content scrolls
+ * under it.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun glowTopAppBarColors(): TopAppBarColors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent, scrolledContainerColor = Theme.gradientBase)
+fun glowTopAppBarColors(): TopAppBarColors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent, scrolledContainerColor = Palette.background)

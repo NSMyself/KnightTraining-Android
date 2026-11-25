@@ -55,7 +55,7 @@ internal fun DailyActivityContent(context: Context, surface: WeeklySurface, size
     val height = ((size.height - padding * 2).value * density).toInt()
     val calendar = WeekCalendar.system()
     val today = calendar.localDate(Instant.now())
-    val bitmap = WidgetStyle.grid(width, height, 3 * density, calendar.weekStart(today), today, surface.recentDailyDurationSeconds)
+    val bitmap = WidgetStyle.grid(width, height, 3 * density, calendar.weekStart(today), today, surface.recentDailyDurationSeconds, WidgetStyle.palette(context))
     Box(
         GlanceModifier.fillMaxSize().background(GlanceTheme.colors.background).cornerRadius(20.dp).padding(padding)
             .clickable(actionStartActivity<MainActivity>()),

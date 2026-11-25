@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.ui
 
+import com.knightindustries.knighttraining.designsystem.Palette
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.animation.AnimatedContent
@@ -37,17 +38,19 @@ import androidx.compose.ui.unit.dp
  */
 
 /**
- * A progress bar that moves to a new value instead of jumping there. 8dp and rounded on a faint
- * white track, like iOS's `ProgressBar`, rather than Material's hairline.
+ * A progress bar that moves to a new value instead of jumping there. 8dp and rounded, filled with
+ * the accent on a faint track, like iOS's `ProgressBar`, rather than Material's hairline. iOS's
+ * track is a white overlay; here it's the text color at the same strength, so it still shows on
+ * cream.
  */
 @Composable
-fun AnimatedLinearProgress(progress: Float, modifier: Modifier = Modifier, color: Color = ProgressIndicatorDefaults.linearColor) {
+fun AnimatedLinearProgress(progress: Float, modifier: Modifier = Modifier, color: Color = Palette.accent) {
     val shown by animateFloatAsState(progress.coerceIn(0f, 1f), ProgressIndicatorDefaults.ProgressAnimationSpec, label = "progress")
     LinearProgressIndicator(
         progress = { shown },
         modifier = modifier.height(8.dp),
         color = color,
-        trackColor = Color.White.copy(alpha = 0.1f),
+        trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
         strokeCap = StrokeCap.Round,
         gapSize = 0.dp,
         drawStopIndicator = {},

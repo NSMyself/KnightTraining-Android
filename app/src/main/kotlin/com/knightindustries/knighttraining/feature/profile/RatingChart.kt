@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.profile
 
+import com.knightindustries.knighttraining.designsystem.Palette
 import android.text.format.DateFormat
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseOut
@@ -54,9 +55,12 @@ import kotlin.math.roundToInt
 /** One week of the Profile chart: time studied and planned, and the rating at the week's end. */
 data class RatingChartPoint(val weekStart: LocalDate, val seconds: Int, val plannedSeconds: Int, val rating: Int?)
 
-private val HoursColor = Theme.accent.copy(alpha = 0.55f)
-private val PlannedColor = Theme.accentBorder
-private val RatingColor = Theme.ratingGold
+// iOS `EloHistoryChart` on Palette: hours in the accent, the plan's dashes in the accent too, the
+// rating line in `rating`.
+private class ChartColors(val hours: Color, val planned: Color, val rating: Color)
+
+@Composable
+private fun chartColors() = Palette.current.let { ChartColors(it.accent.copy(alpha = 0.55f), it.accent, it.rating) }
 
 /*
  * Bands of the chart's height (iOS `EloHistoryChart`): bars rise to 90%, the rating line lives in
@@ -124,6 +128,7 @@ private class Reveal(bars: Int, dots: Int, segments: Int) {
 
 @Composable
 private fun EffortAndRatingChart(points: List<RatingChartPoint>, modifier: Modifier) {
+    val colors = chartColors()
     val locale = currentLocale()
     val axis = remember(locale) { DateTimeFormatter.ofPattern(DateFormat.getBestDateTimePattern(locale, "MMMd"), locale) }
     val measurer = rememberTextMeasurer()
@@ -166,7 +171,7 @@ private fun EffortAndRatingChart(points: List<RatingChartPoint>, modifier: Modif
                 val barWidth = minOf(slot * 0.6f, 41.dp.toPx())
                 val height = bottom * barFraction(point.seconds) * reveal.bars[index].value
                 if (height > 0f) {
-                    drawRoundRect(HoursColor, Offset(x(index) - barWidth / 2, bottom - height), Size(barWidth, height), CornerRadius(4.dp.toPx()))
+                    drawRoundRect(colors.hours, Offset(x(index) - barWidth / 2, bottom - height), Size(barWidth, height), CornerRadius(4.dp.toPx()))
                 }
             }
 
@@ -175,24 +180,24 @@ private fun EffortAndRatingChart(points: List<RatingChartPoint>, modifier: Modif
             planned.zipWithNext().forEachIndexed { segment, (a, b) ->
                 val alpha = reveal.segments.getOrNull(segment)?.value ?: 1f
                 drawLine(
-                    PlannedColor.copy(alpha = alpha),
+                    colors.planned.copy(alpha = alpha),
                     Offset(x(a), y(barFraction(points[a].plannedSeconds) * reveal.bars[a].value)),
                     Offset(x(b), y(barFraction(points[b].plannedSeconds) * reveal.bars[b].value)),
                     2.dp.toPx(),
                     pathEffect = PathEffect.dashPathEffect(floatArrayOf(4.dp.toPx(), 3.dp.toPx())),
                 )
             }
-            planned.forEach { drawCircle(PlannedColor, 3.dp.toPx(), Offset(x(it), y(barFraction(points[it].plannedSeconds) * reveal.bars[it].value))) }
+            planned.forEach { drawCircle(colors.planned, 3.dp.toPx(), Offset(x(it), y(barFraction(points[it].plannedSeconds) * reveal.bars[it].value))) }
 
             // Rating: gold, in its own band above the bars.
             val rated = points.indices.filter { points[it].rating != null }
             rated.zipWithNext().forEachIndexed { segment, (a, b) ->
                 val alpha = reveal.segments.getOrNull(segment)?.value ?: 1f
-                drawLine(RatingColor.copy(alpha = alpha), Offset(x(a), y(ratingY(points[a].rating!!))), Offset(x(b), y(ratingY(points[b].rating!!))), 2.dp.toPx())
+                drawLine(colors.rating.copy(alpha = alpha), Offset(x(a), y(ratingY(points[a].rating!!))), Offset(x(b), y(ratingY(points[b].rating!!))), 2.dp.toPx())
             }
             rated.forEach { index ->
                 val dot = reveal.dots[index].value
-                if (dot > 0f) drawCircle(RatingColor.copy(alpha = dot), 3.5.dp.toPx() * dot, Offset(x(index), y(ratingY(points[index].rating!!))))
+                if (dot > 0f) drawCircle(colors.rating.copy(alpha = dot), 3.5.dp.toPx() * dot, Offset(x(index), y(ratingY(points[index].rating!!))))
             }
             latest?.let { rating ->
                 val label = measurer.measure(rating.toString(), labelStyle)
@@ -206,6 +211,7 @@ private fun EffortAndRatingChart(points: List<RatingChartPoint>, modifier: Modif
 /** A rating line over its own range: no hours to share the chart with. */
 @Composable
 private fun RatingOnlyChart(points: List<RatingChartPoint>, modifier: Modifier) {
+    val colors = chartColors()
     val locale = currentLocale()
     val axis = remember(locale) { DateTimeFormatter.ofPattern(DateFormat.getBestDateTimePattern(locale, "MMMd"), locale) }
     val measurer = rememberTextMeasurer()
@@ -235,22 +241,23 @@ private fun RatingOnlyChart(points: List<RatingChartPoint>, modifier: Modifier) 
             drawText(label, topLeft = Offset(x(index) - label.size.width / 2f, bottom + 4.dp.toPx()))
         }
         points.indices.zipWithNext().forEachIndexed { segment, (a, b) ->
-            drawLine(RatingColor.copy(alpha = reveal.segments[segment].value), Offset(x(a), y(ratings[a])), Offset(x(b), y(ratings[b])), 2.dp.toPx())
+            drawLine(colors.rating.copy(alpha = reveal.segments[segment].value), Offset(x(a), y(ratings[a])), Offset(x(b), y(ratings[b])), 2.dp.toPx())
         }
         points.indices.forEach { index ->
             val dot = reveal.dots[index].value
-            if (dot > 0f) drawCircle(RatingColor.copy(alpha = dot), 3.5.dp.toPx() * dot, Offset(x(index), y(ratings[index])))
+            if (dot > 0f) drawCircle(colors.rating.copy(alpha = dot), 3.5.dp.toPx() * dot, Offset(x(index), y(ratings[index])))
         }
     }
 }
 
 @Composable
 private fun Legend() {
+    val colors = chartColors()
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)) {
-        LegendItem(stringResource(R.string.chart_hours)) { drawRoundRect(HoursColor, cornerRadius = CornerRadius(2.dp.toPx())) }
-        LegendItem(stringResource(R.string.stat_rating)) { drawLine(RatingColor, Offset(0f, size.height / 2), Offset(size.width, size.height / 2), 2.dp.toPx()) }
+        LegendItem(stringResource(R.string.chart_hours)) { drawRoundRect(colors.hours, cornerRadius = CornerRadius(2.dp.toPx())) }
+        LegendItem(stringResource(R.string.stat_rating)) { drawLine(colors.rating, Offset(0f, size.height / 2), Offset(size.width, size.height / 2), 2.dp.toPx()) }
         LegendItem(stringResource(R.string.planned)) {
-            drawLine(PlannedColor, Offset(0f, size.height / 2), Offset(size.width, size.height / 2), 2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(3.dp.toPx(), 2.dp.toPx())))
+            drawLine(colors.planned, Offset(0f, size.height / 2), Offset(size.width, size.height / 2), 2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(3.dp.toPx(), 2.dp.toPx())))
         }
     }
 }

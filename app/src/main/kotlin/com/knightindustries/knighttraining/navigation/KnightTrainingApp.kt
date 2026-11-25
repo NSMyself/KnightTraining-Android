@@ -1,9 +1,10 @@
 package com.knightindustries.knighttraining.navigation
 
+import androidx.compose.foundation.background
 import com.knightindustries.knighttraining.feature.history.TrainingHistoryScreen
 import com.knightindustries.knighttraining.feature.history.TrainingHistoryViewModel
 import androidx.compose.foundation.layout.Box
-import com.knightindustries.knighttraining.designsystem.GradientBackground
+import com.knightindustries.knighttraining.designsystem.KnightTrainingTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -108,7 +109,11 @@ fun KnightTrainingApp(pendingAction: String? = null, onActionHandled: () -> Unit
 
     when (onboarded) {
         null -> Unit // Not read yet: draw nothing rather than flash the wrong screen.
-        false -> OnboardingScreen(onFinished = { scope.launch { container.preferences.completeOnboarding() } })
+        // Pinned dark in either mode, like iOS's onboarding on its fixed gradient: its white
+        // reveal and the quote are one sequence that looks the same whatever the setting.
+        false -> KnightTrainingTheme(darkTheme = true) {
+            OnboardingScreen(onFinished = { scope.launch { container.preferences.completeOnboarding() } })
+        }
         true -> MainContent(pendingAction, onActionHandled)
     }
 }
@@ -177,10 +182,9 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
             entryDecorators = listOf(rememberTabKeepingStateDecorator(), rememberViewModelStoreNavEntryDecorator()),
             modifier = Modifier.consumeWindowInsets(padding),
             entryProvider = entryProvider {
-                // Each tab sits on the brand glow (iOS `NewBackgroundView`); only the tab showing
-                // hears its own reselection.
-                @Composable fun TabRoot(route: TabRoute, content: @Composable () -> Unit) = Box {
-                    GradientBackground()
+                // Each tab sits on the flat background (iOS's tabs left the glow on 2026-11-24);
+                // only the tab showing hears its own reselection.
+                @Composable fun TabRoot(route: TabRoute, content: @Composable () -> Unit) = Box(Modifier.background(MaterialTheme.colorScheme.background)) {
                     CompositionLocalProvider(LocalTabReselections provides if (top == route) reselections else emptyFlow(), content = content)
                 }
 

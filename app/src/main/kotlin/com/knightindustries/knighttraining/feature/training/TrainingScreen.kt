@@ -90,7 +90,7 @@ fun TrainingScreen(
                 colors = glowTopAppBarColors(),
             )
         },
-        // The tab's glow (`GradientBackground`) is drawn behind it.
+        // The tab's background is drawn behind it.
         containerColor = Color.Transparent,
     ) { padding ->
         val current = state

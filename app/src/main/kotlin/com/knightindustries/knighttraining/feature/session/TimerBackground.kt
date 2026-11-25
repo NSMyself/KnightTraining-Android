@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.session
 
+import com.knightindustries.knighttraining.designsystem.Palette
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -83,7 +84,7 @@ fun rememberTimerBackground(session: PracticeSession, now: Instant): TimerBackgr
 }
 
 /**
- * The purple glow while the timer runs, with the mesh over it; flat once stopped, where the motion
+ * The brand glow while the timer runs, with the mesh over it; flat once stopped, where the motion
  * would distract from reading and typing the review. The glow is always the base: the mesh freezes
  * and fades to reveal it, rather than the two cross-dissolving.
  */
@@ -110,7 +111,7 @@ fun TimerBackground(running: Boolean, state: TimerBackgroundState) {
 fun DimmedNotice(state: TimerBackgroundState) {
     // Drifts in alongside the dimming, but far short of its 20 s, or it would sit unreadable.
     AnimatedVisibility(state.dimmedToSaveBattery, enter = fadeIn(tween(3_000)), exit = fadeOut(tween(600))) {
-        TextButton(onClick = state.keepMesh, colors = androidx.compose.material3.ButtonDefaults.textButtonColors(contentColor = Color.White.copy(alpha = 0.5f))) {
+        TextButton(onClick = state.keepMesh, colors = androidx.compose.material3.ButtonDefaults.textButtonColors(contentColor = Palette.textTertiary)) {
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Rounded.Battery5Bar, contentDescription = null, modifier = Modifier.size(16.dp))
                 Text(stringResource(R.string.mesh_dimmed), style = MaterialTheme.typography.labelMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -119,10 +120,12 @@ fun DimmedNotice(state: TimerBackgroundState) {
     }
 }
 
+/** A halo in the background color: a dark shadow on navy, a soft cream glow on cream, so the clock lifts off the blobs. */
 @Composable
 fun clockShadow(): Shadow {
     val blur = with(LocalDensity.current) { 20.dp.toPx() }
-    return remember(blur) { Shadow(Color.Black.copy(alpha = 0.5f), blurRadius = blur) }
+    val color = Palette.background.copy(alpha = 0.7f)
+    return remember(blur, color) { Shadow(color, blurRadius = blur) }
 }
 
 @Composable

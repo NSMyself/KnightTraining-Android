@@ -82,9 +82,19 @@ a first-party Material 3 app would: system back and predictive back, edge-to-edg
 sheets and dialogs where iOS uses sheets, a navigation bar for tabs, the system font, Material
 motion. iOS's pixel-perfect-to-Figma rule doesn't apply here.
 
-Brand carries over through color only: dark-only, accent `#8D59E9`. Tokens in
-`app/.../designsystem/Theme.kt` mirror iOS `DesignSystem/Theme.swift` and fill the Material 3
-scheme, surface-container ladder included.
+Brand carries over through color only. **The app follows the system's light/dark setting**, like
+iOS since 2026-11-24 (maintainer, 2026-11-25: Android follows iOS here). Colors are iOS's
+`Palette` (navy, royal blue, cyan, cream), token for token in `designsystem/Palette.kt`;
+`Theme.kt` fills the Material 3 scheme from it for each mode. Call sites use the scheme, or
+`Palette.*` for roles Material has no slot for (`success`, `rating`, `highlight`, the heatmap,
+`accent` as a fill); never a hex value. iOS's `docs/color-migration.md` has the mapping and what was
+deliberately left (white overlays: chart grid lines, the widgets' row fill and silhouette; the
+resource badges). One deliberate difference: Material's `primary` is iOS's `accentText`, since
+Material draws text buttons in `primary` and iOS's fill blue is 3.4:1 on navy. So dark mode's
+filled buttons are a lighter blue with navy text, Material's own convention, where iOS fills
+`0162E4` with white; the fill blue stays as `primaryContainer` (FABs) and `Palette.accent`
+(progress, rings). Onboarding and the share-card images are pinned dark
+(`KnightTrainingTheme(darkTheme = true)`), as on iOS.
 
 ## App structure
 
@@ -127,13 +137,17 @@ scheme, surface-container ladder included.
 - **Tapping a goal on Home** opens `GoalDetailsSheet` (iOS `ActivityDetailsSheet`): title,
   resource, target and progress, and Start / Train again. Per-goal reminders, iOS's other half of
   that sheet, will go there. Pinned by `GoalDetailsTest`.
-- **The brand glow**: every tab root sits on `GradientBackground` (iOS `NewBackgroundView`), drawn
-  by the tab wrapper in `KnightTrainingApp`. Tab scaffolds are transparent and use
-  `glowTopAppBarColors()`; their lists sit below the bar (padding, not `contentPadding`), so the
-  clear bar never shows content through it. The surface-container ladder leans indigo, toward iOS's
-  cards, and `AnimatedLinearProgress` is 8dp and rounded like iOS's `ProgressBar`.
+- **Backgrounds**: every tab root sits on the flat background, drawn by the tab wrapper in
+  `KnightTrainingApp` (iOS's tabs left the glow on 2026-11-24). Tab scaffolds are transparent and
+  use `glowTopAppBarColors()`; their lists sit below the bar (padding, not `contentPadding`), so
+  the clear bar never shows content through it. The brand glow (`GradientBackground`, iOS
+  `NewBackgroundView`) is now the app icon's blue and violet (`GlowColors`), faint on cream, and
+  backs onboarding and the timer. `AnimatedLinearProgress` is 8dp and rounded like iOS's
+  `ProgressBar`, filled with the accent.
 - **The timer's background** (`feature/session/TimerBackground.kt`, `designsystem/Backgrounds.kt`):
-  iOS's purple glow with its drifting mesh over it, the blob physics ported constant for constant.
+  the glow with iOS's drifting mesh over it, the blob physics ported constant for constant. The
+  blobs are the icon's blue, violet, sky blue and a smaller cyan, added onto navy in dark mode and
+  painted as soft tints on cream; the clock's shadow is a halo in the background color.
   Same battery rules: first 10 running minutes only, frozen while paused, off under battery saver,
   and a notice that brings it back. Android adds one: off when system animations are removed.
   Blur needs API 31; below that the blobs are radial gradients. The frame loop uses

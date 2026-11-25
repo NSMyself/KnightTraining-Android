@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.history
 
+import com.knightindustries.knighttraining.designsystem.PaletteColors
+import com.knightindustries.knighttraining.designsystem.Palette
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -54,17 +56,19 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlin.math.roundToInt
 
-/** iOS's grid blue, at each intensity's opacity. */
-private val GridBlue = Color(0.34f, 0.44f, 0.89f)
-
-private fun DailyTrainingIntensity?.color(): Color = GridBlue.copy(
-    alpha = when (this) {
-        null -> 0.08f
-        DailyTrainingIntensity.LIGHT -> 0.3f
-        DailyTrainingIntensity.MODERATE -> 0.5f
-        DailyTrainingIntensity.INTENSE -> 0.8f
+/**
+ * The day's step on the heatmap (iOS `DailyTrainingIntensity.color`): three levels on a six-step
+ * ramp, steps skipped so each reads apart, and only an intense day reaching the highlight end. An
+ * empty day is the ramp's first step, a faint blue rather than a gray.
+ */
+internal fun DailyTrainingIntensity?.color(palette: PaletteColors): Color = palette.heatmap[
+    when (this) {
+        null -> 0
+        DailyTrainingIntensity.LIGHT -> 2
+        DailyTrainingIntensity.MODERATE -> 4
+        DailyTrainingIntensity.INTENSE -> 5
     },
-)
+]
 
 private const val TAP_LABEL_MILLIS = 2_500L
 
@@ -134,7 +138,7 @@ fun ActivityGrid(dailySeconds: Map<LocalDate, Int>, today: LocalDate) {
                         val index = row * GRID_COLUMNS + column
                         val minutes = (dailySeconds[dateAt(index)] ?: 0) / 60
                         GridCell(
-                            DailyTrainingIntensity.of(minutes).color(),
+                            DailyTrainingIntensity.of(minutes).color(Palette.current),
                             isSelected = index == selected,
                             delayMillis = column * 70L,
                             description = spoken(index),
@@ -155,12 +159,12 @@ fun ActivityGrid(dailySeconds: Map<LocalDate, Int>, today: LocalDate) {
             val y = row * pitchPx - with(density) { 36.dp.toPx() }
             Surface(
                 shape = CircleShape,
-                color = MaterialTheme.colorScheme.primary,
+                color = Palette.accent,
                 modifier = Modifier.offset { IntOffset(x.roundToInt(), y.roundToInt()) }.onSizeChanged { labelWidth = it.width },
             ) {
                 Row(Modifier.padding(horizontal = 10.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(dateFormat.format(dateAt(index)), style = MaterialTheme.typography.labelLarge, color = Color.White.copy(alpha = 0.8f))
-                    Text(labels[index], style = MaterialTheme.typography.labelLarge, color = Color.White)
+                    Text(dateFormat.format(dateAt(index)), style = MaterialTheme.typography.labelLarge, color = Palette.onAccent.copy(alpha = 0.8f))
+                    Text(labels[index], style = MaterialTheme.typography.labelLarge, color = Palette.onAccent)
                 }
             }
         }
@@ -175,6 +179,7 @@ private fun GridCell(color: Color, isSelected: Boolean, delayMillis: Long, descr
         appear.animateTo(1f, spring(dampingRatio = 0.7f, stiffness = Spring.StiffnessMediumLow))
     }
     val shape = RoundedCornerShape(percent = 15)
+    val outline = if (isSelected) Palette.textPrimary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
     Box(
         modifier
             .graphicsLayer {
@@ -184,7 +189,7 @@ private fun GridCell(color: Color, isSelected: Boolean, delayMillis: Long, descr
                 alpha = appear.value.coerceIn(0f, 1f)
             }
             .background(color, shape)
-            .border(if (isSelected) 1.5.dp else 0.5.dp, if (isSelected) Color.White else Color.White.copy(alpha = 0.1f), shape)
+            .border(if (isSelected) 1.5.dp else 0.5.dp, outline, shape)
             .semantics { contentDescription = description },
     )
 }

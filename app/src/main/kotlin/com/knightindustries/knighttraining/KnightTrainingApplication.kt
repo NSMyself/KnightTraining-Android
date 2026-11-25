@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining
 
+import android.content.res.Configuration
 import android.app.Application
 import androidx.room.Room
 import com.knightindustries.knighttraining.core.persistence.AppDatabase
@@ -42,6 +43,7 @@ class KnightTrainingApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         container.appScope.launch {
             container.store.seedPresetsIfNeeded()
             container.preferences.firstLaunch()
@@ -59,6 +61,21 @@ class KnightTrainingApplication : Application() {
                 lastCompletion = completion
                 WidgetStyle.updateAll(this@KnightTrainingApplication)
             }
+        }
+    }
+
+    private var nightMode = 0
+
+    /**
+     * The widgets' ring and grid are bitmaps drawn for one light/dark mode, so a switch redraws
+     * them. (Their Glance colors switch on their own.)
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val mode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (mode != nightMode) {
+            nightMode = mode
+            container.appScope.launch { WidgetStyle.updateAll(this@KnightTrainingApplication) }
         }
     }
 }

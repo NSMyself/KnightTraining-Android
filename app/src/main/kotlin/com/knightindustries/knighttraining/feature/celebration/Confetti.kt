@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.celebration
 
+import com.knightindustries.knighttraining.designsystem.Palette
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.setValue
@@ -37,7 +38,9 @@ import kotlin.random.Random
 @Composable
 fun Confetti(modifier: Modifier = Modifier) {
     val density = LocalDensity.current.density
-    val pieces = remember { ConfettiPiece.burst() }
+    // iOS draws the confetti from Palette since 2026-11-23: accent, highlight, rating, success, error.
+    val palette = Palette.current
+    val pieces = remember { ConfettiPiece.burst(listOf(palette.accent, palette.highlight, palette.rating, palette.success, palette.error)) }
     val end = remember(pieces) { pieces.maxOf { it.delay + it.fallDuration } }
     var elapsed by remember { mutableFloatStateOf(0f) }
 
@@ -117,7 +120,6 @@ private class ConfettiPiece(
     private class Gust(val startTime: Float, val push: Float)
 
     companion object {
-        private val palette = listOf(Theme.accent, Theme.ratingGold, Color(0xFF5AD8A6), Color(0xFFFF6F91), Color(0xFFEBECFE))
 
         /** Each pop's size and when it fires (seconds), the cannon tapering off and then holding. */
         private val pops = listOf(100 to 0f, 100 to 0.1f, 80 to 0.2f, 40 to 0.3f, 30 to 0.4f, 20 to 0.5f, 20 to 0.6f, 20 to 0.7f)
@@ -135,14 +137,14 @@ private class ConfettiPiece(
 
         private fun Random.between(from: Float, to: Float) = from + nextFloat() * (to - from)
 
-        fun burst(random: Random = Random.Default): List<ConfettiPiece> {
+        fun burst(colors: List<Color>, random: Random = Random.Default): List<ConfettiPiece> {
             val gustCount = random.nextInt(2, 4)
             val step = 7f / gustCount
             val gusts = (0 until gustCount).map { i ->
                 Gust(i * step + random.between(0f, step * 0.5f), (if (random.nextBoolean()) 1f else -1f) * random.between(10f, 55f) * 1.2f)
             }
-            val popPieces = pops.flatMap { (count, at) -> List(count) { piece(random, gusts, at + random.between(0f, POP_WINDOW)) } }
-            val trickle = List(TRICKLE_COUNT) { piece(random, gusts, trickleDelay(random)) }
+            val popPieces = pops.flatMap { (count, at) -> List(count) { piece(colors, random, gusts, at + random.between(0f, POP_WINDOW)) } }
+            val trickle = List(TRICKLE_COUNT) { piece(colors, random, gusts, trickleDelay(random)) }
             return popPieces + trickle
         }
 
@@ -153,7 +155,7 @@ private class ConfettiPiece(
             }
         }
 
-        private fun piece(random: Random, gusts: List<Gust>, delay: Float): ConfettiPiece {
+        private fun piece(colors: List<Color>, random: Random, gusts: List<Gust>, delay: Float): ConfettiPiece {
             val fallDuration = random.between(2f, 3.2f) * GRAVITY
             val fallEnd = delay + fallDuration
             // The gusts that change partway through this piece's fall, then its landing.
@@ -169,7 +171,7 @@ private class ConfettiPiece(
             }
             return ConfettiPiece(
                 isCircle = random.nextBoolean(),
-                color = palette.random(random),
+                color = colors.random(random),
                 size = random.between(6f, 11f),
                 aspectRatio = random.between(0.4f, 1f),
                 startX = random.between(0.5f - SPREAD / 2, 0.5f + SPREAD / 2),

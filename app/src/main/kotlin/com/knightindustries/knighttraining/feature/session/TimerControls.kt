@@ -50,14 +50,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.knightindustries.knighttraining.R
-import com.knightindustries.knighttraining.designsystem.Theme
-
-/** Reached-target green (iOS `StudySessionCard`). */
-private val TargetReached = Color(0xFF6EE7A8)
+import com.knightindustries.knighttraining.designsystem.GlowColors
+import com.knightindustries.knighttraining.designsystem.Palette
 
 /**
  * The timer's three controls (iOS `StudyingControlBar`): pause/play is the large one in the middle,
- * ringed in the mesh's colors; attach-a-resource and stop sit either side, smaller and outlined.
+ * ringed in the icon's glow colors; attach-a-resource and stop sit either side, smaller and outlined.
  * Stop is always there, not hidden behind a pause.
  */
 @Composable
@@ -67,14 +65,14 @@ fun TimerControls(isPaused: Boolean, hasResource: Boolean, onTogglePause: () -> 
             Icons.AutoMirrored.Rounded.PlaylistAdd,
             stringResource(R.string.link_resource),
             onAttach,
-            tint = if (hasResource) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.8f),
+            tint = if (hasResource) MaterialTheme.colorScheme.primary else Palette.textSecondary,
         )
         Surface(
             onClick = onTogglePause,
             shape = CircleShape,
-            color = Color.White.copy(alpha = 0.1f),
-            contentColor = Color.White,
-            border = BorderStroke(2.dp, Brush.linearGradient(listOf(Theme.MeshBlob.indigo, Theme.MeshBlob.purple, Theme.MeshBlob.pink))),
+            color = Palette.surfaceRaised.copy(alpha = 0.6f),
+            contentColor = Palette.textPrimary,
+            border = BorderStroke(2.dp, Brush.linearGradient(listOf(GlowColors.blue(), GlowColors.violet(), GlowColors.cyan()))),
             modifier = Modifier.size(80.dp).semantics { role = Role.Button },
         ) {
             Box(contentAlignment = Alignment.Center) {
@@ -87,7 +85,7 @@ fun TimerControls(isPaused: Boolean, hasResource: Boolean, onTogglePause: () -> 
                 }
             }
         }
-        SideButton(Icons.Rounded.Stop, stringResource(R.string.stop), onStop, tint = Color.White.copy(alpha = 0.8f))
+        SideButton(Icons.Rounded.Stop, stringResource(R.string.stop), onStop, tint = Palette.textSecondary)
     }
 }
 
@@ -95,7 +93,7 @@ fun TimerControls(isPaused: Boolean, hasResource: Boolean, onTogglePause: () -> 
 private fun SideButton(icon: ImageVector, label: String, onClick: () -> Unit, tint: Color) {
     OutlinedIconButton(
         onClick = onClick,
-        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.3f)),
+        border = BorderStroke(1.dp, Palette.border),
         colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = tint),
         modifier = Modifier.size(52.dp),
     ) { Icon(icon, contentDescription = label) }
@@ -108,17 +106,18 @@ private fun SideButton(icon: ImageVector, label: String, onClick: () -> Unit, ti
  */
 @Composable
 fun StudyCard(icon: ImageVector, title: String, subtitle: String?, progress: Float?, reachedTarget: Boolean, onChange: () -> Unit) {
-    val tint by animateColorAsState(if (reachedTarget) TargetReached else Theme.accent, tween(400), label = "tint")
+    val tint by animateColorAsState(if (reachedTarget) Palette.success else Palette.accent, tween(400), label = "tint")
     val shownProgress by animateFloatAsState(progress ?: 0f, tween(400), label = "progress")
     Surface(
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.92f),
+        // iOS tints its glass with the surface color, so it matches the screen in either mode.
+        color = Palette.surface.copy(alpha = 0.92f),
         modifier = Modifier.fillMaxWidth(),
     ) {
         // The card runs under the navigation bar; its content stays above it.
         Column(Modifier.navigationBarsPadding()) {
             if (progress != null) {
-                Box(Modifier.fillMaxWidth().height(4.dp).background(Color.White.copy(alpha = 0.15f))) {
+                Box(Modifier.fillMaxWidth().height(4.dp).background(Palette.border)) {
                     Box(Modifier.fillMaxWidth(shownProgress.coerceIn(0f, 1f)).height(4.dp).background(tint))
                 }
             }

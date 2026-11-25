@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.widget
 
+import com.knightindustries.knighttraining.designsystem.DarkPalette
 import androidx.glance.appwidget.testing.unit.runGlanceAppWidgetUnitTest
 import androidx.glance.testing.unit.hasText
 import androidx.room.Room
@@ -160,9 +161,9 @@ class WeekWidgetTest {
         val dir = java.io.File(context.getExternalFilesDir(null), "screenshots").apply { mkdirs() }
         fun save(name: String, bitmap: android.graphics.Bitmap) =
             java.io.File(dir, "$name.png").outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
-        save("95_widget_ring", WidgetStyle.ring(198, 30f, 0.6f))
+        save("95_widget_ring", WidgetStyle.ring(198, 30f, 0.6f, DarkPalette))
         val today = java.time.LocalDate.of(2026, 11, 19)
         val days = (0L until 60L).associate { today.minusDays(it) to listOf(0, 900, 4200, 12000, 0, 300)[(it % 6).toInt()] }
-        save("96_widget_grid", WidgetStyle.grid(900, 360, 9f, today.minusDays(4), today, days))
+        save("96_widget_grid", WidgetStyle.grid(900, 360, 9f, today.minusDays(4), today, days, DarkPalette))
     }
 }

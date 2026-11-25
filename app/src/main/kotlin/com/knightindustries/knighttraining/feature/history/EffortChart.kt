@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.history
 
+import com.knightindustries.knighttraining.designsystem.Palette
 import android.text.format.DateFormat
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -50,8 +51,9 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
-private val PlannedColor = Color.White.copy(alpha = 0.6f)
-private val ActualColor = Theme.accent
+// iOS Training History: planned in the secondary text color, actual in the accent.
+private val PlannedColor @Composable get() = Palette.textSecondary
+private val ActualColor @Composable get() = Palette.accent
 
 /** The two series' keys: planned dashed, as on the chart. */
 @Composable
@@ -82,6 +84,10 @@ private fun LegendItem(color: Color, dashed: Boolean, label: String) {
  */
 @Composable
 fun EffortChart(weeks: List<WeeklyEffort>) {
+    val plannedColor = PlannedColor
+    val actualColor = ActualColor
+    // iOS marks the selected week with a rule in the border color.
+    val selectionRule = Palette.border
     val locale = currentLocale()
     val axisFormat = remember(locale) { DateTimeFormatter.ofPattern(DateFormat.getBestDateTimePattern(locale, "Md"), locale) }
     val measurer = rememberTextMeasurer()
@@ -154,7 +160,7 @@ fun EffortChart(weeks: List<WeeklyEffort>) {
                 }
                 drawText(label, topLeft = Offset(left, plotBottom + 6.dp.toPx()))
             }
-            selected?.let { drawLine(Color.White.copy(alpha = 0.25f), Offset(xAt(it), 0f), Offset(xAt(it), plotBottom), strokeWidth = 1.dp.toPx()) }
+            selected?.let { drawLine(selectionRule, Offset(xAt(it), 0f), Offset(xAt(it), plotBottom), strokeWidth = 1.dp.toPx()) }
 
             fun series(minutes: List<Float>, color: Color, width: Float, dashed: Boolean) {
                 val path = Path()
@@ -168,8 +174,8 @@ fun EffortChart(weeks: List<WeeklyEffort>) {
                 )
                 minutes.forEachIndexed { index, value -> drawCircle(color, 4.dp.toPx(), Offset(xAt(index), yAt(value))) }
             }
-            series(weeks.map { it.plannedSeconds / 60f }, PlannedColor, 2.dp.toPx(), dashed = true)
-            series(weeks.map { it.actualSeconds / 60f }, ActualColor, 2.5.dp.toPx(), dashed = false)
+            series(weeks.map { it.plannedSeconds / 60f }, plannedColor, 2.dp.toPx(), dashed = true)
+            series(weeks.map { it.actualSeconds / 60f }, actualColor, 2.5.dp.toPx(), dashed = false)
         }
 
         // Drawn over the chart, outside its layout, so a selection never resizes the plot.
