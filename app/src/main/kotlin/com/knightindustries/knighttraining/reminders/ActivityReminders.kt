@@ -19,7 +19,6 @@ import com.knightindustries.knighttraining.core.model.WeekCalendar
 import com.knightindustries.knighttraining.core.store.activityReminder
 import com.knightindustries.knighttraining.core.store.allActivityReminders
 import com.knightindustries.knighttraining.core.store.goalTemplate
-import com.knightindustries.knighttraining.core.store.planTemplate
 import com.knightindustries.knighttraining.ui.activityNameRes
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -31,7 +30,7 @@ import java.util.UUID
  * weekday with the text fixed at that moment; here each reminder holds one inexact alarm for its
  * next occurrence, and [ActivityReminderReceiver] reads the block when it fires and sets the next
  * one. So a renamed block is announced by its new name, and a removed block (its reminders go with
- * it) or a deleted plan simply stays quiet.
+ * it) stays quiet. A deleted plan is only archived, and its blocks' reminders keep firing, as on iOS.
  */
 object ActivityReminderScheduler {
     /** Cancels whatever was set for [reminder], then sets its next occurrence if it's on. */
@@ -89,8 +88,6 @@ class ActivityReminderReceiver : BroadcastReceiver() {
 
     private suspend fun remind(context: Context, container: AppContainer, reminder: ActivityReminder) {
         val block = container.store.goalTemplate(reminder.goalTemplateId) ?: return
-        // A deleted plan is archived, not removed: its blocks' reminders go quiet with it.
-        if (container.store.planTemplate(block.planTemplateId)?.isArchived != false) return
         val title = block.name ?: context.getString(activityNameRes(block.activityType.code)).let { base ->
             block.timeControlLabel?.let { "$base ($it)" } ?: base
         }
