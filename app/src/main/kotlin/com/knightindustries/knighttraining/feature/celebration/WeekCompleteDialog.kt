@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.celebration
 
+import com.knightindustries.knighttraining.review.StoreReview
+import androidx.activity.compose.LocalActivity
 import android.app.Application
 import android.os.PowerManager
 import android.provider.Settings
@@ -52,6 +54,9 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun WeekCompleteDialog(event: WeeklyPlanCompleted, onDismiss: () -> Unit) {
+    // The one place that may ask for a store review, as on iOS (off for now: `StoreReview.IS_ENABLED`).
+    val activity = LocalActivity.current
+    LaunchedEffect(event) { activity?.let { StoreReview.maybeAsk(it, event.streakLength) } }
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
         // A brand color isn't in the scheme, so the content color is named, or a dialog's window
         // falls back to black text.

@@ -185,8 +185,12 @@ filled buttons are a lighter blue with navy text, Material's own convention, whe
 - **The week-complete celebration** (`feature/celebration/`) is a full-screen dialog: iOS's sound
   with a vibration pattern on the same measured hits (`WeekCompleteSequence`, pinned to the WAV by
   `WeekCompleteSoundTest`), confetti ported count for count and held for the mating move, skipped
-  under battery saver or with animations off. iOS also asks for an App Store review here; Play's
-  in-app review isn't wired yet.
+  under battery saver or with animations off. As on iOS, it's the one place that may ask for a store review
+  (`review/StoreReview.kt`, Play's in-app review): at the 2-, 8- and 26-week streaks, once each,
+  never twice in a version or within 90 days, after 90 s in the app, and only with the phone held
+  still (`ReviewRequestPolicy`, pinned by `ReviewRequestPolicyTest`). **Off**, like iOS's
+  `reviewRequests` flag: `StoreReview.IS_ENABLED`; turn it on together with iOS. Android has no
+  paywall, so iOS's paywall gate is left out.
 
 ## Build & test
 

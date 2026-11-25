@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining
 
+import com.knightindustries.knighttraining.review.StoreReview
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
+        StoreReview.onForeground()
         AppContainer.from(application).apply {
             syncLichessSoon()
             prefetchCoachModelOnce()
@@ -40,4 +42,10 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         pendingAction.value = intent.action
     }
+
+    override fun onStop() {
+        super.onStop()
+        StoreReview.onBackground()
+    }
 }
+

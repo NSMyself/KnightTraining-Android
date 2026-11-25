@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.data
 
+import com.knightindustries.knighttraining.core.model.ReviewMilestone
+import com.knightindustries.knighttraining.core.model.ReviewState
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -43,6 +45,26 @@ class AppPreferences(private val context: Context) {
 
     private val weakThemeStreakKey = stringPreferencesKey("weak_theme_streak")
     private val lastCoachingSuggestionKey = longPreferencesKey("last_coaching_suggestion")
+    private val reviewAskedVersionKey = stringPreferencesKey("review_asked_version")
+    private val reviewAskedAtKey = longPreferencesKey("review_asked_at")
+    private val reviewMilestoneKey = stringPreferencesKey("review_milestone")
+
+    /** What the store-review ask has used up so far (iOS `ReviewStateStore`, in `UserDefaults` there). */
+    suspend fun reviewState(): ReviewState = context.dataStore.data.first().let { prefs ->
+        ReviewState(
+            lastAskedVersion = prefs[reviewAskedVersionKey],
+            lastAskedAt = prefs[reviewAskedAtKey]?.let(Instant::ofEpochMilli),
+            highestMilestoneAsked = prefs[reviewMilestoneKey]?.let { name -> ReviewMilestone.entries.firstOrNull { it.name == name } },
+        )
+    }
+
+    suspend fun setReviewState(state: ReviewState) {
+        context.dataStore.edit { prefs ->
+            state.lastAskedVersion?.let { prefs[reviewAskedVersionKey] = it }
+            state.lastAskedAt?.let { prefs[reviewAskedAtKey] = it.toEpochMilli() }
+            state.highestMilestoneAsked?.let { prefs[reviewMilestoneKey] = it.name }
+        }
+    }
 
     /** The weekly coach's weak-theme streak, carried from one review to the next (iOS `WeakThemeStreak`). */
     suspend fun weakThemeStreak(): WeakThemeStreak? =
