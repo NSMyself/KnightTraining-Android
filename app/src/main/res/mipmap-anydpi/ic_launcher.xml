@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The iOS app icon's white king on navy; the monochrome layer drives Android 13+ themed icons. -->
+<!-- iOS's app icon (2026-11-23), a single flattened image: it is the whole background layer,
+     scaled into the 72dp safe zone so no launcher mask cuts the knight, over the palette's navy.
+     The monochrome layer, the knight's silhouette keyed out of it, drives Android 13+ themed icons. -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@color/ic_launcher_background" />
-    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
-    <monochrome android:drawable="@mipmap/ic_launcher_foreground" />
+    <background android:drawable="@mipmap/ic_launcher_background" />
+    <foreground android:drawable="@android:color/transparent" />
+    <monochrome android:drawable="@mipmap/ic_launcher_monochrome" />
 </adaptive-icon>
