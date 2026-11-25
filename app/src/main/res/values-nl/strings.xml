@@ -544,7 +544,6 @@
     <string name="widget_daily_description">Je recente trainingsactiviteit, dag voor dag.</string>
     <string name="widget_stat_name">Trainingsstatistiek</string>
     <string name="widget_stat_description">Kies één statistiek om in de gaten te houden: rating, sessies of getrainde tijd deze week, reeks, of totaal aantal uren.</string>
-    <string name="widget_open_app">Open Knight Training om te beginnen</string>
     <string name="widget_no_training">Geen training geregistreerd deze week</string>
     <string name="widget_this_week">Deze week</string>
     <string name="goals_fraction">%1$d/%2$d doelen</string>

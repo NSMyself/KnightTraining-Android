@@ -200,6 +200,7 @@ JDK: Android Studio's bundled JBR. SDK: `~/Library/Android/sdk` (`local.properti
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 ./gradlew :core:test           # JVM unit tests, fast
 ./gradlew :app:assembleDebug   # debug APK
+./gradlew :app:lintDebug       # must pass: no lint errors
 # Device tests (CoreLoopTest); needs a running emulator. Keeping the app installed keeps the
 # screenshots each step writes to /sdcard/Android/data/<package>/files/screenshots.
 ./gradlew :app:connectedDebugAndroidTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true
@@ -303,9 +304,9 @@ maintainer confirms how interactions *feel* on a device themselves.
      `tools/l10n/` (see its README). 231 strings reuse the iOS catalog; the other ~160 were drafted
      against the iOS glossaries. All of it awaits native review, as on iOS. `locales_config`
      offers a per-app language in system Settings.
-   - Lint's resource checks are clean. The code still trips Compose's `NonObservableLocale` and
-     `LocalContext*` checks (pre-existing, so `lintDebug` fails); fix those before making lint a
-     gate.
+   - Lint is a gate: `lintDebug` has no errors (2026-11-25), so a new one fails the build. The
+     remaining warnings are accepted: plural hints on strings that mirror iOS's, German "in Folge"
+     (correct: "in a row"), attributes newer than `minSdk`, KTX suggestions, and the target SDK.
    - **Customizable Home, built 2026-11-12.** The plan card stays pinned; below it the user's tiles
      (`HomeTile`/`HomeLayout`, ids identical to iOS, saved in DataStore so "Delete all data" keeps
      them). Wide tiles take a row, small ones pair up. Edited in `EditHomeSheet` (drag handles,

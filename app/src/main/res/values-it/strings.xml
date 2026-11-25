@@ -559,7 +559,6 @@
     <string name="widget_daily_description">La tua attività di allenamento recente, giorno per giorno.</string>
     <string name="widget_stat_name">Statistica di allenamento</string>
     <string name="widget_stat_description">Scegli una statistica da tenere d\'occhio: Elo, sessioni o tempo di allenamento della settimana, serie oppure ore totali.</string>
-    <string name="widget_open_app">Apri Knight Training per iniziare</string>
     <string name="widget_no_training">Nessun allenamento questa settimana</string>
     <string name="widget_this_week">Questa settimana</string>
     <string name="goals_fraction">%1$d/%2$d obiettivi</string>

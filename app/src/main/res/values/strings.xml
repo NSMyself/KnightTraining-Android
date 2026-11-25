@@ -606,7 +606,6 @@
     <string name="widget_daily_description">Your recent training activity, day by day.</string>
     <string name="widget_stat_name">Training stat</string>
     <string name="widget_stat_description">Pick one stat to keep an eye on: ELO, sessions or time trained this week, streak, or lifetime hours.</string>
-    <string name="widget_open_app">Open Knight Training to get started</string>
     <string name="widget_no_training">No training logged this week</string>
     <string name="widget_this_week">This week</string>
     <string name="goals_fraction">%1$d/%2$d goals</string>

@@ -53,6 +53,9 @@ class TrainingHistoryTest {
         container.store.deleteAllUserData()
         container.preferences.completeOnboarding()
         container.sessions.clear()
+        // Last week was seeded unreviewed: without this, launch opens its review over Home. It
+        // passed only when an earlier test happened to have left this set.
+        container.preferences.setLastReviewedWeekStart(WeekCalendar.system().weekStart(Instant.now()).minusWeeks(1))
     }
 
     private fun text(id: Int) = context.getString(id)

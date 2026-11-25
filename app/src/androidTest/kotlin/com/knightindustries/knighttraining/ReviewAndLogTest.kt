@@ -74,7 +74,8 @@ class ReviewAndLogTest {
         val lastWeek = calendar.weekStart(Instant.now()).minusWeeks(1)
         val plan = plan(lastWeek)
         (1..4).forEach { session(calendar.startOf(lastWeek).plus(Duration.ofHours(10L + it)), notes = "Note $it") }
-        compose.setContent { KnightTrainingTheme { WeeklyReviewScreen(WeeklyReviewViewModel(container, plan.id), onDone = {}) } }
+        val viewModel = WeeklyReviewViewModel(container, plan.id)
+        compose.setContent { KnightTrainingTheme { WeeklyReviewScreen(viewModel, onDone = {}) } }
 
         compose.waitUntilAtLeastOneExists(hasText("Endgame drills"), 10_000)
         compose.onNodeWithText("4/10").assertExists()
@@ -88,7 +89,8 @@ class ReviewAndLogTest {
         val lastWeek = calendar.weekStart(Instant.now()).minusWeeks(1)
         val plan = plan(lastWeek)
         runBlocking { container.store.saveWeeklyReview(WeeklyReview(weeklyPlanId = plan.id, wentWell = "Daily tactics stuck")) }
-        compose.setContent { KnightTrainingTheme { WeekLogScreen(WeekLogViewModel(container, lastWeek), onBack = {}, onReflect = {}) } }
+        val viewModel = WeekLogViewModel(container, lastWeek)
+        compose.setContent { KnightTrainingTheme { WeekLogScreen(viewModel, onBack = {}, onReflect = {}) } }
 
         compose.waitUntilAtLeastOneExists(hasText("Daily tactics stuck"), 10_000)
         compose.onNodeWithText(text(R.string.reflection)).assertExists()
@@ -100,7 +102,8 @@ class ReviewAndLogTest {
         val thisWeek = calendar.weekStart(Instant.now())
         plan(thisWeek)
         session(Instant.now().minus(Duration.ofMinutes(30)), notes = "Swipe me")
-        compose.setContent { KnightTrainingTheme { WeekLogScreen(WeekLogViewModel(container, thisWeek), onBack = {}, onReflect = {}) } }
+        val viewModel = WeekLogViewModel(container, thisWeek)
+        compose.setContent { KnightTrainingTheme { WeekLogScreen(viewModel, onBack = {}, onReflect = {}) } }
 
         compose.waitUntilAtLeastOneExists(hasText("Swipe me", substring = true), 10_000)
         compose.onNodeWithText("Swipe me", substring = true).performCustomAccessibilityActionWithLabel(text(R.string.delete_session))
