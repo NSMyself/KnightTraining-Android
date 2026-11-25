@@ -54,7 +54,9 @@ re-propose either without a concrete reason.
 
 - Schema version 1 is the iOS schema's end state after its migration `v24`. Data never moves
   between platforms, so iOS's migrations aren't replayed. Every later change is a new version with
-  a real Room migration. Schemas are exported to `core/schemas/`; commit them.
+  a real Room migration in `persistence/Migrations.kt`, run by `MigrationTest` against the
+  exported schema it starts from. Version 2 is iOS's `v25` (the coach's tip on `weekly_review`).
+  Schemas are exported to `core/schemas/`; commit them.
 - **Bundled SQLite** (`androidx.sqlite:sqlite-bundled`) on every device and in tests, configured
   once in `AppDatabase.configure()`. Android 9's system SQLite (3.22) lacks upserts and window
   functions, which iOS queries rely on.
@@ -289,12 +291,20 @@ maintainer confirms how interactions *feel* on a device themselves.
        still alpha.
      - `app/coach/` holds the Nano adapter (a system prompt where supported, temperature 0.2)
        and `WeeklyTipService` (30 s timeout, silent on any failure).
-     - The review screen shows the tip card; accepting saves the focus and applies the target
-       (`applyCoachTarget`).
+     - **The tip is shown where the week is planned, not on the review** (iOS, 2026-11-23). Saving
+       the review starts `WeeklyCoachTipGenerator` in the app's scope and closes; the tip is stored
+       on the reviewed week's review (`WeeklyReview.CoachTip`: text, focus, target and a status,
+       `NULL` until asked, `unavailable` when there was nothing to show, never retried). Plan This
+       Week shows it in `CoachTipCard` (`feature/coach/`), waiting for the same run or starting
+       one. If the week was committed before the review showed, Home's Last week tile shows it
+       instead, and accepting there goes through `applyCoachTarget`. On Plan This Week, accepting
+       only remembers the target: **every commit of the week applies it** to the plan's goal for
+       the same activity in the same units, template included (`createWeeklyPlan` reads
+       `acceptedCoachTarget`). The prompt says "the coming week". Pinned by `CoachTipTest`.
      - Pinned by `WeeklyTipCoachTest`, `CoachSignalsTest`, `CoachStoreTest`, `ModelGateTest`
        and `WeeklyCoachTest`.
-     - When the coach stays silent in a debug build, a toast says why ("Coach skipped: …"), and
-       the reason is logged under `WeeklyCoach`.
+     - When the coach stays silent in a debug build, a toast says why ("Coach skipped: …"), from
+       the background run, and the reason is logged under `WeeklyCoach`.
      - Each launch asks AICore for the model when it's downloadable, so the first review
        normally has it (where the coach is on only, to spare everyone else a multi-gigabyte
        download). The status is logged under `GeminiNano`.

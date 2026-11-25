@@ -46,6 +46,8 @@ import com.knightindustries.knighttraining.core.model.PlanEstimatorBlock
 import com.knightindustries.knighttraining.core.model.PlanTemplate
 import com.knightindustries.knighttraining.core.store.allPlanTemplates
 import com.knightindustries.knighttraining.core.store.createWeeklyPlan
+import com.knightindustries.knighttraining.feature.coach.CoachTipCard
+import com.knightindustries.knighttraining.feature.coach.CoachTipState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -62,7 +64,15 @@ class PlanThisWeekViewModel(private val container: AppContainer) : ViewModel() {
     var isCommitting by mutableStateOf(false)
         private set
 
+    /**
+     * The coach's tip about last week belongs here, where this week is planned. A target accepted
+     * here is applied to whichever plan gets committed, picked below or created new.
+     */
+    val coachTip = CoachTipState(container, CoachTipState.Placement.PLANNING, viewModelScope)
+
     init {
+        // Separate from the plans: the coach may still be writing, and the list shouldn't wait.
+        viewModelScope.launch { coachTip.load() }
         viewModelScope.launch {
             val all = container.store.allPlanTemplates()
             _templates.value = all
@@ -117,6 +127,7 @@ fun PlanThisWeekScreen(viewModel: PlanThisWeekViewModel, onBack: () -> Unit, onC
             item {
                 Text(stringResource(R.string.plan_this_week_subtitle), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(bottom = 4.dp))
             }
+            item(key = "coachTip") { CoachTipCard(viewModel.coachTip, Modifier.animateItem()) }
             items(templates.orEmpty(), key = { it.id }) { template ->
                 val selected = template.id == viewModel.selectedId
                 Card(

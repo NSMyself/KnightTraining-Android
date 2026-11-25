@@ -28,6 +28,7 @@ import com.knightindustries.knighttraining.core.store.reopenMilestone
 import com.knightindustries.knighttraining.core.store.resource
 import com.knightindustries.knighttraining.core.store.saveMilestone
 import com.knightindustries.knighttraining.core.store.weeklyReview
+import com.knightindustries.knighttraining.feature.coach.CoachTipState
 import com.knightindustries.knighttraining.feature.plan.DraftBlock
 import com.knightindustries.knighttraining.feature.session.SessionStart
 import java.time.Instant
@@ -79,6 +80,13 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeState.Loading)
+
+    /**
+     * The coach's tip about last week, under the Last week tile, when this week was committed
+     * before the review ever showed (the app stayed open past midnight): Plan This Week, where the
+     * tip normally shows, won't open again this week. Home reloads it when a week is committed.
+     */
+    val coachTip = CoachTipState(container, CoachTipState.Placement.COMMITTED_WEEK, viewModelScope)
 
     /** The session in progress, if any: Home shows a way back to it. */
     val session: StateFlow<PracticeSession?> = container.sessions.session

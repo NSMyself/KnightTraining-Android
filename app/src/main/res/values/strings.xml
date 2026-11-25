@@ -258,7 +258,8 @@
     <string name="review_held_back_hint">e.g. Ran out of time mid-week</string>
     <string name="review_wish">What do you wish you\'d done differently?</string>
     <string name="review_wish_hint">e.g. Trained earlier in the day</string>
-    <string name="review_next_week">Next week I want to:</string>
+    <string name="review_next_week">This week I want to:</string>
+    <string name="week_log_intent">Next week</string>
     <string name="intent_keep_same">Keep the same plan</string>
     <string name="intent_make_easier">Make it easier</string>
     <string name="intent_push_harder">Push harder</string>
@@ -552,13 +553,14 @@
     <string name="share_failed">Couldn\'t load this.</string>
 
     <!-- Weekly coach -->
-    <string name="review_preparing_tip">Preparing a tip for next week…</string>
-    <string name="review_tip_title">Coach\'s tip for next week</string>
-    <string name="review_tip_focus">Focus for next week</string>
-    <string name="review_tip_target">Target for next week</string>
-    <string name="review_tip_use">Use it next week</string>
+    <string name="coach_tip_loading">Your coach is looking at last week…</string>
+    <string name="review_tip_title">Coach\'s tip</string>
+    <string name="review_tip_focus">Focus for this week</string>
+    <string name="review_tip_target">Target for this week</string>
+    <string name="review_tip_use">Use it this week</string>
     <string name="review_tip_make_focus">Make it my focus</string>
-    <string name="review_tip_continue">Continue</string>
+    <string name="review_tip_got_it">Got it</string>
+    <string name="coach_tip_saved">Saved</string>
     <string name="review_tip_not_now">Not now</string>
     <string name="start_training">Start training</string>
     <string name="train_again">Train again</string>

@@ -225,7 +225,14 @@ fun HomeScreen(
                 Spacer(Modifier.height(64.dp))
                 CircularProgressIndicator()
             }
-            is HomeState.Loaded -> LazyColumn(
+            is HomeState.Loaded -> {
+                // The coach's tip, when this week was committed before the review showed. A new
+                // commit or rollover is when its answer can change.
+                val committedPlanId = current.surface.plan?.id
+                LaunchedEffect(committedPlanId, current.lastWeek?.plan?.id) {
+                    if (committedPlanId != null) viewModel.coachTip.load() else viewModel.coachTip.hide()
+                }
+                LazyColumn(
                 state = listState,
                 // Below the bar, not under it: the bar is clear over the glow until it collapses.
                 modifier = Modifier.padding(top = padding.calculateTopPadding()),
@@ -245,7 +252,7 @@ fun HomeScreen(
                     ) { addingMoreTo = it } }
                 homeTiles(
                     layout,
-                    TileData(current.surface, current.stats, current.lastWeek, milestones),
+                    TileData(current.surface, current.stats, current.lastWeek, milestones, viewModel.coachTip),
                     MilestoneActions(
                         onToggle = { milestone ->
                             if (milestone.completedAt == null) feedback(FeedbackEvent.MilestoneCompleted)
@@ -257,6 +264,7 @@ fun HomeScreen(
                     ),
                     onOpenHistory,
                 )
+            }
             }
         }
     }

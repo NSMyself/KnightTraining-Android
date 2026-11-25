@@ -177,7 +177,7 @@ class WeeklyTipCoachTest {
         val verification = model.prompts[1].second
         assertTrue(verification.contains("Proposed tip to review:\n- Spend part of your puzzle time on Lichess's Fork theme."))
         assertTrue(verification.contains("- Suggested change: openings → 60"))
-        assertTrue(verification.contains("- Proposed focus for next week: Forks"))
+        assertTrue(verification.contains("- Proposed focus for the coming week: Forks"))
         assertTrue("The schema rides along", model.prompts[0].second.contains("Respond with only a JSON object, no other text, with these fields:\n\"tip\" (string)"))
         assertTrue(model.prompts[1].second.contains("with these fields in this order:\n\"reason\" (string)"))
     }

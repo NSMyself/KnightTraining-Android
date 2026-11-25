@@ -158,10 +158,10 @@ class WeeklyTipCoach(private val model: LanguageModel) {
         private val SUGGESTION_SCHEMA = unwrap(
             """
             Respond with only a JSON object, no other text, with these fields:
-            "tip" (string): One or two short, warm, specific sentences suggesting an adjustment for next week's plan, referencing what actually happened.
+            "tip" (string): One or two short, warm, specific sentences suggesting an adjustment for the coming week's plan, referencing what actually happened.
             "activityTypeCode" (string or null): The activity type code this tip is about, if it targets one specific goal — one of: puzzles, playing, analyzing, openings, endgames. Null if the tip is general advice (e.g. about timing or habits) not tied to a single goal.
             "suggestedTargetValue" (integer or null): A specific new target value to suggest for that activity's goal, only if the tip proposes a concrete number change. A number of puzzles or games for those goals; minutes for every other goal. Always in the units that goal's own plan line uses, never a number taken from a different goal.
-            "focus" (string or null): Optional: one short phrase (under 8 words) naming the single chess skill to focus on next week, only if a weak Lichess puzzle theme or the player's own notes about their chess support it. Null otherwise.
+            "focus" (string or null): Optional: one short phrase (under 8 words) naming the single chess skill to focus on in the coming week, only if a weak Lichess puzzle theme or the player's own notes about their chess support it. Null otherwise.
             """,
             keepLines = true,
         )
@@ -220,7 +220,7 @@ class WeeklyTipCoach(private val model: LanguageModel) {
                 You're reviewing one specific week: what the player committed to, what they actually did,
                 and any notes they left themselves — specifically what held them back and what they wish
                 they'd done differently. From that, suggest exactly ONE small, specific, actionable
-                adjustment for next week's plan — grounded in what actually happened, never generic
+                adjustment for the coming week's plan — grounded in what actually happened, never generic
                 encouragement like "keep up the great work," and never a sarcastic or backhanded reframe
                 of something the player said bothered them. Build on what the player wished they'd done
                 differently rather than restating it — a tip that just repeats their own words back adds
@@ -242,7 +242,7 @@ class WeeklyTipCoach(private val model: LanguageModel) {
                 shows no puzzles at all in the last 30 days and they logged no puzzles in the app either,
                 suggesting some puzzle practice is a good tip.
 
-                Separately, you may name one "focus" for next week: a short phrase (under 8 words) naming
+                Separately, you may name one "focus" for the coming week: a short phrase (under 8 words) naming
                 the single chess skill most worth working on, e.g. "Pins" or "Endgame technique". Prefer the weakest Lichess puzzle theme when one is listed; otherwise
                 use something the player wrote about their own chess (not about their schedule). If
                 neither supports one, leave "focus" empty rather than inventing something generic. If they
@@ -445,7 +445,7 @@ class WeeklyTipCoach(private val model: LanguageModel) {
             review?.wentWell?.takeIf { it.isNotEmpty() }?.let { add("- What went well: $it") }
             review?.heldBack?.takeIf { it.isNotEmpty() }?.let { add("- What held them back: $it") }
             review?.wishIDone?.takeIf { it.isNotEmpty() }?.let { add("- What they wish they'd done: $it") }
-            review?.nextWeekIntent?.takeIf { it.isNotEmpty() }?.let { add("- Stated intent for next week: $it") }
+            review?.nextWeekIntent?.takeIf { it.isNotEmpty() }?.let { add("- Stated intent for the coming week: $it") }
             notedActivities.forEach { activity -> activity.notes?.takeIf { it.isNotEmpty() }?.let { add("- ${activity.activityType.code}: $it") } }
         }
 
@@ -454,7 +454,7 @@ class WeeklyTipCoach(private val model: LanguageModel) {
             tip.activityTypeCode?.let { code ->
                 lines += tip.suggestedTargetValue?.let { "- Suggested change: $code → $it" } ?: "- About: $code"
             }
-            normalizedFocus(tip.focus)?.let { lines += "- Proposed focus for next week: $it" }
+            normalizedFocus(tip.focus)?.let { lines += "- Proposed focus for the coming week: $it" }
             return lines.joinToString("\n")
         }
 

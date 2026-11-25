@@ -19,6 +19,7 @@ import com.knightindustries.knighttraining.widget.WidgetStyle
 import android.util.Log
 import com.knightindustries.knighttraining.core.lichess.LichessClient
 import com.knightindustries.knighttraining.core.lichess.LichessSync
+import com.knightindustries.knighttraining.coach.WeeklyCoachTipGenerator
 import com.knightindustries.knighttraining.coach.WeeklyTipService
 import com.knightindustries.knighttraining.lichess.LichessAuth
 import com.knightindustries.knighttraining.lichess.LichessCredentials
@@ -100,6 +101,9 @@ class AppContainer(application: Application) {
 
     /** The weekly coach on Gemini Nano (debug builds only for now). */
     val weeklyTipService: WeeklyTipService by lazy { WeeklyTipService(this) }
+
+    /** Writes each reviewed week's tip in the background, for Plan This Week to show. */
+    val weeklyCoachTipGenerator: WeeklyCoachTipGenerator by lazy { WeeklyCoachTipGenerator(this, application) }
 
     private val coachModelPrefetched = AtomicBoolean(false)
 

@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.home
 
+import com.knightindustries.knighttraining.feature.coach.CoachTipCard
+import com.knightindustries.knighttraining.feature.coach.CoachTipState
 import androidx.compose.runtime.getValue
 import androidx.compose.animation.core.animateFloatAsState
 import com.knightindustries.knighttraining.ui.AnimatedValueText
@@ -60,6 +62,8 @@ data class TileData(
     val stats: WeeklyTrainingStats,
     val lastWeek: LastWeek?,
     val milestones: MilestonesSnapshot?,
+    /** Shown under the Last week tile; see `HomeViewModel.coachTip`. */
+    val coachTip: CoachTipState? = null,
 )
 
 data class MilestoneActions(
@@ -93,7 +97,10 @@ private fun WideTile(tile: HomeTile, data: TileData, milestoneActions: Milestone
         HomeTile.MILESTONES -> data.milestones?.let {
             MilestonesCard(it, milestoneActions.onToggle, milestoneActions.onAdd, milestoneActions.onEdit, milestoneActions.onDelete)
         }
-        HomeTile.LAST_WEEK -> LastWeekTile(data.lastWeek, onOpenHistory)
+        HomeTile.LAST_WEEK -> Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            LastWeekTile(data.lastWeek, onOpenHistory)
+            data.coachTip?.let { CoachTipCard(it) }
+        }
         else -> Unit
     }
 }

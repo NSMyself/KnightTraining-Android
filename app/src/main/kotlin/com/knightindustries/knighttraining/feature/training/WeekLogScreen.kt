@@ -230,7 +230,7 @@ private fun ReflectionCard(review: WeeklyReview, onEdit: () -> Unit) {
                     }
                 }
             review.nextWeekIntent?.let {
-                Text(stringResource(R.string.review_next_week), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.week_log_intent), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(stringResource(intentName(it)), style = MaterialTheme.typography.bodyMedium)
             }
             review.nextWeekFocus?.takeIf { it.isNotBlank() }?.let {

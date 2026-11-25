@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.rounded.CheckCircle
 import com.knightindustries.knighttraining.ui.AnimatedLinearProgress
-import android.widget.Toast
-import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -32,10 +30,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -49,7 +45,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -58,36 +53,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.knightindustries.knighttraining.AppContainer
 import com.knightindustries.knighttraining.R
-import com.knightindustries.knighttraining.coach.WeeklyTipService
-import com.knightindustries.knighttraining.core.coach.CoachTargetChange
-import com.knightindustries.knighttraining.core.coach.WeeklyTip
-import com.knightindustries.knighttraining.core.model.PlanSuggestionEngine
-import com.knightindustries.knighttraining.core.model.PlanSuggestionHistory
-import com.knightindustries.knighttraining.core.model.TargetType
-import com.knightindustries.knighttraining.core.model.WeekCalendar
-import com.knightindustries.knighttraining.core.model.WeeklyPlan
 import com.knightindustries.knighttraining.core.model.WeeklyReview
 import com.knightindustries.knighttraining.core.store.WeekReviewContext
-import com.knightindustries.knighttraining.core.store.applyCoachTarget
 import com.knightindustries.knighttraining.core.store.saveWeeklyReview
-import com.knightindustries.knighttraining.core.store.setNextWeekFocus
 import com.knightindustries.knighttraining.core.store.weekReviewContext
 import com.knightindustries.knighttraining.feature.home.weekRange
 import com.knightindustries.knighttraining.ui.activityName
 import com.knightindustries.knighttraining.ui.durationText
-import com.knightindustries.knighttraining.ui.targetText
-import java.time.Instant
 import java.util.UUID
 import kotlinx.coroutines.launch
 
-/** iOS `WeeklyReviewViewModel`: the reflection, then (on a supported phone) the coach's tip. */
+/**
+ * iOS `WeeklyReviewViewModel`: the reflection. The coach's tip isn't shown here: it's advice for the
+ * week being planned, so it's written in the background once the review is saved and shown on Plan
+ * This Week (`WeeklyCoachTipGenerator`, `CoachTipCard`).
+ */
 class WeeklyReviewViewModel(private val container: AppContainer, private val weeklyPlanId: UUID) : ViewModel() {
-    sealed interface Phase {
-        data object Form : Phase
-        data object PreparingTip : Phase
-        data class Tip(val tip: WeeklyTip, val accepted: Boolean = false) : Phase
-    }
-
     var context by mutableStateOf<WeekReviewContext?>(null)
         private set
     var wentWell by mutableStateOf("")
@@ -95,8 +76,6 @@ class WeeklyReviewViewModel(private val container: AppContainer, private val wee
     var wishIDone by mutableStateOf("")
     var intent by mutableStateOf<String?>(null)
     var isSaving by mutableStateOf(false)
-        private set
-    var phase by mutableStateOf<Phase>(Phase.Form)
         private set
 
     init {
@@ -113,68 +92,23 @@ class WeeklyReviewViewModel(private val container: AppContainer, private val wee
     }
 
     /**
-     * Every field is optional: a mostly empty reflection still saves. Then the coach gets its turn,
-     * and [onSaved] runs straight away when it has nothing to say, after [onCoachSilent] hears why
-     * (the coach only runs in debug builds, where the reason is worth showing).
+     * Every field is optional: a mostly empty reflection still saves. Then the coach is asked about
+     * this week in the app's scope, so its tip is ready by the time the next one is planned; the
+     * review doesn't wait for it.
      */
-    fun save(onSaved: () -> Unit, onCoachSilent: (String) -> Unit = {}) {
+    fun save(onSaved: () -> Unit) {
         val current = context ?: return
         isSaving = true
         viewModelScope.launch {
-            val review: WeeklyReview
             try {
                 val base = current.existing ?: WeeklyReview(weeklyPlanId = weeklyPlanId)
-                review = base.updating(wentWell.clean(), heldBack.clean(), wishIDone.clean(), intent)
-                container.store.saveWeeklyReview(review)
+                container.store.saveWeeklyReview(base.updating(wentWell.clean(), heldBack.clean(), wishIDone.clean(), intent))
                 container.preferences.setLastReviewedWeekStart(current.plan.weekStart)
             } finally {
                 isSaving = false
             }
-            val service = container.weeklyTipService
-            if (!service.isEnabledInThisBuild) return@launch onSaved()
-            phase = Phase.PreparingTip
-            when (val result = service.generateTip(current.plan, review, current.notedActivities, current.previous?.nextWeekFocus)) {
-                is WeeklyTipService.Result.Silent -> {
-                    phase = Phase.Form
-                    onCoachSilent(result.reason)
-                    onSaved()
-                }
-                is WeeklyTipService.Result.Tip -> {
-                    phase = Phase.Tip(result.tip)
-                    if (result.tip.suggestsCoach) service.recordCoachSuggestionShown()
-                }
-            }
-        }
-    }
-
-    /**
-     * Shows a given tip as if the coach had written it (iOS `showTipForPreview`): for UI tests,
-     * since no emulator runs Gemini Nano.
-     */
-    @VisibleForTesting
-    fun showTipForPreview(tip: WeeklyTip) {
-        phase = Phase.Tip(tip)
-    }
-
-    /** Saves the coach's focus and target change onto this review; "Not now" saves neither. */
-    fun acceptTip() {
-        val current = context ?: return
-        val shown = phase as? Phase.Tip ?: return
-        viewModelScope.launch {
-            val tip = shown.tip
-            tip.focus?.let { container.store.setNextWeekFocus(it, weeklyPlanId) }
-            val code = tip.targetActivityTypeCode
-            val value = tip.targetValue
-            if (code != null && value != null) {
-                val firstLaunch = container.preferences.firstLaunch()
-                container.store.applyCoachTarget(
-                    PlanSuggestionHistory.CoachTarget(code, value),
-                    reviewedWeeklyPlanId = weeklyPlanId,
-                    goalTemplateId = CoachTargetChange.goal(code, current.plan)?.goalTemplateId,
-                    currentWeekStart = WeeklyPlan.effectiveWeekStart(Instant.now(), firstLaunch, WeekCalendar.system()),
-                )
-            }
-            phase = shown.copy(accepted = true)
+            container.appScope.launch { container.weeklyCoachTipGenerator.generateIfNeeded(current.plan) }
+            onSaved()
         }
     }
 
@@ -194,8 +128,6 @@ class WeeklyReviewViewModel(private val container: AppContainer, private val wee
 @Composable
 fun WeeklyReviewScreen(viewModel: WeeklyReviewViewModel, onDone: () -> Unit, onOpenHistory: (() -> Unit)? = null) {
     val context = viewModel.context
-    // The application context, so the debug toast outlives this screen closing.
-    val appContext = LocalContext.current.applicationContext
     Scaffold(
         topBar = {
             TopAppBar(
@@ -209,20 +141,6 @@ fun WeeklyReviewScreen(viewModel: WeeklyReviewViewModel, onDone: () -> Unit, onO
         if (context == null) {
             CircularProgressIndicator(Modifier.padding(padding).padding(32.dp))
             return@Scaffold
-        }
-        when (val phase = viewModel.phase) {
-            WeeklyReviewViewModel.Phase.PreparingTip -> {
-                Column(Modifier.padding(padding).fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                    CircularProgressIndicator()
-                    Text(stringResource(R.string.review_preparing_tip), modifier = Modifier.padding(top = 16.dp), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-                return@Scaffold
-            }
-            is WeeklyReviewViewModel.Phase.Tip -> {
-                TipCard(phase, Modifier.padding(padding), onAccept = viewModel::acceptTip, onContinue = onDone)
-                return@Scaffold
-            }
-            WeeklyReviewViewModel.Phase.Form -> Unit
         }
         val plan = context.plan
         Column(
@@ -300,64 +218,10 @@ fun WeeklyReviewScreen(viewModel: WeeklyReviewViewModel, onDone: () -> Unit, onO
                     )
                 }
             }
-            Button(onClick = { viewModel.save(onDone, onCoachSilent = { Toast.makeText(appContext, "Coach skipped: $it", Toast.LENGTH_LONG).show() }) }, enabled = !viewModel.isSaving, modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
+            Button(onClick = { viewModel.save(onDone) }, enabled = !viewModel.isSaving, modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
                 Text(stringResource(R.string.save))
             }
         }
-    }
-}
-
-/**
- * The coach's tip, with its focus and target change when it offered them. The primary button
- * saves both ("Use it next week" with a target, else "Make it my focus"), then becomes Continue;
- * "Not now" leaves without saving. A bare tip just has Continue.
- */
-@Composable
-private fun TipCard(phase: WeeklyReviewViewModel.Phase.Tip, modifier: Modifier, onAccept: () -> Unit, onContinue: () -> Unit) {
-    val tip = phase.tip
-    val hasTarget = tip.targetActivityTypeCode != null && tip.targetValue != null
-    val offersAdvice = (tip.focus != null || hasTarget) && !phase.accepted
-    Column(
-        modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp).navigationBarsPadding(),
-        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
-    ) {
-        Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
-            Column(Modifier.padding(20.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(stringResource(R.string.review_tip_title), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
-                Text(tip.text, style = MaterialTheme.typography.bodyLarge)
-                tip.focus?.let { Advice(stringResource(R.string.review_tip_focus), it) }
-                if (hasTarget) {
-                    val code = tip.targetActivityTypeCode!!
-                    val type = PlanSuggestionEngine.targetType(code)
-                    val target = targetText(code, type, tip.targetValue!!)
-                    // A count already names the activity ("40 puzzles"); a duration doesn't.
-                    Advice(stringResource(R.string.review_tip_target), if (type == TargetType.COUNT) target else "${activityName(code)}: $target")
-                }
-            }
-        }
-        Button(onClick = if (offersAdvice) onAccept else onContinue, modifier = Modifier.fillMaxWidth()) {
-            Text(
-                stringResource(
-                    when {
-                        !offersAdvice -> R.string.review_tip_continue
-                        hasTarget -> R.string.review_tip_use
-                        else -> R.string.review_tip_make_focus
-                    },
-                ),
-            )
-        }
-        if (offersAdvice) {
-            TextButton(onClick = onContinue, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.review_tip_not_now)) }
-        }
-    }
-}
-
-@Composable
-private fun Advice(label: String, text: String) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        HorizontalDivider()
-        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 8.dp))
-        Text(text, style = MaterialTheme.typography.bodyMedium)
     }
 }
 

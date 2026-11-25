@@ -1863,13 +1863,13 @@
   "fr": "Barres : temps d'étude de chaque semaine. Ligne : ton classement à la fin de celle-ci."
  },
  "review_tip_title": {
-  "pt-PT": "Dica do treinador para a próxima semana",
-  "es": "Consejo del entrenador para la próxima semana",
-  "pt-BR": "Dica do treinador para a próxima semana",
-  "nl": "Tip van de trainer voor volgende week",
-  "it": "Il consiglio del coach per la prossima settimana",
-  "de": "Trainertipp für nächste Woche",
-  "fr": "Le conseil du coach pour la semaine prochaine"
+  "pt-PT": "Dica do treinador",
+  "es": "Consejo del entrenador",
+  "pt-BR": "Dica do treinador",
+  "nl": "Tip van de trainer",
+  "it": "Il consiglio del coach",
+  "de": "Trainertipp",
+  "fr": "Le conseil du coach"
  },
  "start_training": {
   "de": "Training starten",
