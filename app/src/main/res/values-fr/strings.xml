@@ -64,7 +64,7 @@
     <string name="classical_tip">Les cadences lentes laissent le temps de réfléchir. C\'est là qu\'on progresse vraiment.</string>
     <string name="preset_tactics_title">La tactique d\'abord</string>
     <string name="preset_tactics_description">La plupart des parties de club se jouent sur une tactique. Beaucoup de problèmes, quelques parties lentes, et un retour sur chacune.</string>
-    <string name="preset_slow_title">Parties lentes, analyse approfondie</string>
+    <string name="preset_slow_title">Prends ton temps</string>
     <string name="preset_slow_description">Moins de parties, plus de réflexion. Joue des parties longues jusqu\'au bout et apprends de chacune.</string>
     <string name="preset_endgames_title">Les bases des finales</string>
     <string name="preset_endgames_description">Apprends les finales qui arrivent vraiment dans tes parties. D\'abord les finales de tours, les plus fréquentes.</string>

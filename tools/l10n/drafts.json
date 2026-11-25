@@ -1871,15 +1871,6 @@
   "de": "Trainertipp für nächste Woche",
   "fr": "Le conseil du coach pour la semaine prochaine"
  },
- "preset_slow_title": {
-  "pt-PT": "Partidas lentas, análise a fundo",
-  "es": "Partidas lentas, análisis a fondo",
-  "pt-BR": "Partidas lentas, análise a fundo",
-  "nl": "Lange partijen, grondige analyse",
-  "it": "Partite lente, analisi approfondita",
-  "de": "Lange Partien, gründliche Analyse",
-  "fr": "Parties lentes, analyse approfondie"
- },
  "start_training": {
   "de": "Training starten",
   "es": "Empezar a entrenar",

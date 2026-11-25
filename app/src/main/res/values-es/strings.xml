@@ -64,7 +64,7 @@
     <string name="classical_tip">Los ritmos más lentos te dejan espacio para pensar a fondo. Ahí es donde de verdad mejoras.</string>
     <string name="preset_tactics_title">Primero la táctica</string>
     <string name="preset_tactics_description">La mayoría de las partidas de club se deciden por una táctica. Muchos problemas, algunas partidas lentas y un repaso de cada una.</string>
-    <string name="preset_slow_title">Partidas lentas, análisis a fondo</string>
+    <string name="preset_slow_title">Sin prisa</string>
     <string name="preset_slow_description">Menos partidas, más reflexión. Juega partidas largas hasta el final y aprende de cada una.</string>
     <string name="preset_endgames_title">Bases de los finales</string>
     <string name="preset_endgames_description">Aprende los finales que de verdad aparecen en tus partidas. Primero los de torres, que son los más comunes.</string>

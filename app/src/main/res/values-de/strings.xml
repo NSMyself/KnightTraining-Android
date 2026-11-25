@@ -62,7 +62,7 @@
     <string name="classical_tip">Längere Bedenkzeiten lassen Raum zum Durchdenken. Genau da wirst du wirklich besser.</string>
     <string name="preset_tactics_title">Taktik zuerst</string>
     <string name="preset_tactics_description">Die meisten Vereinspartien entscheidet eine Taktik. Viele Taktikaufgaben, ein paar langsame Partien und ein Blick zurück auf jede.</string>
-    <string name="preset_slow_title">Lange Partien, gründliche Analyse</string>
+    <string name="preset_slow_title">Lass dir Zeit</string>
     <string name="preset_slow_description">Weniger Partien, mehr Nachdenken. Spiele lange Partien bis zum Ende und lerne aus jeder.</string>
     <string name="preset_endgames_title">Endspiel-Grundlagen</string>
     <string name="preset_endgames_description">Lerne die Endspiele, die in deinen Partien wirklich vorkommen. Zuerst Turmendspiele, denn die sind am häufigsten.</string>

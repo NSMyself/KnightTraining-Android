@@ -78,7 +78,7 @@
     <!-- Presets (iOS PlanTemplatePreset.all, written 2026-11-03, awaiting a coach's review) -->
     <string name="preset_tactics_title">Tactics first</string>
     <string name="preset_tactics_description">Most club games are decided by a tactic. Plenty of puzzles, a few slow games, and a look back at each one.</string>
-    <string name="preset_slow_title">Slow games, deep review</string>
+    <string name="preset_slow_title">Take your time</string>
     <string name="preset_slow_description">Fewer games, more thinking. Play long games to the end and learn from every one.</string>
     <string name="preset_endgames_title">Endgame foundations</string>
     <string name="preset_endgames_description">Learn the endings that actually come up in your games. Rook endings first, since they\'re the most common.</string>
