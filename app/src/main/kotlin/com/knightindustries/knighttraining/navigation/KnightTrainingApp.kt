@@ -286,6 +286,7 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                         onBack = { backStack.removeLastOrNull() },
                         onCreatePlan = { backStack.add(CreatePlanRoute(commit = true)) },
                         onCommitted = { backStack.popTo(HomeRoute) },
+                        onOpenHistory = { backStack.add(TrainingHistoryRoute) },
                     )
                 }
             },

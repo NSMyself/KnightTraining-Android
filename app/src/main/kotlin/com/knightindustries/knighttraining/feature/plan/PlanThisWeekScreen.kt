@@ -1,5 +1,9 @@
 package com.knightindustries.knighttraining.feature.plan
 
+import com.knightindustries.knighttraining.core.store.weeklyReview
+import com.knightindustries.knighttraining.core.store.previousWeeklyPlan
+import com.knightindustries.knighttraining.feature.home.LastWeekTile
+import com.knightindustries.knighttraining.feature.home.LastWeek
 import com.knightindustries.knighttraining.feedback.FeedbackEvent
 import com.knightindustries.knighttraining.feedback.rememberFeedback
 import androidx.compose.foundation.layout.Arrangement
@@ -70,7 +74,20 @@ class PlanThisWeekViewModel(private val container: AppContainer) : ViewModel() {
      */
     val coachTip = CoachTipState(container, CoachTipState.Placement.PLANNING, viewModelScope)
 
+    /**
+     * Last week's goals and the obstacle, intent or focus its review named (iOS `LastWeekContext`),
+     * so this week is planned against what really happened. `null` when that review named none.
+     */
+    var lastWeek by mutableStateOf<LastWeek?>(null)
+        private set
+
     init {
+        viewModelScope.launch {
+            val previous = container.store.previousWeeklyPlan(firstLaunch = container.preferences.firstLaunch()) ?: return@launch
+            val review = container.store.weeklyReview(previous.id) ?: return@launch
+            val said = listOf(review.heldBack, review.wishIDone, review.nextWeekFocus).any { !it.isNullOrBlank() }
+            if (said) lastWeek = LastWeek(previous, review)
+        }
         // Separate from the plans: the coach may still be writing, and the list shouldn't wait.
         viewModelScope.launch { coachTip.load() }
         viewModelScope.launch {
@@ -97,7 +114,13 @@ class PlanThisWeekViewModel(private val container: AppContainer) : ViewModel() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlanThisWeekScreen(viewModel: PlanThisWeekViewModel, onBack: () -> Unit, onCreatePlan: () -> Unit, onCommitted: () -> Unit) {
+fun PlanThisWeekScreen(
+    viewModel: PlanThisWeekViewModel,
+    onBack: () -> Unit,
+    onCreatePlan: () -> Unit,
+    onCommitted: () -> Unit,
+    onOpenHistory: () -> Unit = {},
+) {
     val templates by viewModel.templates.collectAsStateWithLifecycle()
     val feedback = rememberFeedback()
 
@@ -126,6 +149,9 @@ fun PlanThisWeekScreen(viewModel: PlanThisWeekViewModel, onBack: () -> Unit, onC
         ) {
             item {
                 Text(stringResource(R.string.plan_this_week_subtitle), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(bottom = 4.dp))
+            }
+            viewModel.lastWeek?.let { lastWeek ->
+                item(key = "lastWeek") { LastWeekTile(lastWeek, onOpenHistory, Modifier.animateItem()) }
             }
             item(key = "coachTip") { CoachTipCard(viewModel.coachTip, Modifier.animateItem()) }
             items(templates.orEmpty(), key = { it.id }) { template ->

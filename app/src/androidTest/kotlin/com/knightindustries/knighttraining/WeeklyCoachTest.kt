@@ -64,6 +64,7 @@ class WeeklyCoachTest {
     private lateinit var plan: WeeklyPlan
     private lateinit var template: PlanTemplate
     private var done = false
+    private var openedHistory = false
 
     @Before
     fun seedLastWeek() = runBlocking {
@@ -94,7 +95,7 @@ class WeeklyCoachTest {
             container.store.saveCoachTip(tip, plan.id)
         }
         val viewModel = PlanThisWeekViewModel(container)
-        compose.setContent { KnightTrainingTheme { PlanThisWeekScreen(viewModel, onBack = {}, onCreatePlan = {}, onCommitted = { done = true }) } }
+        compose.setContent { KnightTrainingTheme { PlanThisWeekScreen(viewModel, onBack = {}, onCreatePlan = {}, onCommitted = { done = true }, onOpenHistory = { openedHistory = true }) } }
         compose.waitUntilAtLeastOneExists(hasText(tip.text!!), 10_000)
     }
 
@@ -148,5 +149,14 @@ class WeeklyCoachTest {
         val review = runBlocking { container.store.weeklyReview(plan.id) }!!
         assertNull(review.nextWeekFocus)
         assertEquals(CoachTip.Status.DISMISSED, review.coachTip?.status)
+    }
+
+    /** iOS `LastWeekCard` above the tip: what last week's review said, and a way into Training History. */
+    @Test
+    fun planThisWeekShowsLastWeekAndOpensHistory() {
+        showPlanThisWeek(CoachTip(CoachTip.Status.READY, "Spend ten minutes on Lichess's Fork theme first."))
+        compose.onNodeWithText("“Missed a lot of forks”").assertExists()
+        compose.onNodeWithText(text(R.string.tile_last_week)).performClick()
+        compose.runOnIdle { assertEquals(true, openedHistory) }
     }
 }

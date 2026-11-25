@@ -115,8 +115,10 @@ filled buttons are a lighter blue with navy text, Material's own convention, whe
   actual minutes on a `Canvas` chart (press and drag to read a week), the last 36 days as iOS's
   4×9 grid (tap or hold a day), and three stats. Its queries are in
   `core/store/TrainingStoreHistory.kt`, ported with iOS's tests (`TrainingHistoryTest`). Time of
-  day is bucketed in the store's calendar zone, where iOS's SQL uses SQLite's `localtime`. Not yet
-  reachable from Plan This Week or the weekly review, which have no Last Week card on Android.
+  day is bucketed in the store's calendar zone, where iOS's SQL uses SQLite's `localtime`. Also
+  opened from the Last week card on Plan This Week (`LastWeekTile`, shared with Home; shown there
+  only when last week's review named an obstacle, intent or focus, like iOS's `LastWeekContext`)
+  and from the weekly review's card.
 - **Onboarding** (`feature/onboarding/`) follows iOS's: four pages on the glow with iOS's artwork
   (WebP in `drawable-nodpi`; the target page uses a Material icon for iOS's SF Symbol), title,
   subtitle and detail, the first page's text staged in once. "Let's go" grows a white circle into

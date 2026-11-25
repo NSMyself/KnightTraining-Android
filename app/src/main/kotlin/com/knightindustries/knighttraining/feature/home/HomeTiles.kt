@@ -220,10 +220,13 @@ private fun WeeklyActivityTile(surface: WeeklySurface, onOpen: () -> Unit) {
     }
 }
 
-/** Last week's goals and what its review said: the context for this week's plan. Opens Training History. */
+/**
+ * Last week's goals and what its review said: the context for this week's plan (iOS `LastWeekCard`).
+ * Opens Training History. Shared by Home's tile and Plan This Week.
+ */
 @Composable
-private fun LastWeekTile(lastWeek: LastWeek?, onOpen: () -> Unit) {
-    Card(onClick = onOpen, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+fun LastWeekTile(lastWeek: LastWeek?, onOpen: () -> Unit, modifier: Modifier = Modifier) {
+    Card(onClick = onOpen, modifier = modifier, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
         Column(Modifier.padding(20.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(stringResource(R.string.tile_last_week), style = MaterialTheme.typography.titleMedium)
             if (lastWeek == null) {
