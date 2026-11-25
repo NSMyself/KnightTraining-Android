@@ -378,6 +378,7 @@
     <string name="reminder_pick_a_day">Pick at least one day.</string>
     <string name="reminder_delete">Delete reminder</string>
     <string name="reminder_add">Add reminder</string>
+    <string name="see_all">See all</string>
     <string name="reminder_no_days">No days selected: no reminders will arrive.</string>
     <string name="mesh_dimmed">Dimmed to save battery · Tap to show</string>
     <string name="sounds">Sounds</string>

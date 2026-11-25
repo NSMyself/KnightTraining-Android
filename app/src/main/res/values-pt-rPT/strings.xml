@@ -341,6 +341,7 @@
     <string name="reminder_pick_a_day">Escolhe pelo menos um dia.</string>
     <string name="reminder_delete">Apagar lembrete</string>
     <string name="reminder_add">Adicionar lembrete</string>
+    <string name="see_all">Ver tudo</string>
     <string name="reminder_no_days">Nenhum dia escolhido: não vais receber lembretes.</string>
     <string name="mesh_dimmed">Modo poupança de bateria · Toca para mostrar</string>
     <string name="sounds">Sons</string>

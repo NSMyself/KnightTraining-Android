@@ -46,6 +46,10 @@ data class WeeklyReviewRoute(val weeklyPlanId: String) : Route
 @Serializable
 data class ResourceDetailRoute(val resourceId: String) : Route
 
+/** Every resource of one kind: the shelf for books and courses, the full list for studies. */
+@Serializable
+data class ResourceKindRoute(val kindCode: String) : Route
+
 /** Edit a saved plan. [templateId] is a UUID string. */
 @Serializable
 data class EditPlanRoute(val templateId: String) : Route

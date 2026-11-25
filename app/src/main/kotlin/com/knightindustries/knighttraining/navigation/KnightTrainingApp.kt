@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.navigation
 
+import com.knightindustries.knighttraining.feature.resources.ResourceShelfScreen
 import androidx.compose.foundation.background
 import com.knightindustries.knighttraining.feature.history.TrainingHistoryScreen
 import com.knightindustries.knighttraining.feature.history.TrainingHistoryViewModel
@@ -253,9 +254,18 @@ private fun MainContent(pendingAction: String?, onActionHandled: () -> Unit) {
                             onOpen = { backStack.add(ResourceDetailRoute(it.toString())) },
                             onAdd = { addCount++; adding = true },
                             contentPadding = padding,
+                            onSeeAll = { backStack.add(ResourceKindRoute(it)) },
                         )
                         if (adding) AddResourceSheet(appViewModel(key = "add-resource-$addCount") { AddResourceViewModel(it) }) { adding = false }
                     }
+                }
+                entry<ResourceKindRoute> { route ->
+                    ResourceShelfScreen(
+                        viewModel = appViewModel { ResourcesViewModel(it) },
+                        kindCode = route.kindCode,
+                        onOpen = { backStack.add(ResourceDetailRoute(it.toString())) },
+                        onBack = { backStack.remove(route) },
+                    )
                 }
                 entry<ResourceDetailRoute> { route ->
                     ResourceDetailScreen(

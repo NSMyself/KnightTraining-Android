@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.feature.resources
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material.icons.automirrored.rounded.LibraryBooks
@@ -97,7 +99,13 @@ class ResourcesViewModel(container: AppContainer) : ViewModel() {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResourcesScreen(viewModel: ResourcesViewModel, onOpen: (UUID) -> Unit, onAdd: () -> Unit, contentPadding: PaddingValues) {
+fun ResourcesScreen(
+    viewModel: ResourcesViewModel,
+    onOpen: (UUID) -> Unit,
+    onAdd: () -> Unit,
+    contentPadding: PaddingValues,
+    onSeeAll: (String) -> Unit = {},
+) {
     val resources by viewModel.resources.collectAsStateWithLifecycle()
     var searching by rememberSaveable { mutableStateOf(false) }
     var query by rememberSaveable { mutableStateOf("") }
@@ -165,11 +173,26 @@ fun ResourcesScreen(viewModel: ResourcesViewModel, onOpen: (UUID) -> Unit, onAdd
                     val ofKind = visible.filter { it.kind.code == code }
                     if (ofKind.isEmpty()) return@forEach
                     item(key = "header-$code") {
-                        Text(stringResource(kindPluralRes(code)), style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 4.dp))
+                        // A chevron means the header opens the whole kind (iOS): the shelf for kinds
+                        // with covers, the full list for studies. Other rows already show everything.
+                        val title = stringResource(kindPluralRes(code))
+                        if (code in ResourceShelf.kinds) {
+                            Row(
+                                Modifier.fillMaxWidth().clickable(onClickLabel = stringResource(R.string.see_all)) { onSeeAll(code) }
+                                    .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                                Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        } else {
+                            Text(title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 4.dp))
+                        }
                     }
                     if (code == ResourceKind.LICHESS_STUDY) {
                         // Studies have no covers: a row of identical placeholders said nothing.
-                        items(ofKind.sortedWith(studyOrder), key = { it.id }) { StudyRow(it) { onOpen(it.id) } }
+                        // Capped here; the header opens the full list in the same order.
+                        items(ofKind.sortedWith(studyOrder).take(ResourceShelf.STUDY_ROW_LIMIT), key = { it.id }) { StudyRow(it) { onOpen(it.id) } }
                     } else {
                         item(key = "row-$code") {
                             LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -184,7 +207,7 @@ fun ResourcesScreen(viewModel: ResourcesViewModel, onOpen: (UUID) -> Unit, onAdd
 }
 
 /** In progress by recency, then not started, then finished (iOS `LichessStudyList`). */
-private val studyOrder = compareBy<Resource>({ it.status().let { s -> listOf(ResourceStatus.IN_PROGRESS, ResourceStatus.NOT_STARTED, ResourceStatus.COMPLETED).indexOf(s) } })
+internal val studyOrder = compareBy<Resource>({ it.status().let { s -> listOf(ResourceStatus.IN_PROGRESS, ResourceStatus.NOT_STARTED, ResourceStatus.COMPLETED).indexOf(s) } })
     .thenByDescending { it.lastAccessedAt }
 
 @Composable
@@ -222,7 +245,7 @@ private fun ResourceCard(resource: Resource, onClick: () -> Unit) {
 }
 
 @Composable
-private fun StudyRow(resource: Resource, onClick: () -> Unit) {
+internal fun StudyRow(resource: Resource, onClick: () -> Unit) {
     ListItem(
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         headlineContent = { Text(resource.title, maxLines = 1, overflow = TextOverflow.Ellipsis) },

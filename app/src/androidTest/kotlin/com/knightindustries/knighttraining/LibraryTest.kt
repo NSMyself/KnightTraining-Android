@@ -1,5 +1,10 @@
 package com.knightindustries.knighttraining
 
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.semantics.SemanticsProperties
+import com.knightindustries.knighttraining.core.store.saveResources
+import com.knightindustries.knighttraining.core.model.Resource
+import androidx.compose.ui.test.hasContentDescription
 import android.Manifest
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
@@ -87,5 +92,36 @@ class LibraryTest {
         compose.waitUntilAtLeastOneExists(hasText("Overprotection clicked"), 5_000)
         compose.waitUntilAtLeastOneExists(hasText("100%"), 5_000)
         screenshot("34_detail_finished")
+    }
+
+    /** A kind's header, not its filter chip (a checkbox) of the same name. */
+    private fun header(id: Int) = hasText(text(id)) and hasClickAction() and SemanticsMatcher.keyNotDefined(SemanticsProperties.Role)
+
+    /** iOS: a chevron on Books opens the shelf; on studies, the full list behind the library's four. */
+    @Test
+    fun headersOpenEveryResourceOfTheirKind() {
+        runBlocking {
+            val book = container.store.resourceKind("book")!!
+            val study = container.store.resourceKind("lichess_study")!!
+            container.store.saveResources(
+                listOf("My System", "Endgame Strategy").map { Resource(kind = book, title = it) } +
+                    (1..6).map { Resource(kind = study, title = "Study $it") },
+            )
+        }
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.tab_resources)), 10_000)
+        compose.onNodeWithText(text(R.string.tab_resources)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText("Study 1"), 5_000)
+        compose.onNodeWithText("Study 5").assertDoesNotExist()
+
+        compose.onNode(header(R.string.kinds_lichess_study)).performScrollTo().performClick()
+        compose.waitUntilAtLeastOneExists(hasText("Study 6"), 5_000)
+        compose.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+
+        compose.waitUntilAtLeastOneExists(header(R.string.kinds_book), 5_000)
+        compose.onNode(header(R.string.kinds_book)).performClick()
+        compose.waitUntilAtLeastOneExists(hasContentDescription("Endgame Strategy"), 5_000)
+        screenshot("35_book_shelf")
+        compose.onNode(hasContentDescription("My System")).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.mark_finished)), 5_000)
     }
 }

@@ -341,6 +341,7 @@
     <string name="reminder_pick_a_day">Elige al menos un día.</string>
     <string name="reminder_delete">Eliminar recordatorio</string>
     <string name="reminder_add">Agregar recordatorio</string>
+    <string name="see_all">Ver todo</string>
     <string name="reminder_no_days">Ningún día elegido: no te llegarán recordatorios.</string>
     <string name="mesh_dimmed">Atenuado para ahorrar batería · Toca para mostrar</string>
     <string name="sounds">Sonidos</string>

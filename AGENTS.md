@@ -235,9 +235,12 @@ maintainer confirms how interactions *feel* on a device themselves.
    the cover's averaged color (`coverAccent`, iOS's normalization) over a blurred cover, videos
    are "watched" rather than "finished", each completion is numbered with the time that pass took,
    and the list has loading, empty and no-match states. iOS's load-error state has no Android
-   counterpart: the library is a local Room flow. Not yet: YouTube playlist import (needs an
-   Android-restricted API key from the maintainer), the `shared_course` table and its catalog
-   merge, a "see all" shelf per kind.
+   counterpart: the library is a local Room flow. The Books, Courses and Lichess Studies headers
+   open every resource of that kind, ignoring search and filters as iOS does
+   (`ResourceShelfScreen`): covers three to a row on shelf ledges over the glow (iOS
+   `BookShelfScreen`), or the full study list, which the library caps at four rows
+   (`LibraryTest`). Not yet: YouTube playlist import (needs an Android-restricted API key from the
+   maintainer), the `shared_course` table and its catalog merge.
 4. Lichess: OAuth, Elo, activity sync (one request at a time, 60s after a 429), milestones.
    **Built 2026-11-12**:
    - Core: `core/lichess/` (payload models, `LichessClient` + `LichessRequestGate`, `LichessSync`).

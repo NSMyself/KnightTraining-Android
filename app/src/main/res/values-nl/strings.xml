@@ -334,6 +334,7 @@
     <string name="reminder_pick_a_day">Kies minstens één dag.</string>
     <string name="reminder_delete">Herinnering verwijderen</string>
     <string name="reminder_add">Herinnering toevoegen</string>
+    <string name="see_all">Alles tonen</string>
     <string name="reminder_no_days">Geen dagen gekozen: je krijgt geen herinneringen.</string>
     <string name="mesh_dimmed">Gedimd om batterij te sparen · Tik om te tonen</string>
     <string name="sounds">Geluiden</string>
