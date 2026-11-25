@@ -1,5 +1,13 @@
 package com.knightindustries.knighttraining.feature.plan
 
+import com.knightindustries.knighttraining.ui.progressText
+import com.knightindustries.knighttraining.ui.goalTitle
+import com.knightindustries.knighttraining.core.store.addBonusGoal
+import com.knightindustries.knighttraining.core.store.increaseGoalTarget
+import com.knightindustries.knighttraining.feature.home.AddMoreSheet
+import androidx.compose.material.icons.rounded.AddCircleOutline
+import androidx.compose.runtime.mutableStateMapOf
+import com.knightindustries.knighttraining.core.model.WeeklyGoal
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -78,6 +86,37 @@ class EditPlanViewModel(private val container: AppContainer, private val templat
     var loaded by mutableStateOf(false)
         private set
 
+    /** This week's goal for each block, when this is this week's plan: what "Add more" stretches. */
+    private var weekGoals by mutableStateOf<Map<UUID, WeeklyGoal>>(emptyMap())
+
+    /** This week's one-week extras, listed under the blocks. */
+    var bonusGoals by mutableStateOf<List<WeeklyGoal>>(emptyList())
+        private set
+
+    /**
+     * "Add more", staged like every other edit here and written only on Save, so Cancel discards
+     * it (iOS `pendingTargetIncreases`/`pendingBonusGoals`). Raises are per week only and never
+     * reach the template; bonus goals never get one.
+     */
+    private val pendingRaises = mutableStateMapOf<UUID, Int>()
+    private val pendingBonusGoals = mutableStateListOf<DraftBlock>()
+
+    /**
+     * This week's goals done at their current target (a staged raise counts as not done again),
+     * shown with that target. Open whatever the session lock says: the stretch has its own rules.
+     */
+    val addMoreGoals: List<WeeklyGoal>
+        get() = blocks.mapNotNull { weekGoals[it.id] }.map { goal -> goal.copy(targetValue = pendingRaises[goal.id] ?: goal.targetValue) }
+            .filter { it.targetValue > 0 && it.currentValue >= it.targetValue }
+
+    fun stageRaise(goal: WeeklyGoal, target: Int) {
+        pendingRaises[goal.id] = target
+    }
+
+    fun stageBonusGoal(block: DraftBlock) {
+        pendingBonusGoals += block
+    }
+
     init {
         viewModelScope.launch {
             val template = container.store.planTemplate(templateId) ?: return@launch
@@ -89,6 +128,8 @@ class EditPlanViewModel(private val container: AppContainer, private val templat
             val week = container.store.weeklyPlanContaining(Instant.now(), container.preferences.firstLaunch())
             if (week?.planTemplateId == templateId) {
                 weeklyPlanId = week.id
+                weekGoals = week.weeklyGoals.filter { !it.isBonus && it.goalTemplateId != null }.associateBy { it.goalTemplateId!! }
+                bonusGoals = week.weeklyGoals.filter { it.isBonus }
                 val sessions = container.store.qualifyingSessionCount(week.id)
                 lock = when {
                     sessions >= WeeklyPlan.EDITABLE_SESSION_LIMIT -> WeekLock.LOCKED
@@ -116,6 +157,15 @@ class EditPlanViewModel(private val container: AppContainer, private val templat
                     )
                 },
             )
+            pendingRaises.forEach { (goalId, target) -> store.increaseGoalTarget(goalId, target) }
+            weeklyPlanId?.let { weekId ->
+                pendingBonusGoals.forEach { block ->
+                    store.addBonusGoal(
+                        weekId, store.activityType(block.activityTypeCode)!!, block.targetType, block.targetValue,
+                        name = block.name, resource = block.resourceId?.let { store.resource(it) }, timeControlLabel = block.timeControlLabel,
+                    )
+                }
+            }
             onSaved()
         }
     }
@@ -135,6 +185,7 @@ fun EditPlanScreen(viewModel: EditPlanViewModel, onClose: () -> Unit) {
     val resources = LocalResources.current
     var editing by remember { mutableStateOf<DraftBlock?>(null) }
     var adding by rememberSaveable { mutableStateOf(false) }
+    var addingMore by rememberSaveable { mutableStateOf(false) }
     var confirmingDelete by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -175,6 +226,14 @@ fun EditPlanScreen(viewModel: EditPlanViewModel, onClose: () -> Unit) {
                 }
                 Text(stringResource(note), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
+            if (viewModel.addMoreGoals.isNotEmpty()) {
+                item(key = "addMore") {
+                    OutlinedButton(onClick = { addingMore = true }, modifier = Modifier.fillMaxWidth().animateItem()) {
+                        Icon(Icons.Rounded.AddCircleOutline, contentDescription = null)
+                        Text(stringResource(R.string.add_more), modifier = Modifier.padding(start = 8.dp))
+                    }
+                }
+            }
             items(viewModel.blocks, key = { it.id }) { block ->
                 Card(onClick = { editing = block }, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
                     ListItem(
@@ -191,6 +250,26 @@ fun EditPlanScreen(viewModel: EditPlanViewModel, onClose: () -> Unit) {
                     Text(stringResource(R.string.add_weekly_goal), modifier = Modifier.padding(start = 8.dp))
                 }
             }
+            if (viewModel.bonusGoals.isNotEmpty()) {
+                item(key = "bonusHeader") {
+                    Text(
+                        stringResource(R.string.bonus_goals_this_week),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 8.dp),
+                    )
+                }
+                items(viewModel.bonusGoals, key = { it.id }) { goal ->
+                    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+                        ListItem(
+                            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                            leadingContent = { Icon(activityIcon(goal.activityType.code), contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+                            headlineContent = { Text(goalTitle(goal)) },
+                            supportingContent = { Text(progressText(goal)) },
+                        )
+                    }
+                }
+            }
             // Never for this week's plan (iOS): deleting it mid-week has no sensible meaning.
             if (viewModel.loaded && viewModel.lock == WeekLock.NOT_THIS_WEEK) {
                 item {
@@ -204,6 +283,14 @@ fun EditPlanScreen(viewModel: EditPlanViewModel, onClose: () -> Unit) {
         }
     }
 
+    if (addingMore) {
+        AddMoreSheet(
+            viewModel.addMoreGoals,
+            onDismiss = { addingMore = false },
+            onRaise = { goal, target -> viewModel.stageRaise(goal, target); addingMore = false },
+            onAddBonus = { viewModel.stageBonusGoal(it); addingMore = false },
+        )
+    }
     if (adding) BlockSheet(initial = null, onDismiss = { adding = false }, onSave = { viewModel.blocks += it; adding = false })
     editing?.let { block ->
         BlockSheet(

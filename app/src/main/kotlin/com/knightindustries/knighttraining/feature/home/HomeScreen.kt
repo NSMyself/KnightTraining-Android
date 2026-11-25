@@ -173,9 +173,9 @@ fun HomeScreen(
     }
     addingMoreTo?.let { goal ->
         AddMoreSheet(
-            goal,
+            listOf(goal),
             onDismiss = { addingMoreTo = null },
-            onRaise = { viewModel.raiseTarget(goal, it); addingMoreTo = null },
+            onRaise = { _, target -> viewModel.raiseTarget(goal, target); addingMoreTo = null },
             onAddBonus = { viewModel.addBonus(goal.weeklyPlanId, it); addingMoreTo = null },
         )
     }

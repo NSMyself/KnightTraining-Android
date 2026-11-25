@@ -242,6 +242,7 @@
     <string name="new_target_too_low">The new target has to be higher than what you already hit.</string>
     <string name="save_new_target">Save new target</string>
     <string name="bonus">Bonus</string>
+    <string name="bonus_goals_this_week">Bonus goals added this week</string>
 
     <!-- Weekly review -->
     <string name="review_title">Week %d review</string>

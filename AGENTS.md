@@ -219,10 +219,13 @@ maintainer confirms how interactions *feel* on a device themselves.
    phases. The weekly review's queries and `applyCoachTarget` followed with the coach (Phase 6).
 2. Core loop UI: onboarding, plan creation + presets, weekly commit, Home (fixed layout),
    practice timer (ongoing notification), log/edit sessions, history. **Built 2026-11-12**, pending
-   the maintainer's device check. The weekly review screen and resource picking followed. Not yet:
-   "add more" bonus goals from the plan editor, a time
-   control when switching to "Something else" mid-session, and crediting an ad-hoc segment when
-   several goals fit (it credits only a single fit; iOS asks).
+   the maintainer's device check. The weekly review screen and resource picking followed, as did
+   switching away from a "Something else" stretch (asks which goal it counts toward when several
+   fit, and a time control for games). "Add more" is on Home's completed goals and in the plan
+   editor (iOS `EditTrainingPlanScreen`): raises and bonus goals are staged until Save, raises are
+   week-only, and the editor lists the week's bonus goals (`EditPlanAddMoreTest`).
+   **Differs from iOS, unresolved:** once this week's plan is locked (two sessions), iOS disables
+   editing its blocks; Android still lets them be edited and saves them to the template only.
 3. Resources: library, detail screens, catalog sync, book lookup, link metadata. **Built
    2026-11-12**: the library tab, a shared kind-aware detail screen, add (link enrichment +
    catalog browser) and edit (cover photo picker), share-to-app, and resource links on plan

@@ -42,14 +42,19 @@ import com.knightindustries.knighttraining.ui.goalTitle
 import com.knightindustries.knighttraining.ui.progressText
 
 /**
- * The mid-week stretch (iOS `AddMoreGoalSheet`), offered on a completed goal. Both ways are upward
- * only and never a penalty: a raised target keeps the goal's completion, and a bonus goal never
- * counts toward "is this week done".
+ * The mid-week stretch (iOS `AddMoreGoalSheet`), offered on a completed goal (Home) or on every
+ * goal completed this week (the plan editor). Both ways are upward only and never a penalty: a
+ * raised target keeps the goal's completion, and a bonus goal never counts toward "is this week
+ * done".
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddMoreSheet(goal: WeeklyGoal, onDismiss: () -> Unit, onRaise: (Int) -> Unit, onAddBonus: (DraftBlock) -> Unit) {
+fun AddMoreSheet(goals: List<WeeklyGoal>, onDismiss: () -> Unit, onRaise: (WeeklyGoal, Int) -> Unit, onAddBonus: (DraftBlock) -> Unit) {
     var step by rememberSaveable { mutableStateOf("choose") }
+    // Stacking an extra on an extra has no clear meaning, so bonus goals can't be raised.
+    val raisable = goals.filter { !it.isBonus }
+    var raisingId by rememberSaveable { mutableStateOf(raisable.singleOrNull()?.id?.toString()) }
+    val raising = raisable.firstOrNull { it.id.toString() == raisingId }
 
     if (step == "bonus") {
         BlockSheet(initial = null, onDismiss = onDismiss, onSave = onAddBonus)
@@ -60,11 +65,20 @@ fun AddMoreSheet(goal: WeeklyGoal, onDismiss: () -> Unit, onRaise: (Int) -> Unit
         Column(Modifier.padding(horizontal = 24.dp).navigationBarsPadding(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(stringResource(R.string.add_more_title), style = MaterialTheme.typography.headlineSmall)
             Text(stringResource(R.string.add_more_body), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            if (step == "raise") {
-                RaiseTarget(goal, onRaise)
+            if (step == "raise" && raising != null) {
+                RaiseTarget(raising) { onRaise(raising, it) }
+            } else if (step == "raise") {
+                // Several goals done this week: which one to stretch.
+                raisable.forEach { goal ->
+                    ListItem(
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                        headlineContent = { Text(goalTitle(goal)) },
+                        supportingContent = { Text(progressText(goal)) },
+                        modifier = Modifier.selectable(selected = false, onClick = { raisingId = goal.id.toString() }, role = Role.Button),
+                    )
+                }
             } else {
-                // Stacking an extra on an extra has no clear meaning, so bonus goals can't be raised.
-                if (!goal.isBonus) Choice(Icons.Rounded.TrendingUp, R.string.raise_target, R.string.raise_target_body) { step = "raise" }
+                if (raisable.isNotEmpty()) Choice(Icons.Rounded.TrendingUp, R.string.raise_target, R.string.raise_target_body) { step = "raise" }
                 Choice(Icons.Rounded.Add, R.string.add_different_activity, R.string.add_different_activity_body) { step = "bonus" }
             }
             Spacer(Modifier.height(16.dp))

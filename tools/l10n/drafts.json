@@ -2132,5 +2132,14 @@
   "it": "Mostra meno",
   "de": "Weniger anzeigen",
   "fr": "Afficher moins"
+ },
+ "bonus_goals_this_week": {
+  "pt-PT": "Objetivos extra adicionados esta semana",
+  "es": "Objetivos extra agregados esta semana",
+  "pt-BR": "Objetivos bônus adicionados esta semana",
+  "nl": "Bonusdoelen toegevoegd deze week",
+  "it": "Obiettivi extra aggiunti questa settimana",
+  "de": "Diese Woche hinzugefügte Bonusziele",
+  "fr": "Objectifs bonus ajoutés cette semaine"
  }
 }

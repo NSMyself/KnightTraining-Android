@@ -210,6 +210,7 @@
     <string name="new_target_too_low">O novo objetivo tem de ser maior do que aquele que já atingiste.</string>
     <string name="save_new_target">Guardar novo objetivo</string>
     <string name="bonus">Extra</string>
+    <string name="bonus_goals_this_week">Objetivos extra adicionados esta semana</string>
     <string name="review_title">Revisão da semana %d</string>
     <plurals name="review_goals_completed">
         <item quantity="one">Completaste %1$d de %2$d objetivo semanal</item>
@@ -513,6 +514,7 @@
     <string name="review_tip_use">Usar esta semana</string>
     <string name="review_tip_make_focus">Definir como o meu foco</string>
     <string name="review_tip_got_it">Percebido</string>
+    <string name="coach_tip_saved">Guardado</string>
     <string name="review_tip_not_now">Agora não</string>
     <string name="start_training">Começar a treinar</string>
     <string name="train_again">Treinar outra vez</string>
