@@ -180,7 +180,7 @@
     <string name="edit_plan">Modifica piano</string>
     <string name="edit_plan_unlocked">Puoi modificare liberamente il piano di questa settimana fino alla tua 2ª sessione.</string>
     <string name="edit_plan_last_chance">Ancora una sessione e il piano di questa settimana si blocca. Per ora puoi ancora modificarlo.</string>
-    <string name="edit_plan_locked">Il piano di questa settimana è bloccato perché ti sei già allenato con esso. Le modifiche valgono dalla prossima settimana confermata.</string>
+    <string name="edit_plan_locked">Il piano di questa settimana è bloccato perché ti sei già allenato seguendolo. Non puoi ridurre ciò che ti sei impegnato a fare, ma puoi sempre aggiungere altro.</string>
     <string name="edit_plan_future">Queste modifiche valgono dalla prossima settimana che confermerai.</string>
     <string name="delete_plan">Elimina piano</string>
     <string name="delete_plan_title">Eliminare questo piano?</string>

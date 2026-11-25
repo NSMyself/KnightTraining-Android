@@ -176,7 +176,7 @@
     <string name="edit_plan">Plan bearbeiten</string>
     <string name="edit_plan_unlocked">Bis zu deiner 2. Einheit kannst du den Plan dieser Woche frei anpassen.</string>
     <string name="edit_plan_last_chance">Noch eine Einheit, dann steht der Plan dieser Woche fest. Jetzt kannst du ihn noch anpassen.</string>
-    <string name="edit_plan_locked">Der Plan dieser Woche ist gesperrt, weil du schon damit trainiert hast. Änderungen gelten ab deiner nächsten festgelegten Woche.</string>
+    <string name="edit_plan_locked">Der Plan dieser Woche ist gesperrt, weil du schon danach trainiert hast. Was du dir vorgenommen hast, kannst du nicht senken, aber du kannst jederzeit mehr hinzufügen.</string>
     <string name="edit_plan_future">Änderungen gelten ab der nächsten Woche, die du festlegst.</string>
     <string name="delete_plan">Plan löschen</string>
     <string name="delete_plan_title">Diesen Plan löschen?</string>

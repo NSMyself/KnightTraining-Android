@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.plan
 
+import androidx.compose.ui.draw.alpha
 import com.knightindustries.knighttraining.ui.progressText
 import com.knightindustries.knighttraining.ui.goalTitle
 import com.knightindustries.knighttraining.core.store.addBonusGoal
@@ -72,9 +73,10 @@ import kotlinx.coroutines.launch
 enum class WeekLock { NOT_THIS_WEEK, UNLOCKED, LAST_CHANCE, LOCKED }
 
 /**
- * Edits a saved plan (iOS `EditTrainingPlanViewModel`). Changes always reach the template; they
- * reach the committed week too while it's this template's and fewer than two sessions have been
- * trained against it. Kept blocks keep their id, so the week's progress on them survives.
+ * Edits a saved plan (iOS `EditTrainingPlanViewModel`). Block changes reach the template, and the
+ * committed week too while it's this template's and fewer than two sessions have been trained
+ * against it. Once that week is locked, its blocks can't be edited at all, as on iOS: only the name
+ * and "Add more" still save. Kept blocks keep their id, so the week's progress on them survives.
  */
 class EditPlanViewModel(private val container: AppContainer, private val templateId: UUID) : ViewModel() {
     var name by mutableStateOf("")
@@ -146,7 +148,7 @@ class EditPlanViewModel(private val container: AppContainer, private val templat
             val store = container.store
             val resolved = name.trim().ifEmpty { store.nextUntitledPlanTemplateName(untitledBase, untitledNumbered, excludingId = templateId) }
             store.renamePlanTemplate(templateId, resolved)
-            store.updatePlanBlocks(
+            if (lock != WeekLock.LOCKED) store.updatePlanBlocks(
                 planTemplateId = templateId,
                 weeklyPlanId = weeklyPlanId.takeIf { lock == WeekLock.UNLOCKED || lock == WeekLock.LAST_CHANCE },
                 blocks = blocks.map { block ->
@@ -234,8 +236,18 @@ fun EditPlanScreen(viewModel: EditPlanViewModel, onClose: () -> Unit) {
                     }
                 }
             }
+            val locked = viewModel.lock == WeekLock.LOCKED
             items(viewModel.blocks, key = { it.id }) { block ->
-                Card(onClick = { editing = block }, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
+                // Locked: shown, dimmed, and not editable (iOS greys them out the same way).
+                Card(
+                    onClick = { editing = block },
+                    enabled = !locked,
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        disabledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    ),
+                    modifier = Modifier.alpha(if (locked) 0.6f else 1f),
+                ) {
                     ListItem(
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                         leadingContent = { Icon(activityIcon(block.activityTypeCode), contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
@@ -244,10 +256,12 @@ fun EditPlanScreen(viewModel: EditPlanViewModel, onClose: () -> Unit) {
                     )
                 }
             }
-            item {
-                OutlinedButton(onClick = { adding = true }, modifier = Modifier.fillMaxWidth()) {
-                    Icon(Icons.Rounded.Add, contentDescription = null)
-                    Text(stringResource(R.string.add_weekly_goal), modifier = Modifier.padding(start = 8.dp))
+            if (!locked) {
+                item {
+                    OutlinedButton(onClick = { adding = true }, modifier = Modifier.fillMaxWidth()) {
+                        Icon(Icons.Rounded.Add, contentDescription = null)
+                        Text(stringResource(R.string.add_weekly_goal), modifier = Modifier.padding(start = 8.dp))
+                    }
                 }
             }
             if (viewModel.bonusGoals.isNotEmpty()) {

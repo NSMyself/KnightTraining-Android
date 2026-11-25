@@ -11,7 +11,8 @@ apply here unchanged unless this file says otherwise. When porting a rule, port 
 too: the Core test suite is the conformance spec, so both platforms agree on goal crediting, week
 windows, the 48h first-week extension, time-control categories and the reminder policy.
 
-Surface any disagreement between the two apps rather than picking one silently.
+When the two apps disagree, follow iOS (maintainer, 2026-11-25: "treat iOS as the reference")
+and say so, unless this file records a deliberate Android difference.
 
 ## Why native, not shared code
 
@@ -223,9 +224,9 @@ maintainer confirms how interactions *feel* on a device themselves.
    switching away from a "Something else" stretch (asks which goal it counts toward when several
    fit, and a time control for games). "Add more" is on Home's completed goals and in the plan
    editor (iOS `EditTrainingPlanScreen`): raises and bonus goals are staged until Save, raises are
-   week-only, and the editor lists the week's bonus goals (`EditPlanAddMoreTest`).
-   **Differs from iOS, unresolved:** once this week's plan is locked (two sessions), iOS disables
-   editing its blocks; Android still lets them be edited and saves them to the template only.
+   week-only, and the editor lists the week's bonus goals. Once this week's plan is locked (two
+   sessions), its blocks are dimmed and can't be edited or added to, as on iOS; only the name and
+   "Add more" still save (`EditPlanAddMoreTest`).
 3. Resources: library, detail screens, catalog sync, book lookup, link metadata. **Built
    2026-11-12**: the library tab, a shared kind-aware detail screen, add (link enrichment +
    catalog browser) and edit (cover photo picker), share-to-app, and resource links on plan
@@ -279,8 +280,8 @@ maintainer confirms how interactions *feel* on a device themselves.
    time, paused), stored per block on `activity_reminder` (days in iOS's 1 = Sunday numbering) so
    they last across weeks and go with the block. Each holds one inexact alarm for its next
    occurrence (`reminders/ActivityReminders.kt`); the receiver reads the block when it fires, so the
-   text is never stale and an archived plan's reminders stay quiet (iOS bakes the text in at
-   scheduling). Re-armed with the weekly reminder after a reboot or clock change, cancelled by
+   text is never stale (iOS bakes it in at scheduling). As on iOS, a deleted (archived) plan's
+   reminders keep firing. Re-armed with the weekly reminder after a reboot or clock change, cancelled by
    "Delete all data". Pinned by `ActivityReminderTest` (core) and `GoalDetailsTest`.
 6. Suggest a plan, weekly coach (Gemini Nano where available), customizable Home, share cards,
    translations converted from the iOS `.xcstrings`.

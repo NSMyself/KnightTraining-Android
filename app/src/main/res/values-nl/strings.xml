@@ -176,7 +176,7 @@
     <string name="edit_plan">Plan bewerken</string>
     <string name="edit_plan_unlocked">Je kunt het plan van deze week vrij aanpassen tot je 2e sessie.</string>
     <string name="edit_plan_last_chance">Nog één sessie en het plan van deze week wordt vergrendeld. Je kunt het nu nog aanpassen.</string>
-    <string name="edit_plan_locked">Het plan van deze week staat vast omdat je er al mee hebt getraind. Wijzigingen gelden vanaf je volgende vastgelegde week.</string>
+    <string name="edit_plan_locked">Het plan van deze week is vergrendeld omdat je er al mee hebt getraind. Je kunt niet minder doen dan wat je hebt afgesproken, maar je kunt altijd meer toevoegen.</string>
     <string name="edit_plan_future">Deze wijzigingen gelden vanaf je volgende bevestigde week.</string>
     <string name="delete_plan">Plan verwijderen</string>
     <string name="delete_plan_title">Dit plan verwijderen?</string>

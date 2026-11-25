@@ -180,7 +180,7 @@
     <string name="edit_plan">Modifier le plan</string>
     <string name="edit_plan_unlocked">Tu peux ajuster librement le plan de la semaine jusqu\'à ta 2e séance.</string>
     <string name="edit_plan_last_chance">Encore une séance et le plan de la semaine sera verrouillé. Tu peux encore l\'ajuster.</string>
-    <string name="edit_plan_locked">Le plan de cette semaine est verrouillé car tu t\'es déjà entraîné avec. Les modifications s\'appliquent à partir de ta prochaine semaine validée.</string>
+    <string name="edit_plan_locked">Le plan de la semaine est verrouillé car tu t\'es déjà entraîné dessus. Tu ne peux pas baisser ce à quoi tu t\'es engagé, mais tu peux toujours en ajouter.</string>
     <string name="edit_plan_future">Les changements s\'appliquent à partir de ta prochaine semaine validée.</string>
     <string name="delete_plan">Supprimer le plan</string>
     <string name="delete_plan_title">Supprimer ce plan ?</string>

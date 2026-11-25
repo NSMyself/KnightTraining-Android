@@ -593,15 +593,6 @@
   "de": "Plan bearbeiten",
   "fr": "Modifier le plan"
  },
- "edit_plan_locked": {
-  "pt-PT": "O plano desta semana está bloqueado porque já treinaste com ele. As alterações aplicam-se a partir da próxima semana a que te comprometeres.",
-  "es": "El plan de esta semana está bloqueado porque ya entrenaste con él. Los cambios se aplican desde la próxima semana con la que te comprometas.",
-  "pt-BR": "O plano desta semana está bloqueado porque você já treinou com ele. As alterações valem a partir da próxima semana com que você se comprometer.",
-  "nl": "Het plan van deze week staat vast omdat je er al mee hebt getraind. Wijzigingen gelden vanaf je volgende vastgelegde week.",
-  "it": "Il piano di questa settimana è bloccato perché ti sei già allenato con esso. Le modifiche valgono dalla prossima settimana confermata.",
-  "de": "Der Plan dieser Woche ist gesperrt, weil du schon damit trainiert hast. Änderungen gelten ab deiner nächsten festgelegten Woche.",
-  "fr": "Le plan de cette semaine est verrouillé car tu t'es déjà entraîné avec. Les modifications s'appliquent à partir de ta prochaine semaine validée."
- },
  "delete_plan": {
   "pt-PT": "Apagar plano",
   "es": "Eliminar plan",

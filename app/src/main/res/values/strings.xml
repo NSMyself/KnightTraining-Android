@@ -207,7 +207,7 @@
     <string name="edit_plan">Edit plan</string>
     <string name="edit_plan_unlocked">You can freely adjust this week\'s plan until your 2nd session.</string>
     <string name="edit_plan_last_chance">One more session and this week\'s plan locks in. You can still adjust it now.</string>
-    <string name="edit_plan_locked">This week\'s plan is locked because it\'s already been trained against. Changes here apply from your next committed week.</string>
+    <string name="edit_plan_locked">This week\'s plan is locked because it\'s already been trained against. You can\'t lower what you\'ve committed to, but you can always add more.</string>
     <string name="edit_plan_future">Changes here apply from your next committed week.</string>
     <string name="delete_plan">Delete plan</string>
     <string name="delete_plan_title">Delete this plan?</string>

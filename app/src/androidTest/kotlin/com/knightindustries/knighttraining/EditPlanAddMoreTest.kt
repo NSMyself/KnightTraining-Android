@@ -1,5 +1,11 @@
 package com.knightindustries.knighttraining
 
+import androidx.compose.ui.test.hasAnyDescendant
+import java.time.Instant
+import com.knightindustries.knighttraining.core.store.saveActivity
+import com.knightindustries.knighttraining.core.model.Activity
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
@@ -34,7 +40,8 @@ import java.util.UUID
 
 /**
  * "Add more" from the plan editor (iOS `EditTrainingPlanScreen`): offered once a goal is done this
- * week, staged until Save, week-only (the template keeps its number), and discarded by Cancel.
+ * week, staged until Save, week-only (the template keeps its number), and discarded by Cancel. Once
+ * two sessions lock the week, its blocks can't be edited at all, as on iOS, but "Add more" still can.
  */
 @OptIn(ExperimentalTestApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -49,6 +56,8 @@ class EditPlanAddMoreTest {
     private var closed = false
 
     private fun text(id: Int) = context.getString(id)
+
+    private val blockTitle get() = context.getString(R.string.activity_puzzles)
 
     @Before
     fun seedACompletedGoal() = runBlocking {
@@ -98,5 +107,26 @@ class EditPlanAddMoreTest {
         compose.onNodeWithContentDescription(text(R.string.cancel)).performClick()
         compose.waitUntil(5_000) { closed }
         assertEquals(10, goalTarget())
+    }
+
+    @Test
+    fun aLockedWeeksBlocksCantBeEditedButAddMoreStillWorks() {
+        runBlocking {
+            val now = Instant.now()
+            repeat(2) {
+                container.store.saveActivity(
+                    Activity(activityType = container.store.activityType("puzzles")!!, startedAt = now, endedAt = now, duration = 600, sessionId = UUID.randomUUID(), weeklyPlanId = week.id),
+                )
+            }
+        }
+        show()
+        compose.onNodeWithText(text(R.string.edit_plan_locked)).assertExists()
+        compose.onNodeWithText(text(R.string.add_weekly_goal)).assertDoesNotExist()
+        compose.onNode(hasAnyDescendant(hasText(blockTitle)) and hasClickAction()).assertIsNotEnabled()
+
+        raiseTo("15")
+        compose.onNodeWithText(text(R.string.save)).performClick()
+        compose.waitUntil(5_000) { closed }
+        assertEquals(15, goalTarget())
     }
 }
