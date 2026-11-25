@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.knightindustries.knighttraining.core.persistence.entities.CatalogCourseEntity
+import com.knightindustries.knighttraining.core.persistence.entities.SharedCourseEntity
 import com.knightindustries.knighttraining.core.persistence.entities.ResourceCompletionEntity
 import com.knightindustries.knighttraining.core.persistence.entities.ResourceEntity
 import java.time.Instant
@@ -95,6 +96,60 @@ interface LibraryDao {
     /** Completed time per resource, for the library share card. */
     @Query("SELECT resourceId, SUM(duration) AS seconds FROM activity WHERE resourceId IS NOT NULL AND endedAt IS NOT NULL GROUP BY resourceId")
     suspend fun secondsByResource(): List<ResourceSeconds>
+
+    // MARK: - Shared courses (iOS `SharedCourseRecord`)
+
+    @Insert
+    suspend fun insertSharedCourse(course: SharedCourseEntity)
+
+    @Query("SELECT * FROM shared_course WHERE resourceId = :resourceId")
+    suspend fun sharedCourse(resourceId: UUID): SharedCourseEntity?
+
+    /**
+     * Whether a shared course is already in the library: shared before (same platform and id or
+     * slug), or added from the catalog (by id, or by title when the share has no id).
+     */
+    @Query(
+        """
+        SELECT EXISTS (
+            SELECT 1 FROM shared_course WHERE platform = :platform AND (externalId = :externalId OR slug = :slug)
+        ) OR EXISTS (
+            SELECT 1 FROM resource r JOIN catalog_course c ON c.id = r.catalogCourseId
+            WHERE c.platform = :platform AND (c.externalId = :externalId OR (:externalId IS NULL AND c.title = :title))
+        )
+        """,
+    )
+    suspend fun isCourseInLibrary(platform: String, externalId: String?, slug: String?, title: String): Boolean
+
+    /**
+     * Links each shared course's resource to its catalog row: by platform and id, or, with no id,
+     * by share-time title when exactly one course on that platform has it. Only fills a missing
+     * link, and author/image only where the resource has none. Returns how many were linked.
+     */
+    @Query(
+        """
+        WITH matches(resourceId, catalogId) AS (
+            SELECT s.resourceId, c.id FROM shared_course s
+            JOIN catalog_course c ON c.platform = s.platform AND c.externalId = s.externalId
+            UNION ALL
+            SELECT s.resourceId, MIN(c.id) FROM shared_course s
+            JOIN catalog_course c ON c.platform = s.platform AND c.title = s.title
+            WHERE s.externalId IS NULL
+            GROUP BY s.id HAVING COUNT(*) = 1
+        )
+        UPDATE resource
+        SET catalogCourseId = matches.catalogId,
+            author = COALESCE(resource.author, c.author),
+            imageUrl = COALESCE(resource.imageUrl, c.imageUrl),
+            updatedAt = :now
+        FROM matches JOIN catalog_course c ON c.id = matches.catalogId
+        WHERE resource.id = matches.resourceId AND resource.catalogCourseId IS NULL
+        """,
+    )
+    suspend fun mergeSharedCourses(now: Instant): Int
+
+    @Query("DELETE FROM catalog_course WHERE platform = :platform")
+    suspend fun deleteCatalogCourses(platform: String)
 }
 
 data class ResourceSeconds(val resourceId: java.util.UUID, val seconds: Int)

@@ -1,5 +1,7 @@
 package com.knightindustries.knighttraining.share
 
+import com.knightindustries.knighttraining.core.model.ResourceKind
+import com.knightindustries.knighttraining.core.model.SharedCourse
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -9,15 +11,14 @@ import com.knightindustries.knighttraining.KnightTrainingApplication
 import com.knightindustries.knighttraining.R
 import com.knightindustries.knighttraining.core.model.Resource
 import com.knightindustries.knighttraining.core.net.ResourceLinks
-import com.knightindustries.knighttraining.core.store.allResources
-import com.knightindustries.knighttraining.core.store.saveResource
+import com.knightindustries.knighttraining.core.store.saveSharedResources
 import kotlinx.coroutines.launch
 import java.time.Instant
 
 /**
  * "Share → Knight Training" from any app (iOS's Share Extension): no picker, no screen. The link
  * is enriched like a pasted one and saved; a failed lookup still saves it with a fallback title,
- * so a share is never lost (iOS AGENTS.md principle 6). A link already in the library is skipped.
+ * so a share is never lost (iOS AGENTS.md principle 6). A course already in the library is skipped.
  */
 class ShareReceiverActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,18 +43,25 @@ class ShareReceiverActivity : Activity() {
 
         suspend fun import(container: AppContainer, url: String, sharedTitle: String?) {
             val store = container.store
-            if (store.allResources().any { it.url == url }) return
             val enriched = container.enricher.enrich(url)
             val now = Instant.now()
-            store.saveResource(
-                Resource(
-                    kind = store.resourceKind(enriched.kindCode)!!,
-                    title = enriched.title ?: sharedTitle?.takeIf { it.isNotBlank() } ?: ResourceLinks.fallbackTitle(url),
-                    author = enriched.author, url = url, imageUrl = enriched.imageUrl, description = enriched.description,
-                    publisher = enriched.publisher, publicationDate = enriched.publicationDate,
-                    createdAt = now, updatedAt = now, lastAccessedAt = null,
-                ),
+            val title = enriched.title ?: sharedTitle?.takeIf { it.isNotBlank() } ?: ResourceLinks.fallbackTitle(url)
+            val resource = Resource(
+                kind = store.resourceKind(enriched.kindCode)!!,
+                title = title,
+                author = enriched.author, url = url, imageUrl = enriched.imageUrl, description = enriched.description,
+                // Shared from a store or a course page: something the user has, as iOS marks it.
+                isOwned = true,
+                publisher = enriched.publisher, publicationDate = enriched.publicationDate,
+                createdAt = now, updatedAt = now, lastAccessedAt = null,
             )
+            // A Chessable/ChessMood course remembers which course it is, so it's linked to its
+            // catalog row now or after a later sync, and sharing it again is skipped (iOS). Any
+            // other link is always saved. ChessMood's id is only in the cover image's path.
+            val course = SharedCourse.Identity.from(url, enriched.imageUrl)
+                ?.takeIf { enriched.kindCode == ResourceKind.COURSE }
+                ?.let { SharedCourse(resourceId = resource.id, identity = it, url = url, title = title) }
+            store.saveSharedResources(listOf(resource), listOfNotNull(course))
         }
     }
 }

@@ -239,8 +239,12 @@ maintainer confirms how interactions *feel* on a device themselves.
    open every resource of that kind, ignoring search and filters as iOS does
    (`ResourceShelfScreen`): covers three to a row on shelf ledges over the glow (iOS
    `BookShelfScreen`), or the full study list, which the library caps at four rows
-   (`LibraryTest`). Not yet: YouTube playlist import (needs an Android-restricted API key from the
-   maintainer), the `shared_course` table and its catalog merge.
+   (`LibraryTest`). A shared Chessable/ChessMood course is remembered in `shared_course` (iOS
+   `SharedCourse`: Chessable's id from the URL, ChessMood's from its cover image path, else the
+   slug) and linked to its catalog row after each share and each new catalog, filling author and
+   cover only where empty; sharing a course already in the library is skipped, any other link is
+   always saved, as on iOS (`SharedCourseTest`). Not yet: YouTube playlist import (needs an
+   Android-restricted API key from the maintainer).
 4. Lichess: OAuth, Elo, activity sync (one request at a time, 60s after a 429), milestones.
    **Built 2026-11-12**:
    - Core: `core/lichess/` (payload models, `LichessClient` + `LichessRequestGate`, `LichessSync`).

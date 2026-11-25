@@ -3,6 +3,7 @@ package com.knightindustries.knighttraining.core.net
 import com.knightindustries.knighttraining.core.model.CatalogCourse
 import com.knightindustries.knighttraining.core.store.TrainingStore
 import com.knightindustries.knighttraining.core.store.hasCatalogCourses
+import com.knightindustries.knighttraining.core.store.mergeSharedCourses
 import com.knightindustries.knighttraining.core.store.saveCatalogCourses
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -38,6 +39,8 @@ class CatalogSync(
         val newEtag = response.headers["etag"] ?: return false
         val courses = parse(response.body, now()) ?: return false
         store.saveCatalogCourses(courses)
+        // A course shared before the catalog listed it gets linked now.
+        store.mergeSharedCourses()
         etags.set(newEtag)
         return true
     }
