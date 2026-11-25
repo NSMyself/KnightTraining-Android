@@ -78,6 +78,9 @@ suspend fun TrainingStore.finishedResourceCount(): Int = db.libraryDao().finishe
 
 // MARK: - Catalog
 
+/** Whether any catalog course is stored: [com.knightindustries.knighttraining.core.net.CatalogSync] refetches in full when not. */
+suspend fun TrainingStore.hasCatalogCourses(): Boolean = db.libraryDao().hasCourses()
+
 /** Saves a synced catalog in one transaction; each course keeps its id across resyncs. */
 suspend fun TrainingStore.saveCatalogCourses(courses: List<CatalogCourse>) = write {
     courses.forEach { course ->

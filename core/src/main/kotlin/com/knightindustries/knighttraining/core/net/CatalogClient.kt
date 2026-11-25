@@ -2,6 +2,7 @@ package com.knightindustries.knighttraining.core.net
 
 import com.knightindustries.knighttraining.core.model.CatalogCourse
 import com.knightindustries.knighttraining.core.store.TrainingStore
+import com.knightindustries.knighttraining.core.store.hasCatalogCourses
 import com.knightindustries.knighttraining.core.store.saveCatalogCourses
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -28,12 +29,16 @@ class CatalogSync(
 
     /** `true` when a new catalog was stored. */
     suspend fun syncIfNeeded(): Boolean {
-        val response = http.get(CATALOG_URL, etags.get()?.let { mapOf("If-None-Match" to it) }.orEmpty()) ?: return false
+        // The ETag lives in DataStore and the courses in the database, so the two can part (iOS hit
+        // it when a debug schema reset wiped the table and kept the ETag: a 304 forever, for a
+        // catalog that was gone). With nothing stored, always ask for the full catalog.
+        val etag = if (store.hasCatalogCourses()) etags.get() else null
+        val response = http.get(CATALOG_URL, etag?.let { mapOf("If-None-Match" to it) }.orEmpty()) ?: return false
         if (response.status != 200) return false
-        val etag = response.headers["etag"] ?: return false
+        val newEtag = response.headers["etag"] ?: return false
         val courses = parse(response.body, now()) ?: return false
         store.saveCatalogCourses(courses)
-        etags.set(etag)
+        etags.set(newEtag)
         return true
     }
 

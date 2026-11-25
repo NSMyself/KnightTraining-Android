@@ -4,6 +4,7 @@ import com.knightindustries.knighttraining.core.net.ResourceLinks.guessKindCode
 import com.knightindustries.knighttraining.core.net.ResourceLinks.validIsbn
 import com.knightindustries.knighttraining.core.store.StoreTest
 import com.knightindustries.knighttraining.core.store.catalogCourses
+import com.knightindustries.knighttraining.core.store.hasCatalogCourses
 import com.knightindustries.knighttraining.core.store.test
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -234,10 +235,26 @@ class NetTest : StoreTest() {
 
     @Test
     fun theStoredEtagIsSentAndA304ChangesNothing() = test {
+        val etags = MemoryEtags()
+        CatalogSync(store, etags, FakeHttp(mapOf(CatalogSync.CATALOG_URL to ok(catalogJson, mapOf("etag" to "\"v1\""))))).syncIfNeeded()
         val http = FakeHttp(mapOf(CatalogSync.CATALOG_URL to HttpResponse(304, "", emptyMap())))
-        assertFalse(CatalogSync(store, MemoryEtags("\"v1\""), http).syncIfNeeded())
+        assertFalse(CatalogSync(store, etags, http).syncIfNeeded())
         assertEquals("\"v1\"", http.requests.single().second["If-None-Match"])
-        assertTrue(store.catalogCourses().isEmpty())
+        assertEquals(2, store.catalogCourses().size)
+    }
+
+    /** iOS 2026-11-24: an ETag kept after the table was wiped got a 304 forever. */
+    @Test
+    fun anEmptyCatalogIsFetchedInFullDespiteAStoredEtag() = test {
+        val etags = MemoryEtags("\"v1\"")
+        val http = FakeHttp(mapOf(CatalogSync.CATALOG_URL to ok(catalogJson, mapOf("etag" to "\"v2\""))))
+        assertFalse(store.hasCatalogCourses())
+
+        assertTrue(CatalogSync(store, etags, http).syncIfNeeded())
+
+        assertNull(http.requests.single().second["If-None-Match"])
+        assertTrue(store.hasCatalogCourses())
+        assertEquals("\"v2\"", etags.value)
     }
 
     /**

@@ -83,6 +83,9 @@ interface LibraryDao {
     @Query("SELECT * FROM catalog_course ORDER BY title COLLATE NOCASE")
     suspend fun allCourses(): List<CatalogCourseEntity>
 
+    @Query("SELECT EXISTS(SELECT 1 FROM catalog_course)")
+    suspend fun hasCourses(): Boolean
+
     @Query("SELECT * FROM catalog_course WHERE id = :id")
     suspend fun course(id: UUID): CatalogCourseEntity?
 
