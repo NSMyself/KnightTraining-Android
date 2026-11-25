@@ -168,6 +168,13 @@ data class WeeklyReviewEntity(
     val nextWeekFocus: String?,
     val nextWeekTargetCode: String?,
     val nextWeekTargetValue: Int?,
+    /** `WeeklyReview.CoachTip`, flattened (schema 2). A `NULL` status means the coach hasn't been asked. */
+    val coachTipStatus: String? = null,
+    val coachTipText: String? = null,
+    val coachTipFocus: String? = null,
+    val coachTipTargetCode: String? = null,
+    val coachTipTargetValue: Int? = null,
+    @ColumnInfo(defaultValue = "0") val coachTipSuggestsCoach: Boolean = false,
 )
 
 /** A per-block reminder schedule. Lives on the template so it persists across weeks. */

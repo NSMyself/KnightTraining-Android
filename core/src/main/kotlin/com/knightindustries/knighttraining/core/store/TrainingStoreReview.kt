@@ -9,13 +9,20 @@ import java.time.Instant
 import java.util.UUID
 
 private fun WeeklyReviewEntity.toDomain() = WeeklyReview(
-    id, weeklyPlanId, wentWell, heldBack, wishIDone, nextWeekIntent, nextWeekFocus, nextWeekTargetCode, nextWeekTargetValue, createdAt, updatedAt,
+    id, weeklyPlanId, wentWell, heldBack, wishIDone, nextWeekIntent, nextWeekFocus, nextWeekTargetCode, nextWeekTargetValue,
+    coachTip = WeeklyReview.CoachTip.Status.of(coachTipStatus)?.let {
+        WeeklyReview.CoachTip(it, coachTipText, coachTipFocus, coachTipTargetCode, coachTipTargetValue, coachTipSuggestsCoach)
+    },
+    createdAt = createdAt, updatedAt = updatedAt,
 )
 
 private fun WeeklyReview.toEntity() = WeeklyReviewEntity(
     id = id, weeklyPlanId = weeklyPlanId, wentWell = wentWell, heldBack = heldBack, nextWeekIntent = nextWeekIntent,
     createdAt = createdAt, updatedAt = updatedAt, wishIDone = wishIDone, nextWeekFocus = nextWeekFocus,
     nextWeekTargetCode = nextWeekTargetCode, nextWeekTargetValue = nextWeekTargetValue,
+    coachTipStatus = coachTip?.status?.code, coachTipText = coachTip?.text, coachTipFocus = coachTip?.focus,
+    coachTipTargetCode = coachTip?.targetCode, coachTipTargetValue = coachTip?.targetValue,
+    coachTipSuggestsCoach = coachTip?.suggestsCoach ?: false,
 )
 
 suspend fun TrainingStore.weeklyReview(weeklyPlanId: UUID): WeeklyReview? = db.reviewDao().review(weeklyPlanId)?.toDomain()

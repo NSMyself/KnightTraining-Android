@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.core.store
 
+import com.knightindustries.knighttraining.core.coach.CoachTargetChange
 import com.knightindustries.knighttraining.core.coach.CoachingSuggestion
 import com.knightindustries.knighttraining.core.coach.LichessPuzzleStatus
 import com.knightindustries.knighttraining.core.coach.WeakThemeStreak
@@ -7,10 +8,45 @@ import com.knightindustries.knighttraining.core.model.ActivityType
 import com.knightindustries.knighttraining.core.model.PlanSuggestionHistory
 import com.knightindustries.knighttraining.core.model.WeekCalendar
 import com.knightindustries.knighttraining.core.model.WeeklyPlan
+import com.knightindustries.knighttraining.core.model.WeeklyReview
 import com.knightindustries.knighttraining.core.persistence.toDomain
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
+
+// MARK: - The coach's tip, stored on the reviewed week
+
+/**
+ * Stores the coach's answer to the review of [weeklyPlanId] (a tip, or [WeeklyReview.CoachTip.Unavailable]),
+ * but only the first time: two screens asking at once can't overwrite each other, and an accepted
+ * tip stays accepted. Returns whether it was stored; `false` too when there's no review.
+ */
+suspend fun TrainingStore.saveCoachTip(tip: WeeklyReview.CoachTip, weeklyPlanId: UUID): Boolean =
+    db.reviewDao().saveCoachTip(weeklyPlanId, tip.status.code, tip.text, tip.focus, tip.targetCode, tip.targetValue, tip.suggestsCoach, now()) > 0
+
+/** The user's answer to a stored tip ("Use it", "Not now"). Only a tip still waiting for one changes. */
+suspend fun TrainingStore.setCoachTipStatus(status: WeeklyReview.CoachTip.Status, weeklyPlanId: UUID) =
+    db.reviewDao().setCoachTipStatus(weeklyPlanId, WeeklyReview.CoachTip.Status.READY.code, status.code, now())
+
+/** Remembers an accepted target on the reviewed week's review, without touching any plan. */
+suspend fun TrainingStore.setNextWeekTarget(target: PlanSuggestionHistory.CoachTarget, weeklyPlanId: UUID) =
+    db.reviewDao().setTarget(weeklyPlanId, target.activityTypeCode, target.value, now())
+
+/**
+ * The coach's target the user accepted for the week [reference] falls in, from the review of the
+ * week before, in that review's goal units. `null` with no review, no tip, a tip not accepted, or
+ * one without a target.
+ */
+suspend fun TrainingStore.acceptedCoachTarget(
+    reference: Instant = now(),
+    firstLaunch: Instant? = null,
+    calendar: WeekCalendar = calendar(),
+): CoachTargetChange.TemplateTarget? {
+    val reviewed = previousWeeklyPlan(reference, firstLaunch, calendar) ?: return null
+    val tip = weeklyReview(reviewed.id)?.coachTip ?: return null
+    if (tip.status != WeeklyReview.CoachTip.Status.ACCEPTED) return null
+    return CoachTargetChange.templateTarget(tip.target ?: return null, reviewed)
+}
 
 /** The focus the player accepted on the tip card, saved on the review already written. */
 suspend fun TrainingStore.setNextWeekFocus(focus: String?, weeklyPlanId: UUID) = db.reviewDao().setFocus(weeklyPlanId, focus, now())

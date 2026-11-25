@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.core.store
 
+import com.knightindustries.knighttraining.core.coach.CoachTargetChange
 import com.knightindustries.knighttraining.core.model.ActivityType
 import com.knightindustries.knighttraining.core.model.PlanTemplate
 import com.knightindustries.knighttraining.core.model.Resource
@@ -93,6 +94,12 @@ suspend fun TrainingStore.createWeeklyPlan(
 ): WeeklyPlan? = planTemplate(templateId)?.let { createWeeklyPlan(it, firstLaunch, calendar) }
 
 /**
+ * **Every commit applies the coach's accepted target** (iOS 2026-11-23), whichever plan is being
+ * committed (a saved one, one just built by hand, a suggested one): the plan's matching goal
+ * ([CoachTargetChange.TemplateTarget.goalTemplate]) gets the number, in its template too so later
+ * weeks keep it, in the same transaction. Here rather than at each call site so no path that
+ * commits a week can forget it. A plan with no matching goal is committed as is.
+ *
  * Two iOS bugs this is shaped by:
  * - **The week must be the effective week** Home reads, or a plan committed during the first-week
  *   grace lands on next week and stays invisible (2026-09-22).
@@ -107,6 +114,7 @@ private suspend fun TrainingStore.createWeeklyPlan(
 ): WeeklyPlan? {
     val at = now()
     val weekStart = WeeklyPlan.effectiveWeekStart(at, firstLaunch, calendar)
+    val coachTarget = acceptedCoachTarget(at, firstLaunch, calendar)
 
     return write {
         val existing = weekDao.plan(weekStart)
@@ -119,12 +127,17 @@ private suspend fun TrainingStore.createWeeklyPlan(
             UUID.randomUUID().also { weekDao.upsertPlan(WeeklyPlanEntity(it, template.id, weekStart, at)) }
         }
 
+        // Only reached on the paths that write goals: an already committed week is never retargeted.
+        val retargeted = coachTarget?.goalTemplate(template)
+        if (retargeted != null) db.reviewDao().setTemplateTarget(retargeted.id, coachTarget.value)
+
         for (goal in template.goalTemplates) {
+            val targetValue = if (goal.id == retargeted?.id) coachTarget.value else goal.targetValue
             weekDao.upsertGoal(
                 WeeklyGoalEntity(
                     id = UUID.randomUUID(), weeklyPlanId = planId, name = goal.name,
                     activityTypeId = goal.activityType.id, resourceId = goal.resource?.id,
-                    targetType = goal.targetType.code, targetValue = goal.targetValue, currentValue = 0,
+                    targetType = goal.targetType.code, targetValue = targetValue, currentValue = 0,
                     completedAt = null, timeControlLabel = goal.timeControlLabel, goalTemplateId = goal.id,
                     isBonus = false,
                 ),

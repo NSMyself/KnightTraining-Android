@@ -4,7 +4,9 @@ import com.knightindustries.knighttraining.core.lichess.LichessPuzzleDashboard
 import com.knightindustries.knighttraining.core.model.Activity
 import com.knightindustries.knighttraining.core.model.ActivityType
 import com.knightindustries.knighttraining.core.model.EloSnapshot
+import com.knightindustries.knighttraining.core.model.GoalTemplate
 import com.knightindustries.knighttraining.core.model.PlanSuggestionHistory
+import com.knightindustries.knighttraining.core.model.PlanTemplate
 import com.knightindustries.knighttraining.core.model.RatingType
 import com.knightindustries.knighttraining.core.model.TargetType
 import com.knightindustries.knighttraining.core.model.TimeControl
@@ -71,6 +73,23 @@ sealed interface LichessPuzzleStatus {
 object CoachTargetChange {
     private const val LOW = 0.5
     private const val HIGH = 2.0
+
+    /**
+     * An accepted coach target, ready for whichever plan the user commits next. It carries the
+     * reviewed goal's [targetType], so a plan measuring the same activity differently (minutes of
+     * puzzles instead of a count) is left alone rather than given a number in the wrong units.
+     */
+    data class TemplateTarget(val activityTypeCode: String, val targetType: TargetType, val value: Int) {
+        /** The goal the target changes in [template]: its first for the same activity, measured the same way. */
+        fun goalTemplate(template: PlanTemplate): GoalTemplate? =
+            template.goalTemplates.firstOrNull { it.activityType.code == activityTypeCode && it.targetType == targetType }
+    }
+
+    /** [target] in the units of the goal it was written for in [reviewedPlan]; `null` when there's no such goal. */
+    fun templateTarget(target: PlanSuggestionHistory.CoachTarget, reviewedPlan: WeeklyPlan): TemplateTarget? {
+        val goal = goal(target.activityTypeCode, reviewedPlan) ?: return null
+        return TemplateTarget(target.activityTypeCode, goal.targetType, target.value)
+    }
 
     fun goal(code: String, plan: WeeklyPlan): WeeklyGoal? = plan.weeklyGoals.firstOrNull { it.activityType.code == code && !it.isBonus }
 

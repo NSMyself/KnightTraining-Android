@@ -24,12 +24,12 @@ import com.knightindustries.knighttraining.core.persistence.entities.WeeklyRevie
 import kotlinx.coroutines.Dispatchers
 
 /**
- * Version 1 is the iOS schema's end state after its migration `v24`. No migrations are replayed:
+ * Version 1 is the iOS schema's end state after its migration `v24`; version 2 is iOS's `v25`. No migrations are replayed:
  * data never moves between platforms. From here on, every schema change is a new version with a
  * real Room migration, since release data must survive.
  */
 @Database(
-    version = 1,
+    version = 2,
     exportSchema = true,
     entities = [
         ActivityTypeEntity::class,
@@ -81,6 +81,7 @@ abstract class AppDatabase : RoomDatabase() {
          */
         fun RoomDatabase.Builder<AppDatabase>.configure(): RoomDatabase.Builder<AppDatabase> =
             setDriver(BundledSQLiteDriver())
+                .addMigrations(*Migrations.all)
                 .setQueryCoroutineContext(Dispatchers.IO)
     }
 }

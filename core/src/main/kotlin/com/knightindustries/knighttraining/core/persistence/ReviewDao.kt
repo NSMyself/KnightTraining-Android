@@ -21,24 +21,33 @@ interface ReviewDao {
     @Query(
         """
         INSERT INTO weekly_review (id, weeklyPlanId, wentWell, heldBack, nextWeekIntent, createdAt, updatedAt,
-            wishIDone, nextWeekFocus, nextWeekTargetCode, nextWeekTargetValue)
+            wishIDone, nextWeekFocus, nextWeekTargetCode, nextWeekTargetValue, coachTipStatus, coachTipText,
+            coachTipFocus, coachTipTargetCode, coachTipTargetValue, coachTipSuggestsCoach)
         VALUES (:id, :weeklyPlanId, :wentWell, :heldBack, :nextWeekIntent, :createdAt, :updatedAt,
-            :wishIDone, :nextWeekFocus, :nextWeekTargetCode, :nextWeekTargetValue)
+            :wishIDone, :nextWeekFocus, :nextWeekTargetCode, :nextWeekTargetValue, :coachTipStatus, :coachTipText,
+            :coachTipFocus, :coachTipTargetCode, :coachTipTargetValue, :coachTipSuggestsCoach)
         ON CONFLICT(id) DO UPDATE SET
             weeklyPlanId = excluded.weeklyPlanId, wentWell = excluded.wentWell, heldBack = excluded.heldBack,
             nextWeekIntent = excluded.nextWeekIntent, createdAt = excluded.createdAt, updatedAt = excluded.updatedAt,
             wishIDone = excluded.wishIDone, nextWeekFocus = excluded.nextWeekFocus,
-            nextWeekTargetCode = excluded.nextWeekTargetCode, nextWeekTargetValue = excluded.nextWeekTargetValue
+            nextWeekTargetCode = excluded.nextWeekTargetCode, nextWeekTargetValue = excluded.nextWeekTargetValue,
+            coachTipStatus = excluded.coachTipStatus, coachTipText = excluded.coachTipText,
+            coachTipFocus = excluded.coachTipFocus, coachTipTargetCode = excluded.coachTipTargetCode,
+            coachTipTargetValue = excluded.coachTipTargetValue, coachTipSuggestsCoach = excluded.coachTipSuggestsCoach
         """,
     )
     suspend fun upsert(
         id: UUID, weeklyPlanId: UUID, wentWell: String?, heldBack: String?, nextWeekIntent: String?,
         createdAt: Instant, updatedAt: Instant, wishIDone: String?, nextWeekFocus: String?,
-        nextWeekTargetCode: String?, nextWeekTargetValue: Int?,
+        nextWeekTargetCode: String?, nextWeekTargetValue: Int?, coachTipStatus: String?, coachTipText: String?,
+        coachTipFocus: String?, coachTipTargetCode: String?, coachTipTargetValue: Int?, coachTipSuggestsCoach: Boolean,
     )
 
     suspend fun upsert(review: WeeklyReviewEntity) = with(review) {
-        upsert(id, weeklyPlanId, wentWell, heldBack, nextWeekIntent, createdAt, updatedAt, wishIDone, nextWeekFocus, nextWeekTargetCode, nextWeekTargetValue)
+        upsert(
+            id, weeklyPlanId, wentWell, heldBack, nextWeekIntent, createdAt, updatedAt, wishIDone, nextWeekFocus, nextWeekTargetCode,
+            nextWeekTargetValue, coachTipStatus, coachTipText, coachTipFocus, coachTipTargetCode, coachTipTargetValue, coachTipSuggestsCoach,
+        )
     }
 
     /** Sessions in `[start, end)` that carry a note, oldest first: the review's "This week's notes". */
@@ -52,6 +61,25 @@ interface ReviewDao {
 
     @Query("UPDATE weekly_review SET nextWeekTargetCode = :code, nextWeekTargetValue = :value, updatedAt = :now WHERE weeklyPlanId = :weeklyPlanId")
     suspend fun setTarget(weeklyPlanId: UUID, code: String, value: Int, now: Instant)
+
+    // MARK: - The coach's tip
+
+    /** Only the first answer is stored: an answered review keeps it. Returns the rows changed. */
+    @Query(
+        """
+        UPDATE weekly_review SET coachTipStatus = :status, coachTipText = :text, coachTipFocus = :focus,
+            coachTipTargetCode = :targetCode, coachTipTargetValue = :targetValue, coachTipSuggestsCoach = :suggestsCoach,
+            updatedAt = :now
+        WHERE weeklyPlanId = :weeklyPlanId AND coachTipStatus IS NULL
+        """,
+    )
+    suspend fun saveCoachTip(
+        weeklyPlanId: UUID, status: String, text: String?, focus: String?, targetCode: String?, targetValue: Int?,
+        suggestsCoach: Boolean, now: Instant,
+    ): Int
+
+    @Query("UPDATE weekly_review SET coachTipStatus = :status, updatedAt = :now WHERE weeklyPlanId = :weeklyPlanId AND coachTipStatus = :from")
+    suspend fun setCoachTipStatus(weeklyPlanId: UUID, from: String, status: String, now: Instant)
 
     @Query("UPDATE goal_template SET targetValue = :value WHERE id = :goalTemplateId")
     suspend fun setTemplateTarget(goalTemplateId: UUID, value: Int)
