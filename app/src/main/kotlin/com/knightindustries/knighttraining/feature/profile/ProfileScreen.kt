@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.profile
 
+import com.knightindustries.knighttraining.reminders.ActivityReminderScheduler
 import androidx.compose.runtime.remember
 import androidx.compose.material3.Icon
 import android.provider.Settings
@@ -210,6 +211,7 @@ class ProfileViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             container.sessions.clear()
             container.lichessAuth.signOut()
+            ActivityReminderScheduler.cancelAll(container.application)
             container.store.deleteAllUserData()
             refresh()
             refreshLichess()

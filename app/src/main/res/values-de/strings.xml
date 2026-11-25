@@ -323,6 +323,17 @@
     <string name="reminders_body">Nur wenn du mit der Woche im Rückstand bist, und nie an einem Tag, an dem du schon trainiert hast.</string>
     <string name="reminder_days">Tage</string>
     <string name="reminder_time">Zeit</string>
+    <string name="time_to_train">Zeit zu trainieren</string>
+    <string name="activity_reminder_channel">Erinnerungen für Ziele</string>
+    <string name="reminders_none">Noch keine Erinnerungen für diese Aktivität.</string>
+    <string name="reminder_paused">Pausiert</string>
+    <string name="reminder_new">Neue Erinnerung</string>
+    <string name="reminder_edit">Erinnerung bearbeiten</string>
+    <string name="reminder_enabled">Aktiviert</string>
+    <string name="reminder_on_days">An diesen Tagen</string>
+    <string name="reminder_pick_a_day">Wähle mindestens einen Tag.</string>
+    <string name="reminder_delete">Erinnerung löschen</string>
+    <string name="reminder_add">Erinnerung hinzufügen</string>
     <string name="reminder_no_days">Keine Tage gewählt: Es kommen keine Erinnerungen.</string>
     <string name="mesh_dimmed">Gedimmt, um Akku zu sparen · Zum Anzeigen tippen</string>
     <string name="sounds">Töne</string>

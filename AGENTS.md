@@ -137,8 +137,8 @@ filled buttons are a lighter blue with navy text, Material's own convention, whe
   log re-reads on resume, since a saved reflection has no change event. Pinned by
   `ReviewAndLogTest`.
 - **Tapping a goal on Home** opens `GoalDetailsSheet` (iOS `ActivityDetailsSheet`): title,
-  resource, target and progress, and Start / Train again. Per-goal reminders, iOS's other half of
-  that sheet, will go there. Pinned by `GoalDetailsTest`.
+  resource, target and progress, and Start / Train again. Below them, the goal's own reminders,
+  iOS's other half of that sheet (see Phase 5). Pinned by `GoalDetailsTest`.
 - **Backgrounds**: every tab root sits on the flat background, drawn by the tab wrapper in
   `KnightTrainingApp` (iOS's tabs left the glow on 2026-11-24). Tab scaffolds are transparent and
   use `glowTopAppBarColors()`; their lists sit below the bar (padding, not `contentPadding`), so
@@ -274,7 +274,14 @@ maintainer confirms how interactions *feel* on a device themselves.
      SVGs, picked in `StatWidgetConfigActivity`. Launchers reopen it only on Android 12+; before
      that, an unset widget's tap opens the chooser, and a set one is changed by re-adding it.
    - Glance has no determinate ring, so `WidgetStyle.ring` draws one into a bitmap.
-   Layouts are pinned by `WeekWidgetTest`. Not yet: per-block activity reminders.
+   Layouts are pinned by `WeekWidgetTest`.
+   Per-goal reminders (iOS `ActivityReminder`) followed: set on a goal's details sheet (days,
+   time, paused), stored per block on `activity_reminder` (days in iOS's 1 = Sunday numbering) so
+   they last across weeks and go with the block. Each holds one inexact alarm for its next
+   occurrence (`reminders/ActivityReminders.kt`); the receiver reads the block when it fires, so the
+   text is never stale and an archived plan's reminders stay quiet (iOS bakes the text in at
+   scheduling). Re-armed with the weekly reminder after a reboot or clock change, cancelled by
+   "Delete all data". Pinned by `ActivityReminderTest` (core) and `GoalDetailsTest`.
 6. Suggest a plan, weekly coach (Gemini Nano where available), customizable Home, share cards,
    translations converted from the iOS `.xcstrings`.
    - **Suggest a plan, built 2026-11-12.** `PlanSuggestionEngine`, `RatingScale` and

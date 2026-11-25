@@ -330,6 +330,17 @@
     <string name="reminders_body">Seulement quand tu es en retard sur la semaine, et jamais un jour où tu t\'es déjà entraîné.</string>
     <string name="reminder_days">Jours</string>
     <string name="reminder_time">Temps</string>
+    <string name="time_to_train">C\'est l\'heure de s\'entraîner</string>
+    <string name="activity_reminder_channel">Rappels d\'objectifs</string>
+    <string name="reminders_none">Aucun rappel pour cette activité.</string>
+    <string name="reminder_paused">En pause</string>
+    <string name="reminder_new">Nouveau rappel</string>
+    <string name="reminder_edit">Modifier le rappel</string>
+    <string name="reminder_enabled">Activé</string>
+    <string name="reminder_on_days">Ces jours-là</string>
+    <string name="reminder_pick_a_day">Choisis au moins un jour.</string>
+    <string name="reminder_delete">Supprimer le rappel</string>
+    <string name="reminder_add">Ajouter un rappel</string>
     <string name="reminder_no_days">Aucun jour choisi : tu ne recevras pas de rappels.</string>
     <string name="mesh_dimmed">Atténué pour économiser la batterie · Touche pour afficher</string>
     <string name="sounds">Sons</string>

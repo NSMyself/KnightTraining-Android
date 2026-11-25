@@ -1,5 +1,17 @@
 package com.knightindustries.knighttraining
 
+import org.junit.Assert.assertTrue
+import org.junit.Assert.assertFalse
+import java.util.Locale
+import java.time.format.TextStyle
+import java.time.DayOfWeek
+import com.knightindustries.knighttraining.reminders.ActivityReminderReceiver
+import com.knightindustries.knighttraining.core.store.saveGoalTemplate
+import com.knightindustries.knighttraining.core.store.activityReminders
+import com.knightindustries.knighttraining.core.model.GoalTemplate
+import android.net.Uri
+import android.content.Intent
+import android.app.PendingIntent
 import android.Manifest
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
@@ -35,7 +47,10 @@ import org.junit.runner.RunWith
 import java.io.File
 import java.time.Instant
 
-/** Tapping a goal on Home opens its details; Start there opens the timer on that goal. */
+/**
+ * Tapping a goal on Home opens its details; Start there opens the timer on that goal, and its
+ * reminders are added, paused and deleted there (iOS `ActivityDetailsSheet`).
+ */
 @OptIn(ExperimentalTestApi::class)
 @RunWith(AndroidJUnit4::class)
 class GoalDetailsTest {
@@ -55,11 +70,16 @@ class GoalDetailsTest {
         container.sessions.clear()
         val template = PlanTemplate(name = "Plan")
         container.store.savePlanTemplate(template)
+        val block = GoalTemplate(
+            planTemplateId = template.id, name = "Endgame drills", activityType = container.store.activityType("puzzles")!!,
+            targetType = TargetType.COUNT, targetValue = 30,
+        )
+        container.store.saveGoalTemplate(block)
         val plan = WeeklyPlan(planTemplateId = template.id, weekStart = WeekCalendar.system().weekStart(Instant.now()))
         container.store.saveWeeklyPlan(plan)
         goal = WeeklyGoal(
             weeklyPlanId = plan.id, name = "Endgame drills", activityType = container.store.activityType("puzzles")!!,
-            targetType = TargetType.COUNT, targetValue = 30, currentValue = 12,
+            targetType = TargetType.COUNT, targetValue = 30, currentValue = 12, goalTemplateId = block.id,
         )
         container.store.saveWeeklyGoal(goal)
     }
@@ -89,5 +109,47 @@ class GoalDetailsTest {
         compose.waitUntilAtLeastOneExists(hasContentDescription(text(R.string.stop)), 10_000)
         val attribution = container.sessions.session.value!!.attribution
         assertEquals(goal.id, (attribution as com.knightindustries.knighttraining.core.session.PracticeSession.Attribution.Goal).goalId)
+    }
+
+    private fun reminders() = runBlocking { container.store.activityReminders(goal.goalTemplateId!!) }
+
+    /** Whether the reminder's alarm is set: the same intent [ActivityReminderScheduler] uses. */
+    private fun alarmIsSet(id: java.util.UUID): Boolean = PendingIntent.getBroadcast(
+        context, 0,
+        Intent(context, ActivityReminderReceiver::class.java).setAction(ActivityReminderReceiver.ACTION_FIRE)
+            .setData(Uri.parse("knighttraining://activity-reminder/$id")),
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE,
+    ) != null
+
+    @Test
+    fun addPauseAndDeleteAReminder() {
+        compose.waitUntilAtLeastOneExists(hasText("Endgame drills") and hasClickAction(), 10_000)
+        compose.onNode(hasText("Endgame drills") and hasClickAction()).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.reminders_none)), 5_000)
+
+        compose.onNode(hasContentDescription(text(R.string.reminder_add))).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.reminder_new)), 5_000)
+        val monday = DayOfWeek.MONDAY.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+        compose.onNodeWithText(monday).performClick()
+        compose.onNodeWithText(text(R.string.save)).performClick()
+        compose.waitUntil(5_000) { reminders().size == 1 }
+        val saved = reminders().single()
+        assertEquals(setOf(DayOfWeek.MONDAY), saved.schedule.weekdays)
+        compose.waitUntil(5_000) { alarmIsSet(saved.id) }
+        screenshot("73_goal_reminders")
+
+        compose.onNodeWithText(monday).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.reminder_edit)), 5_000)
+        compose.onNodeWithText(text(R.string.reminder_enabled)).performClick()
+        compose.onNodeWithText(text(R.string.save)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.reminder_paused)), 5_000)
+        assertFalse(reminders().single().schedule.isEnabled)
+        compose.waitUntil(5_000) { !alarmIsSet(saved.id) }
+
+        compose.onNodeWithText(monday).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.reminder_delete)), 5_000)
+        compose.onNodeWithText(text(R.string.reminder_delete)).performClick()
+        compose.waitUntilAtLeastOneExists(hasText(text(R.string.reminders_none)), 5_000)
+        assertTrue(reminders().isEmpty())
     }
 }

@@ -1,5 +1,6 @@
 package com.knightindustries.knighttraining.feature.home
 
+import com.knightindustries.knighttraining.core.model.ActivityReminder
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,12 +38,18 @@ import kotlinx.coroutines.launch
 /**
  * One goal of the week, opened by tapping its row on Home (iOS `ActivityDetailsSheet`): what it
  * is, the resource it's tied to, how far along it is, and Start. A completed goal can still be
- * trained, since a target is a floor. iOS also keeps the goal's own reminders here; per-goal
- * reminders aren't ported yet (AGENTS.md), and this sheet is where they'll go.
+ * trained, since a target is a floor. Below, the goal's own reminders, as on iOS.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GoalDetailsSheet(goal: WeeklyGoal, onStart: () -> Unit, onDismiss: () -> Unit) {
+fun GoalDetailsSheet(
+    goal: WeeklyGoal,
+    onStart: () -> Unit,
+    onDismiss: () -> Unit,
+    reminders: List<ActivityReminder> = emptyList(),
+    onSaveReminder: (ActivityReminder) -> Unit = {},
+    onDeleteReminder: (ActivityReminder) -> Unit = {},
+) {
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = state) {
@@ -80,6 +87,7 @@ fun GoalDetailsSheet(goal: WeeklyGoal, onStart: () -> Unit, onDismiss: () -> Uni
                 Text(stringResource(if (goal.isCompleted) R.string.train_again else R.string.start_training))
                 Icon(Icons.AutoMirrored.Rounded.ArrowForward, contentDescription = null, modifier = Modifier.padding(start = 8.dp).size(ButtonDefaults.IconSize))
             }
+            GoalRemindersSection(goal.goalTemplateId, reminders, onSaveReminder, onDeleteReminder)
         }
     }
 }

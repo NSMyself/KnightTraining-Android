@@ -323,6 +323,17 @@
     <string name="reminders_body">Alleen als je achterloopt op de week, en nooit op een dag dat je al hebt getraind.</string>
     <string name="reminder_days">Dagen</string>
     <string name="reminder_time">Tijd</string>
+    <string name="time_to_train">Tijd om te trainen</string>
+    <string name="activity_reminder_channel">Herinneringen voor doelen</string>
+    <string name="reminders_none">Nog geen herinneringen voor deze activiteit.</string>
+    <string name="reminder_paused">Gepauzeerd</string>
+    <string name="reminder_new">Nieuwe herinnering</string>
+    <string name="reminder_edit">Herinnering bewerken</string>
+    <string name="reminder_enabled">Ingeschakeld</string>
+    <string name="reminder_on_days">Op deze dagen</string>
+    <string name="reminder_pick_a_day">Kies minstens één dag.</string>
+    <string name="reminder_delete">Herinnering verwijderen</string>
+    <string name="reminder_add">Herinnering toevoegen</string>
     <string name="reminder_no_days">Geen dagen gekozen: je krijgt geen herinneringen.</string>
     <string name="mesh_dimmed">Gedimd om batterij te sparen · Tik om te tonen</string>
     <string name="sounds">Geluiden</string>

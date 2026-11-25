@@ -5,7 +5,6 @@ import java.time.Duration
 import java.time.Instant
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
-import java.util.UUID
 
 /** What, if anything, is worth reminding the user about right now. */
 sealed interface TrainingReminderDecision {
@@ -93,17 +92,6 @@ data class ReminderSchedule(
         val DEFAULT = ReminderSchedule()
     }
 }
-
-/**
- * A reminder for one training block, on top of the weekly nudge. Tied to the goal template so it
- * persists across weeks; deleting the block deletes it.
- */
-data class ActivityReminder(
-    val id: UUID = UUID.randomUUID(),
-    val goalTemplateId: UUID,
-    val schedule: ReminderSchedule,
-    val createdAt: Instant = Instant.now(),
-)
 
 /** Whether to suggest adding more once everything committed to is done. */
 sealed interface StretchGoalNudgeDecision {

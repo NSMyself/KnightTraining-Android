@@ -2141,5 +2141,59 @@
   "it": "Obiettivi extra aggiunti questa settimana",
   "de": "Diese Woche hinzugefügte Bonusziele",
   "fr": "Objectifs bonus ajoutés cette semaine"
+ },
+ "reminder_new": {
+  "pt-PT": "Novo lembrete",
+  "es": "Nuevo recordatorio",
+  "pt-BR": "Novo lembrete",
+  "nl": "Nieuwe herinnering",
+  "it": "Nuovo promemoria",
+  "de": "Neue Erinnerung",
+  "fr": "Nouveau rappel"
+ },
+ "reminder_edit": {
+  "pt-PT": "Editar lembrete",
+  "es": "Editar recordatorio",
+  "pt-BR": "Editar lembrete",
+  "nl": "Herinnering bewerken",
+  "it": "Modifica promemoria",
+  "de": "Erinnerung bearbeiten",
+  "fr": "Modifier le rappel"
+ },
+ "reminder_delete": {
+  "pt-PT": "Apagar lembrete",
+  "es": "Eliminar recordatorio",
+  "pt-BR": "Excluir lembrete",
+  "nl": "Herinnering verwijderen",
+  "it": "Elimina promemoria",
+  "de": "Erinnerung löschen",
+  "fr": "Supprimer le rappel"
+ },
+ "reminder_enabled": {
+  "pt-PT": "Ativado",
+  "es": "Activado",
+  "pt-BR": "Ativado",
+  "nl": "Ingeschakeld",
+  "it": "Attivo",
+  "de": "Aktiviert",
+  "fr": "Activé"
+ },
+ "reminder_add": {
+  "pt-PT": "Adicionar lembrete",
+  "es": "Agregar recordatorio",
+  "pt-BR": "Adicionar lembrete",
+  "nl": "Herinnering toevoegen",
+  "it": "Aggiungi promemoria",
+  "de": "Erinnerung hinzufügen",
+  "fr": "Ajouter un rappel"
+ },
+ "activity_reminder_channel": {
+  "pt-PT": "Lembretes de objetivos",
+  "es": "Recordatorios de objetivos",
+  "pt-BR": "Lembretes de objetivos",
+  "nl": "Herinneringen voor doelen",
+  "it": "Promemoria degli obiettivi",
+  "de": "Erinnerungen für Ziele",
+  "fr": "Rappels d'objectifs"
  }
 }

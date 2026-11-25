@@ -169,7 +169,14 @@ fun HomeScreen(
     // By id, so the sheet follows the goal's live progress.
     var openGoalId by rememberSaveable { mutableStateOf<String?>(null) }
     (state as? HomeState.Loaded)?.surface?.plan?.weeklyGoals?.firstOrNull { it.id.toString() == openGoalId }?.let { goal ->
-        GoalDetailsSheet(goal, onStart = { onStartGoal(goal) }, onDismiss = { openGoalId = null })
+        val reminders by remember(goal.goalTemplateId) { viewModel.reminders(goal.goalTemplateId) }.collectAsStateWithLifecycle(emptyList())
+        val withPermission = rememberWithNotificationPermission()
+        GoalDetailsSheet(
+            goal, onStart = { onStartGoal(goal) }, onDismiss = { openGoalId = null },
+            reminders = reminders,
+            onSaveReminder = { reminder -> withPermission { viewModel.saveReminder(reminder) } },
+            onDeleteReminder = viewModel::deleteReminder,
+        )
     }
     addingMoreTo?.let { goal ->
         AddMoreSheet(

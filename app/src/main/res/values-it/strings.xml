@@ -330,6 +330,17 @@
     <string name="reminders_body">Solo quando sei indietro sulla settimana, e mai in un giorno in cui ti sei già allenato.</string>
     <string name="reminder_days">Giorni</string>
     <string name="reminder_time">Tempo</string>
+    <string name="time_to_train">È ora di allenarsi</string>
+    <string name="activity_reminder_channel">Promemoria degli obiettivi</string>
+    <string name="reminders_none">Ancora nessun promemoria per questa attività.</string>
+    <string name="reminder_paused">In pausa</string>
+    <string name="reminder_new">Nuovo promemoria</string>
+    <string name="reminder_edit">Modifica promemoria</string>
+    <string name="reminder_enabled">Attivo</string>
+    <string name="reminder_on_days">In questi giorni</string>
+    <string name="reminder_pick_a_day">Scegli almeno un giorno.</string>
+    <string name="reminder_delete">Elimina promemoria</string>
+    <string name="reminder_add">Aggiungi promemoria</string>
     <string name="reminder_no_days">Nessun giorno scelto: non riceverai promemoria.</string>
     <string name="mesh_dimmed">Attenuato per risparmiare batteria · Tocca per mostrare</string>
     <string name="sounds">Suoni</string>

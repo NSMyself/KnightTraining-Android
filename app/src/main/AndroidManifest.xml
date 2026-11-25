@@ -33,6 +33,9 @@
 
         <!-- Training reminders: the alarm itself, and re-arming it after a reboot or clock change. -->
         <receiver
+            android:name=".reminders.ActivityReminderReceiver"
+            android:exported="false" />
+        <receiver
             android:name=".reminders.ReminderReceiver"
             android:exported="false">
             <intent-filter>

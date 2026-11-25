@@ -80,7 +80,7 @@ class KnightTrainingApplication : Application() {
     }
 }
 
-class AppContainer(application: Application) {
+class AppContainer(val application: Application) {
     val appScope = CoroutineScope(SupervisorJob())
 
     /** The file-backed database, like iOS's `AppDatabase.shared`. */

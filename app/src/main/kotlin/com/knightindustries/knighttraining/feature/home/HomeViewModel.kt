@@ -1,5 +1,10 @@
 package com.knightindustries.knighttraining.feature.home
 
+import com.knightindustries.knighttraining.reminders.ActivityReminderScheduler
+import com.knightindustries.knighttraining.core.store.deleteActivityReminder
+import com.knightindustries.knighttraining.core.store.saveActivityReminder
+import com.knightindustries.knighttraining.core.store.observeActivityReminders
+import com.knightindustries.knighttraining.core.model.ActivityReminder
 import kotlinx.coroutines.flow.first
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -166,6 +171,25 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
                 weeklyPlanId, container.store.activityType(block.activityTypeCode)!!, block.targetType, block.targetValue,
                 name = block.name, resource = block.resourceId?.let { container.store.resource(it) }, timeControlLabel = block.timeControlLabel,
             )
+        }
+    }
+
+    /** A goal's own reminders, live; none for a bonus goal, which has no block. */
+    fun reminders(goalTemplateId: java.util.UUID?): kotlinx.coroutines.flow.Flow<List<ActivityReminder>> =
+        goalTemplateId?.let { container.store.observeActivityReminders(it) } ?: kotlinx.coroutines.flow.flowOf(emptyList())
+
+    /** Saves the reminder and sets (or clears) its alarm. */
+    fun saveReminder(reminder: ActivityReminder) {
+        viewModelScope.launch {
+            container.store.saveActivityReminder(reminder)
+            ActivityReminderScheduler.schedule(container.application, reminder)
+        }
+    }
+
+    fun deleteReminder(reminder: ActivityReminder) {
+        viewModelScope.launch {
+            ActivityReminderScheduler.cancel(container.application, reminder.id)
+            container.store.deleteActivityReminder(reminder.id)
         }
     }
 

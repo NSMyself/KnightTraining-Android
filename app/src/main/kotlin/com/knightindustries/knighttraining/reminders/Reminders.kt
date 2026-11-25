@@ -54,7 +54,12 @@ class ReminderReceiver : BroadcastReceiver() {
         val container = AppContainer.from(context.applicationContext as KnightTrainingApplication)
         container.appScope.launch {
             try {
-                if (intent.action == ACTION_FIRE) remindIfBehind(context, container)
+                if (intent.action == ACTION_FIRE) {
+                    remindIfBehind(context, container)
+                } else {
+                    // A reboot or clock change: the blocks' own reminders need their alarms back too.
+                    ActivityReminderScheduler.rescheduleAll(context)
+                }
                 ReminderScheduler.reschedule(context)
             } finally {
                 result.finish()

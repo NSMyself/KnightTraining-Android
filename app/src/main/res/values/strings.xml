@@ -367,6 +367,17 @@
     <string name="reminders_body">Only when you\'re behind on the week, and never on a day you\'ve already trained.</string>
     <string name="reminder_days">Days</string>
     <string name="reminder_time">Time</string>
+    <string name="time_to_train">Time to train</string>
+    <string name="activity_reminder_channel">Goal reminders</string>
+    <string name="reminders_none">No reminders yet for this activity.</string>
+    <string name="reminder_paused">Paused</string>
+    <string name="reminder_new">New reminder</string>
+    <string name="reminder_edit">Edit reminder</string>
+    <string name="reminder_enabled">Enabled</string>
+    <string name="reminder_on_days">On these days</string>
+    <string name="reminder_pick_a_day">Pick at least one day.</string>
+    <string name="reminder_delete">Delete reminder</string>
+    <string name="reminder_add">Add reminder</string>
     <string name="reminder_no_days">No days selected: no reminders will arrive.</string>
     <string name="mesh_dimmed">Dimmed to save battery · Tap to show</string>
     <string name="sounds">Sounds</string>

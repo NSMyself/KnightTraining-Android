@@ -330,6 +330,17 @@
     <string name="reminders_body">Só quando estiveres atrasado na semana, e nunca num dia em que já treinaste.</string>
     <string name="reminder_days">Dias</string>
     <string name="reminder_time">Tempo</string>
+    <string name="time_to_train">Hora de treinar</string>
+    <string name="activity_reminder_channel">Lembretes de objetivos</string>
+    <string name="reminders_none">Ainda não há lembretes para esta atividade.</string>
+    <string name="reminder_paused">Em pausa</string>
+    <string name="reminder_new">Novo lembrete</string>
+    <string name="reminder_edit">Editar lembrete</string>
+    <string name="reminder_enabled">Ativado</string>
+    <string name="reminder_on_days">Nestes dias</string>
+    <string name="reminder_pick_a_day">Escolhe pelo menos um dia.</string>
+    <string name="reminder_delete">Apagar lembrete</string>
+    <string name="reminder_add">Adicionar lembrete</string>
     <string name="reminder_no_days">Nenhum dia escolhido: não vais receber lembretes.</string>
     <string name="mesh_dimmed">Modo poupança de bateria · Toca para mostrar</string>
     <string name="sounds">Sons</string>
