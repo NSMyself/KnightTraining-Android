@@ -201,6 +201,7 @@ export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 ./gradlew :core:test           # JVM unit tests, fast
 ./gradlew :app:assembleDebug   # debug APK
 ./gradlew :app:lintDebug       # must pass: no lint errors
+./gradlew :app:bundleRelease   # the .aab for Play, signed from keystore.properties (see below)
 # Device tests (CoreLoopTest); needs a running emulator. Keeping the app installed keeps the
 # screenshots each step writes to /sdcard/Android/data/<package>/files/screenshots.
 ./gradlew :app:connectedDebugAndroidTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true
@@ -210,6 +211,13 @@ export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 `KT_Pixel_API36`. Headless, start it with `-gpu swiftshader_indirect`, or screenshots come back
 black. Its System UI is slow under software rendering and throws "isn't responding" dialogs;
 they're the emulator's, not the app's.
+
+**Release builds** are shrunk by R8 and signed with the upload key named in `keystore.properties`
+at the repo root (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`; gitignored, never
+committed). Without that file they're left unsigned. Play App Signing holds the real key. Shrinking
+broke the first release build (ML Kit's beta crashed at launch, 2026-11-26), so a release build
+gets a random-tap run (`adb shell monkey`) before it goes to testers. When the coach leaves debug
+builds, check ML Kit under R8 again: release builds don't touch it today.
 
 UI tests act through the semantics tree (what TalkBack reads), never screen coordinates. The
 maintainer confirms how interactions *feel* on a device themselves.

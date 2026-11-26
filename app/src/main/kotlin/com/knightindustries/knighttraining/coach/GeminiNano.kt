@@ -23,10 +23,16 @@ import java.util.concurrent.atomic.AtomicBoolean
  * (AICore refuses background use), which suits a coach that runs on the review screen.
  */
 class GeminiNano(
-    private val client: GenerativeModel = Generation.getClient(
-        generationConfig { modelConfig = ModelConfig.builder().apply { preference = ModelPreference.FULL }.build() },
-    ),
+    newClient: () -> GenerativeModel = {
+        Generation.getClient(generationConfig { modelConfig = ModelConfig.builder().apply { preference = ModelPreference.FULL }.build() })
+    },
 ) : LanguageModel {
+    /**
+     * Made on first use, never at construction: release builds, where the coach is off, must not
+     * touch ML Kit at all. Its beta setup crashed on launch in a shrunk release build (2026-11-26).
+     */
+    private val client: GenerativeModel by lazy(newClient)
+
     sealed interface Availability {
         data class Ready(val baseModelName: String) : Availability
 

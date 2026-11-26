@@ -1,7 +1,21 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+}
+
+/**
+ * Release signing, read from `keystore.properties` at the repo root (gitignored, never committed):
+ * storeFile, storePassword, keyAlias, keyPassword. `-PkeystoreProperties=<path>` points elsewhere.
+ * Without it, release builds are left unsigned rather than signed with something wrong.
+ */
+val keystoreProperties = (findProperty("keystoreProperties") as String?)?.let(::file) ?: rootProject.file("keystore.properties")
+val releaseSigning: Properties? = if (keystoreProperties.exists()) {
+    Properties().also { properties -> keystoreProperties.inputStream().use { properties.load(it) } }
+} else {
+    null
 }
 
 android {
@@ -18,8 +32,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (releaseSigning != null) {
+            create("release") {
+                storeFile = keystoreProperties.parentFile.resolve(releaseSigning.getProperty("storeFile"))
+                storePassword = releaseSigning.getProperty("storePassword")
+                keyAlias = releaseSigning.getProperty("keyAlias")
+                keyPassword = releaseSigning.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
