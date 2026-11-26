@@ -24,7 +24,9 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.knightindustries.knighttraining"
+        // What Play and the phone know the app by; permanent once published. The Kotlin package
+        // (`namespace`) is internal and stays as it was.
+        applicationId = "eu.numerosinusitados.knighttraining"
         minSdk = 28
         targetSdk = 36
         versionCode = 1

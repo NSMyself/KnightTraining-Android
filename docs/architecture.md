@@ -156,7 +156,8 @@ title when they fire, and are re-armed with the weekly one after a reboot or clo
 ### Lichess
 
 - **Sign-in.** OAuth with PKCE in a Custom Tab, with no client registration. The redirect is
-  `com.knightindustries.knighttraining://callback`, handled by `LichessCallbackActivity`.
+  `com.knightindustries.knighttraining://callback` (iOS's, independent of the application id),
+  handled by `LichessCallbackActivity`.
 - **Token.** It's encrypted with a Keystore key in `noBackupFilesDir`, never stored in the
   database.
 - **Sync.** It runs on every `onStart`, at most every two minutes, one request at a time.

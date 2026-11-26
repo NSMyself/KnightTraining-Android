@@ -37,7 +37,7 @@ the iOS screens. [AGENTS.md](AGENTS.md) records every deliberate difference betw
 
 | | |
 |---|---|
-| Application id | `com.knightindustries.knighttraining` |
+| Application id | `eu.numerosinusitados.knighttraining` (Kotlin package: `com.knightindustries.knighttraining`) |
 | `minSdk` / `targetSdk` / `compileSdk` | 28 / 36 / 37 |
 | Java source/target | 17 |
 
